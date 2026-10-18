@@ -310,6 +310,169 @@
           "outcome": "circuit_open"
         }
       ]
+    },
+    {
+      "plan": "03.json",
+      "plan_sha256": "cf5a7a50cc426ed32e833fafdde1a9aba9103839db5c212b25408d974e6e960e",
+      "capture_sha256": "67f4738af14bcbbf067ed40c26d0320c9523f219a0b858f602799489619081e3",
+      "budget": {
+        "max_requests": 6,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 120,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 3,
+      "results": [
+        {
+          "name": "financial-catalogue-old",
+          "observed_at": "2026-10-18T17:34:12.898717+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "financial-catalogue-integrated",
+          "observed_at": "2026-10-18T17:34:12.898744+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "ownership-catalogue",
+          "observed_at": "2026-10-18T17:34:12.898755+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "filing-2025",
+          "observed_at": "2026-10-18T17:34:12.898761+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 92661,
+          "sha256": "2fdffa2d19d0b275b0d3dae9b95ecf515a90c29ad0e84f7fe3134213579e6747"
+        },
+        {
+          "name": "filing-2026",
+          "observed_at": "2026-10-18T17:34:13.012968+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 51858,
+          "sha256": "0a22cb0aad493e026a0775fb889341ccbd5f61be355ef3ad194d46592889c629"
+        },
+        {
+          "name": "ownership-filing",
+          "observed_at": "2026-10-18T17:34:15.071044+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 541780,
+          "sha256": "4a2c6577b55fc1c60ed53b0265cfbcdfa6f44b7710bd63075b140de44c4148f1"
+        }
+      ]
     }
-  ]
+  ],
+  "yahoo": {
+    "capture_kind": "sdk_result",
+    "complete": false,
+    "sets": [
+      {
+        "experiment": "yahoo",
+        "summary_sha256": "e2d635f4058ff8f6bfaa41de25951c92e03726bf4a162cddaf5d216608f2bcf8",
+        "results": [
+          {
+            "symbol": "^GSPC",
+            "start": "2016-09-01",
+            "end": "2016-09-07",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "GSPC-2016-09-01.json",
+            "sha256": "4f1d59cd039ec435eeb60d55a25dcbdae7b44b2242e74f9219caec0e6720e7d9",
+            "error_type": null
+          },
+          {
+            "symbol": "^GSPC",
+            "start": "2025-11-26",
+            "end": "2025-12-02",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "GSPC-2025-11-26.json",
+            "sha256": "b5a9d06417b8987d771011a6ea5d35a748e9260aa720d08880c9ffeb144eff3f",
+            "error_type": null
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2016-09-01",
+            "end": "2016-09-07",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "IXIC-2016-09-01.json",
+            "sha256": "28cfe59ff87a99ca9f668700c7a4e639bc6846ce6fb833c463e16b2fe436a3a9",
+            "error_type": null
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2025-11-26",
+            "end": "2025-12-02",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "IXIC-2025-11-26.json",
+            "sha256": "95d7c238b7aba45affb509351fe47e7b2d2ca2d71b61533b6083b7b0096d52ad",
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "experiment": "yahoo-negative",
+        "summary_sha256": "81af463b06c624f2b45996765b9cfc8ebba23e520c205ac5a1d38d44c6a9c564",
+        "results": [
+          {
+            "symbol": "^GSPC",
+            "start": "2025-11-27",
+            "end": "2025-11-28",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "sdk_error",
+            "artifact": "GSPC-2025-11-27.json",
+            "sha256": "9492a03a65e4785362752487dfb63d216cc533faf52cd11e4aff0ee7ab1ef0ea",
+            "error_type": "YFPricesMissingError"
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2025-11-27",
+            "end": "2025-11-28",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "sdk_error",
+            "artifact": "IXIC-2025-11-27.json",
+            "sha256": "571643e2d5c24f6823c4059adef845adc7d6359be5c5c65e5fc62cba65007780",
+            "error_type": "YFPricesMissingError"
+          }
+        ]
+      }
+    ]
+  }
 }

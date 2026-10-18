@@ -1,0 +1,12 @@
+{
+  "budget": {"max_requests": 6, "deadline_seconds": 120},
+  "blocked_hosts": ["www.nseindia.com"],
+  "probes": [
+    {"name": "financial-catalogue-old", "url": "https://www.nseindia.com/api/corporates-financial-results?index=equities&symbol=RELIANCE&from_date=01-01-2017&to_date=31-01-2017", "scope": "legacy RELIANCE catalogue January 2017", "format": "json", "window_days": 31},
+    {"name": "financial-catalogue-integrated", "url": "https://www.nseindia.com/api/integrated-filing-results?index=equities&symbol=RELIANCE&from_date=01-07-2026&to_date=31-07-2026", "scope": "integrated RELIANCE catalogue July 2026", "format": "json", "window_days": 31},
+    {"name": "ownership-catalogue", "url": "https://www.nseindia.com/api/corporate-share-holdings-master?index=equities&symbol=RELIANCE", "scope": "ownership catalogue/detail candidate, current", "format": "json"},
+    {"name": "filing-2025", "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_87057_25042025215716_iXBRL_WEB.html", "scope": "RELIANCE consolidated year 2024-04-01..2025-03-31; explicit linked filing bytes, not general market HTML", "format": "html"},
+    {"name": "filing-2026", "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_175608_17072026195004_iXBRL_WEB.html", "scope": "RELIANCE consolidated quarter 2026-04-01..06-30; source unit/context inspection", "format": "html"},
+    {"name": "ownership-filing", "url": "https://nsearchives.nseindia.com/corporate/ixbrl/SHP_SDD_10449_25022026230015_iXBRL_WEB.html", "scope": "real shareholding filing; issuer/period/units to verify from content", "format": "html"}
+  ]
+}
