@@ -2,6 +2,7 @@
 
 import csv
 import hashlib
+import io
 import json
 import os
 import tempfile
@@ -72,7 +73,7 @@ def read_fixture_bundle(destination: Path) -> FixtureBatch:
         raise ValidationError("fixture CSV cell lacks N/V encoding")
 
     rows = []
-    with (destination / "data.csv").open(encoding="utf-8", newline="") as handle:
+    with io.StringIO(payload.decode("utf-8"), newline="") as handle:
         reader = csv.reader(handle)
         if next(reader, None) != _FIELDS:
             raise ValidationError("fixture CSV header mismatch")

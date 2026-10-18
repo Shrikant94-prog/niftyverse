@@ -194,3 +194,35 @@ def test_duplicate_identity_rejected_before_sink(tmp_path: Path) -> None:
     with pytest.raises(ValidationError, match="duplicates"):
         build_fixture(json.dumps([EXPECTED_WIRE, EXPECTED_WIRE]).encode(), tmp_path / "db")
     assert not list(tmp_path.iterdir())
+
+
+def test_bundle_reader_parses_the_bytes_it_verified(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    bundle = tmp_path / "out"
+    label = 'a,\r\n"quoted" é'
+    payload = json.dumps([{**EXPECTED_WIRE, "label": label}]).encode()
+    extract_fixture(payload, bundle)
+    data_path = bundle / "data.csv"
+    original_read = Path.read_bytes
+
+    def replace_after_read(path: Path) -> bytes:
+        captured = original_read(path)
+        if path == data_path:
+            path.write_bytes(captured.replace(b"V1.0000", b"V9.0000"))
+        return captured
+
+    monkeypatch.setattr(Path, "read_bytes", replace_after_read)
+    replay = read_fixture_bundle(bundle)
+    assert replay.rows[0].close == Decimal("1.0000")
+    assert replay.rows[0].label == label
+
+
+def test_bundle_reader_rejects_changed_bytes(tmp_path: Path) -> None:
+    bundle = tmp_path / "out"
+    extract_fixture(PAYLOAD, bundle)
+    data_path = bundle / "data.csv"
+    data_path.write_bytes(data_path.read_bytes().replace(b"V123.4500", b"V999.9999"))
+    with pytest.raises(ValidationError, match="schema/hash mismatch"):
+        read_fixture_bundle(bundle)
