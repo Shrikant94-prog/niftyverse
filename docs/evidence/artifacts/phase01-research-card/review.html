@@ -1,0 +1,247 @@
+<!doctype html><html lang='en'><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>niftyverse Phase 01 previews</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eff4f5;color:#19313d;
+ font:14px/1.6 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:48px 32px 64px}
+.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:700;color:#087f75;text-transform:uppercase}
+h1{font-size:34px;line-height:1.2;letter-spacing:-.04em;margin:10px 0 12px;font-weight:650}
+.intro{color:#637983;max-width:640px;margin:0;font-size:15px}
+.review-header{border-bottom:1px solid #d8e4e8;padding-bottom:30px;margin-bottom:36px}
+.review-section{margin-top:36px}.section-heading{display:flex;gap:14px;align-items:baseline;
+ margin-bottom:18px}.section-number{font-size:11px;color:#7d919a;letter-spacing:.06em}
+h2{font-size:17px;letter-spacing:-.015em;margin:0;font-weight:650}
+.section-note{margin:3px 0 0;color:#71848e;font-size:12px}
+.terminal-window{border-radius:12px;overflow:hidden;background:#111b24;
+ box-shadow:0 4px 18px #1b3b4912;
+ border:1px solid #24343f;margin-top:12px}.window-bar{display:flex;align-items:center;gap:6px;
+ padding:12px 16px;background:#1a2833;border-bottom:1px solid #283946;color:#9eafb9;font-size:11px}
+.window-dot{width:7px;height:7px;border-radius:50%;background:#49606c}
+.window-label{margin-left:9px}pre{font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;
+ margin:0;padding:20px;overflow-x:auto;tab-size:4}.terminal-window pre{color:#e2eaf0}
+.review-details{margin-top:12px;border:1px solid #d7e2e7;border-radius:9px;background:#f7fafb}
+.review-details>summary{padding:12px 16px;cursor:pointer;color:#4b6571;
+ font-size:12px;font-weight:550}
+.review-details .terminal-window{margin:0 12px 12px}
+.review-details>pre{border-top:1px solid #e0e9ed;font-size:11px}
+.review-footer{margin-top:36px;font-size:11px;color:#80949d;
+ border-top:1px solid #d8e4e8;padding-top:18px}
+@media(max-width:600px){main{padding:28px 16px}h1{font-size:28px}pre{font-size:11px;padding:14px}}
+@media(prefers-color-scheme:dark){body{background:#0d171e;color:#dce8ee}.intro,.section-note{
+ color:#9cafba}.review-header,.review-footer{border-color:#2c3d47}.review-details{
+ background:#15232c;border-color:#2c3d47}.review-details>summary{color:#b2c5cf}}
+</style><body><main>
+<header class="review-header"><div class="eyebrow">niftyverse / design review</div>
+<h1>Notebook &amp; terminal previews</h1>
+<p class="intro">The same saved fixture, with clear hierarchy, aligned values and details when you need them.</p></header>
+<section class="review-section"><div class="section-heading"><span class="section-number">01</span><div><h2>Notebook card</h2><p class="section-note">Light and dark themes follow your system. Null and empty text remain distinct.</p></div></div>
+<style>
+.niftyverse-card{--nv-bg:#fff;--nv-ink:#182b36;--nv-muted:#647680;--nv-line:#e2e9ed;
+ --nv-tint:#f4f7f9;--nv-accent:#087f75;--nv-good:#e5f5ed;--nv-green:#16734b;
+ --nv-amber:#865400;--nv-amber-bg:#fff4dc;--nv-slate-bg:#eaf0f4;
+ --nv-ui:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ --nv-mono:"Geist Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+ color:var(--nv-ink);background:var(--nv-bg);border:1px solid var(--nv-line);
+ border-radius:14px;max-width:780px;overflow:hidden;font:13px/1.5 var(--nv-ui);
+ box-shadow:0 4px 20px #14343c0a;text-align:left;color-scheme:light dark}
+.niftyverse-card *{box-sizing:border-box}
+.niftyverse-card .nv-top{padding:24px 28px;display:flex;justify-content:space-between;
+ gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--nv-line)}
+.niftyverse-card .nv-brand{color:var(--nv-accent);font-size:10px;font-weight:700;
+ letter-spacing:.12em;margin:0 0 8px}
+.niftyverse-card .nv-title{font:650 22px/1.25 var(--nv-ui);color:var(--nv-ink);
+ margin:0 0 6px;letter-spacing:-.025em}
+.niftyverse-card .nv-sub{margin:0;color:var(--nv-muted);font:12px/1.6 var(--nv-ui)}
+.niftyverse-card .nv-status{align-self:flex-start;background:var(--nv-good);
+ color:var(--nv-green);border:1px solid color-mix(in srgb,var(--nv-green) 14%,transparent);
+ border-radius:20px;padding:5px 10px;font:600 11px/1.5 var(--nv-mono);white-space:nowrap}
+.niftyverse-card .nv-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:20px;padding:18px 28px;
+ background:var(--nv-tint);border-bottom:1px solid var(--nv-line)}
+.niftyverse-card .nv-stat{min-width:0}
+.niftyverse-card .nv-stat-label{display:block;color:var(--nv-muted);font-size:10px;
+ text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.niftyverse-card .nv-stat-value{font:500 12px/1.65 var(--nv-mono);
+ font-variant-numeric:tabular-nums slashed-zero;overflow-wrap:anywhere}
+.niftyverse-card .nv-dates{color:var(--nv-muted)}
+.niftyverse-card .nv-scroll{overflow-x:auto;overscroll-behavior-x:contain}
+.niftyverse-card .nv-table{width:100%;border-collapse:collapse;margin:0;
+ background:var(--nv-bg);font:12px/1.6 var(--nv-mono);color:var(--nv-ink)}
+.niftyverse-card .nv-table th{padding:14px 28px;font:600 11px/1.5 var(--nv-ui);
+ color:var(--nv-muted);
+ border-bottom:1px solid var(--nv-line);white-space:nowrap;text-align:left}
+.niftyverse-card .nv-dtype{font:400 9px/1.5 var(--nv-mono);color:var(--nv-muted);
+ background:var(--nv-tint);border:1px solid var(--nv-line);border-radius:4px;
+ padding:1px 4px;margin-left:5px}
+.niftyverse-card .nv-table td{padding:18px 28px;border-bottom:1px solid var(--nv-line);
+ font:12px/1.6 var(--nv-mono);font-variant-numeric:tabular-nums slashed-zero;
+ vertical-align:middle;text-align:left;max-width:230px;overflow-wrap:anywhere}
+.niftyverse-card .nv-table tbody tr:last-child td{border-bottom:none}
+.niftyverse-card .nv-table .nv-number{text-align:right;white-space:nowrap;overflow-wrap:normal}
+.niftyverse-card .nv-table .nv-id{color:var(--nv-accent);font-weight:600;white-space:nowrap}
+.niftyverse-card .nv-table .nv-date{color:var(--nv-muted);white-space:nowrap}
+.niftyverse-card .nv-table .nv-zero{color:var(--nv-muted)}
+.niftyverse-card .nv-null,.niftyverse-card .nv-empty{display:inline-block;
+ padding:2px 7px;border-radius:5px;font:11px/1.5 var(--nv-mono);white-space:nowrap}
+.niftyverse-card .nv-null{color:var(--nv-amber);background:var(--nv-amber-bg);font-style:italic}
+.niftyverse-card .nv-empty{color:var(--nv-muted);background:var(--nv-slate-bg)}
+.niftyverse-card .nv-footer{padding:14px 28px;border-top:1px solid var(--nv-line);
+ background:var(--nv-tint);
+ display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+ color:var(--nv-muted);font:11px/1.5 var(--nv-ui)}
+@media(max-width:600px){.niftyverse-card .nv-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-color-scheme:dark){.niftyverse-card{--nv-bg:#15232c;--nv-ink:#e3edf2;
+ --nv-muted:#9cafba;--nv-line:#2c3d47;--nv-tint:#1c2d36;--nv-accent:#7fc9be;
+ --nv-good:#193d30;--nv-green:#94c8a8;--nv-amber:#e4c58b;--nv-amber-bg:#3b3020;
+ --nv-slate-bg:#283a46}}
+</style><section class='niftyverse-card' aria-label='niftyverse observation preview'><header class='nv-top'><div><p class='nv-brand'>NIFTYVERSE / RESEARCH DATA</p><h3 class='nv-title'>Observation preview</h3><p class='nv-sub'>Owned offline fixture &middot; CSV bundle<br>Synthetic data &middot; No research snapshot</p></div><span class='nv-status'>● Saved</span></header><div class='nv-stats' aria-label='Provenance metrics'><div class='nv-stat'><span class='nv-stat-label'>Rows</span><span class='nv-stat-value' aria-label='4 committed rows'>4</span></div><div class='nv-stat'><span class='nv-stat-label'>Columns</span><span class='nv-stat-value'>4</span></div><div class='nv-stat'><span class='nv-stat-label'>Preview dates</span><span class='nv-stat-value nv-dates'>01 Sep 2026 → 04 Sep 2026</span></div><div class='nv-stat'><span class='nv-stat-label'>Input hash</span><span class='nv-stat-value' title='Input SHA-256: 277226b740ac2ce6b1b3a4659c8cc18378358989bdaed20f4c8a5774c8c250fa'>277226b740ac...</span></div></div><div class='nv-scroll'><table class='nv-table'><thead><tr><th scope='col'>Instrument<span class='nv-dtype'>id</span></th><th scope='col'>Session date<span class='nv-dtype'>date</span></th><th scope='col' class='nv-number'>Close<span class='nv-dtype'>dec</span></th><th scope='col'>Label<span class='nv-dtype'>str</span></th></tr></thead><tbody><tr><td class="nv-id">0001</td><td class="nv-date">2026-09-01</td><td class="nv-number">123.4500</td><td class="nv-cell"><span class="nv-empty" aria-label="Empty text">&quot;&quot; (empty)</span></td></tr><tr><td class="nv-id">0002</td><td class="nv-date">2026-09-02</td><td class="nv-number"><span class="nv-null" aria-label="Null value">&lt;null&gt;</span></td><td class="nv-cell"><span class="nv-null" aria-label="Null value">&lt;null&gt;</span></td></tr><tr><td class="nv-id">0003</td><td class="nv-date">2026-09-03</td><td class="nv-number nv-zero">0.0000</td><td class="nv-cell">__NULL__</td></tr><tr><td class="nv-id">0004</td><td class="nv-date">2026-09-04</td><td class="nv-number">99,999,999,999,999.9999</td><td class="nv-cell">&lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;</td></tr></tbody></table></div><footer class='nv-footer'><span>Preview only: 4 of 4 rows</span><span>Exact decimals &middot; Nulls preserved</span></footer></section>
+<details class="review-details"><summary>Plain-text notebook fallback</summary><pre>niftyverse / Observation preview
+4 committed rows | CSV bundle
+Owned offline fixture
+
+Instrument     Session date                       Close     Label                     &#32;
+---------------------------------------------------------------------------------------
+0001           2026-09-01                      123.4500     &quot;&quot;                        &#32;
+0002           2026-09-02                        &lt;null&gt;     &lt;null&gt;                    &#32;
+0003           2026-09-03                        0.0000     __NULL__                  &#32;
+0004           2026-09-04       99,999,999,999,999.9999     &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;
+
+Preview only: 4 of 4 rows | 4 columns</pre></details></section>
+<section class="review-section"><div class="section-heading"><span class="section-number">02</span><div><h2>Terminal summary</h2><p class="section-note">Compact at 60 columns. A data preview at 100 and 160.</p></div></div>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">niftyverse &middot; 100 columns</span></div><pre><span style="color: #487271; text-decoration-color: #487271">╭──────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #111b24; text-decoration-color: #111b24; background-color: #94c8a8; font-weight: bold"> SAVED </span><span style="font-weight: bold">  niftyverse / Observation preview</span>                        4 committed rows<span style="color: #8b9dac; text-decoration-color: #8b9dac"> · </span><span style="color: #7fc9be; text-decoration-color: #7fc9be">CSV bundle</span>  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Source         </span>Owned offline fixture                                                            <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview dates  </span>01 Sep 2026 → 04 Sep 2026                                                        <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Input hash     </span>277226b740ac...                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">Instrument  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">  Session date  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">                    Close  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">  Label                      </span>         <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  ───────────────────────────────────────────────────────────────────────────────────────         <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0001      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-01  </span>     <span style="font-weight: bold">               123.4500</span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">&quot;&quot;                         </span>         <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0002      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-02  </span>     <span style="color: #e4c58b; text-decoration-color: #e4c58b">                 &lt;null&gt;</span>     <span style="color: #e4c58b; text-decoration-color: #e4c58b">&lt;null&gt;                     </span>         <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0003      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-03  </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">                 0.0000</span>     __NULL__                            <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0004      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-04  </span>     <span style="font-weight: bold">99,999,999,999,999.9999</span>     &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;         <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview only: 4 of 4 rows                                                                     </span>  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">╰──────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</pre></div>
+<details class="review-details"><summary>Plain / no-color fallback</summary>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">plain text &middot; 100 columns</span></div><pre>+--------------------------------------------------------------------------------------------------+
+|                                                                                                  |
+|   SAVED   niftyverse / Observation preview                        4 committed rows | CSV bundle  |
+|                                                                                                  |
+|--------------------------------------------------------------------------------------------------|
+|                                                                                                  |
+|  Source         Owned offline fixture                                                            |
+|  Preview dates  01 Sep 2026 - 04 Sep 2026                                                        |
+|  Input hash     277226b740ac...                                                                  |
+|                                                                                                  |
+|--------------------------------------------------------------------------------------------------|
+|                                                                                                  |
+|  Instrument     Session date                       Close     Label                               |
+|  ---------------------------------------------------------------------------------------         |
+|  0001           2026-09-01                      123.4500     &quot;&quot;                                  |
+|  0002           2026-09-02                        &lt;null&gt;     &lt;null&gt;                              |
+|  0003           2026-09-03                        0.0000     __NULL__                            |
+|  0004           2026-09-04       99,999,999,999,999.9999     &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;         |
+|                                                                                                  |
+|  Preview only: 4 of 4 rows                                                                       |
+|                                                                                                  |
++--------------------------------------------------------------------------------------------------+
+</pre></div>
+</details>
+<details class="review-details"><summary>60-column layout</summary>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">niftyverse &middot; 60 columns</span></div><pre><span style="color: #487271; text-decoration-color: #487271">╭──────────────────────────────────────────────────────────╮</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #111b24; text-decoration-color: #111b24; background-color: #94c8a8; font-weight: bold"> SAVED </span><span style="font-weight: bold">  niftyverse / Observation preview</span>               <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  4 committed rows<span style="color: #8b9dac; text-decoration-color: #8b9dac"> · </span><span style="color: #7fc9be; text-decoration-color: #7fc9be">CSV bundle</span>                           <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Source         </span>Owned offline fixture                    <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview dates  </span>01 Sep 2026 → 04 Sep 2026                <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Input hash     </span>277226b740ac...                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview only: 0 of 4 rows | Widen to 90+ columns      </span>  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                          <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">╰──────────────────────────────────────────────────────────╯</span>
+</pre></div>
+<details class="review-details"><summary>Plain / no-color fallback</summary>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">plain text &middot; 60 columns</span></div><pre>+----------------------------------------------------------+
+|                                                          |
+|   SAVED   niftyverse / Observation preview               |
+|  4 committed rows | CSV bundle                           |
+|                                                          |
+|----------------------------------------------------------|
+|                                                          |
+|  Source         Owned offline fixture                    |
+|  Preview dates  01 Sep 2026 - 04 Sep 2026                |
+|  Input hash     277226b740ac...                          |
+|                                                          |
+|----------------------------------------------------------|
+|                                                          |
+|  Preview only: 0 of 4 rows | Widen to 90+ columns        |
+|                                                          |
++----------------------------------------------------------+
+</pre></div>
+</details>
+</details>
+<details class="review-details"><summary>160-column layout</summary>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">niftyverse &middot; 160 columns</span></div><pre><span style="color: #487271; text-decoration-color: #487271">╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #111b24; text-decoration-color: #111b24; background-color: #94c8a8; font-weight: bold"> SAVED </span><span style="font-weight: bold">  niftyverse / Observation preview</span>                                                                                    4 committed rows<span style="color: #8b9dac; text-decoration-color: #8b9dac"> · </span><span style="color: #7fc9be; text-decoration-color: #7fc9be">CSV bundle</span>  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Source         </span>Owned offline fixture                                                                                                                        <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview dates  </span>01 Sep 2026 → 04 Sep 2026                                                                                                                    <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Input hash     </span>277226b740ac...                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">├──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">Instrument  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">  Session date  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">                    Close  </span> <span style="color: #aeebe0; text-decoration-color: #aeebe0; font-weight: bold">  Label                      </span>                                                                     <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  ───────────────────────────────────────────────────────────────────────────────────────                                                                     <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0001      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-01  </span>     <span style="font-weight: bold">               123.4500</span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">&quot;&quot;                         </span>                                                                     <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0002      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-02  </span>     <span style="color: #e4c58b; text-decoration-color: #e4c58b">                 &lt;null&gt;</span>     <span style="color: #e4c58b; text-decoration-color: #e4c58b">&lt;null&gt;                     </span>                                                                     <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0003      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-03  </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">                 0.0000</span>     __NULL__                                                                                        <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #7fc9be; text-decoration-color: #7fc9be">0004      </span>     <span style="color: #8b9dac; text-decoration-color: #8b9dac">2026-09-04  </span>     <span style="font-weight: bold">99,999,999,999,999.9999</span>     &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;                                                                     <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>  <span style="color: #8b9dac; text-decoration-color: #8b9dac">Preview only: 4 of 4 rows                                                                                                                                 </span>  <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">│</span>                                                                                                                                                              <span style="color: #487271; text-decoration-color: #487271">│</span>
+<span style="color: #487271; text-decoration-color: #487271">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯</span>
+</pre></div>
+<details class="review-details"><summary>Plain / no-color fallback</summary>
+<div class="terminal-window"><div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">plain text &middot; 160 columns</span></div><pre>+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                                                                                                                              |
+|   SAVED   niftyverse / Observation preview                                                                                    4 committed rows | CSV bundle  |
+|                                                                                                                                                              |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                                                                                                                                                              |
+|  Source         Owned offline fixture                                                                                                                        |
+|  Preview dates  01 Sep 2026 - 04 Sep 2026                                                                                                                    |
+|  Input hash     277226b740ac...                                                                                                                              |
+|                                                                                                                                                              |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                                                                                                                                                              |
+|  Instrument     Session date                       Close     Label                                                                                           |
+|  ---------------------------------------------------------------------------------------                                                                     |
+|  0001           2026-09-01                      123.4500     &quot;&quot;                                                                                              |
+|  0002           2026-09-02                        &lt;null&gt;     &lt;null&gt;                                                                                          |
+|  0003           2026-09-03                        0.0000     __NULL__                                                                                        |
+|  0004           2026-09-04       99,999,999,999,999.9999     &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;                                                                     |
+|                                                                                                                                                              |
+|  Preview only: 4 of 4 rows                                                                                                                                   |
+|                                                                                                                                                              |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+</pre></div>
+</details>
+</details>
+</section><footer class="review-footer">Owned offline fixture &middot; Actual saved result &middot; Phase 01 review</footer></main></body></html>

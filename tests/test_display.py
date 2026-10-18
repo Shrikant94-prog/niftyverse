@@ -1,6 +1,7 @@
 """Bounded representations are pure consumers of the prepared snapshot."""
 
 import dataclasses
+import io
 import json
 from datetime import date
 from decimal import Decimal
@@ -10,6 +11,7 @@ import duckdb
 import polars as pl
 import pytest
 from click.testing import CliRunner
+from rich.console import Console
 from rich.text import Text
 
 from niftyverse import SliceResult, extract_fixture
@@ -33,6 +35,8 @@ def test_snapshot_display_without_io(tmp_path: Path, monkeypatch: pytest.MonkeyP
     monkeypatch.setattr(pl.DataFrame, "to_arrow", denied)
     monkeypatch.setattr(pl.DataFrame, "clone", denied)
     monkeypatch.setattr(pl.LazyFrame, "collect", denied)
+    console = Console(file=io.StringIO(), width=100, height=25, color_system=None)
+    console.print(result)
     html = result._repr_html_()
     assert "&lt;script&gt;" in html
     assert "<script>" not in html
@@ -157,3 +161,98 @@ def test_explicit_terminal_capability_is_reproducible(
     assert "36m" in colored
     assert len(Text.from_ansi(colored).plain.splitlines()[0]) == 100
     assert "\x1b" not in terminal_summary(result, width=100, capable=False)
+
+
+@pytest.mark.parametrize("legacy_windows", [False, True])
+def test_rich_protocol_respects_no_color_and_plain_encoding(
+    tmp_path: Path,
+    legacy_windows: bool,
+) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    for width in (20, 60, 100, 160):
+        stream = io.StringIO()
+        console = Console(
+            file=stream,
+            width=width,
+            height=25,
+            force_terminal=True,
+            color_system="standard",
+            no_color=True,
+            legacy_windows=legacy_windows,
+        )
+        console.print(result)
+        plain = stream.getvalue()
+        assert "\x1b" not in plain and plain.isascii()
+        assert all(len(line) <= width for line in plain.splitlines())
+        if not legacy_windows:
+            assert all(len(line) == width for line in plain.splitlines())
+        assert "fixture" in plain or width == 20  # Smallest layout wraps words.
+
+
+@pytest.mark.parametrize("width", [60, 100])
+def test_rich_protocol_card_zones_and_responsive_preview(tmp_path: Path, width: int) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    stream = io.StringIO()
+    console = Console(
+        file=stream,
+        width=width,
+        height=25,
+        force_terminal=True,
+        color_system="standard",
+        no_color=False,
+        legacy_windows=False,
+    )
+    console.print(result)
+    rendered = stream.getvalue()
+    assert rendered == terminal_summary(result, width=width, capable=True)
+    lines = Text.from_ansi(rendered).plain.splitlines()
+    assert lines[0].startswith("╭") and lines[-1].startswith("╰")
+    assert sum(line.startswith("├") and line.endswith("┤") for line in lines) == 2
+    assert all(len(line) == width for line in lines)
+    assert "4 committed rows" in rendered and "CSV bundle" in rendered
+    assert "Source" in rendered and "Preview dates" in rendered and "Input hash" in rendered
+    assert ("Instrument" in rendered) == (width == 100)
+    assert ("99,999,999,999,999.9999" in rendered) == (width == 100)
+    assert f"Preview only: {4 if width == 100 else 0} of 4 rows" in rendered
+
+
+def test_shared_value_semantics_and_literal_markup(tmp_path: Path) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    rows = (
+        FixtureRow("0001", date(2026, 9, 1), None, None),
+        FixtureRow("0002", date(2026, 9, 2), Decimal("0.0000"), ""),
+        FixtureRow("0003", date(2026, 9, 3), Decimal("99999999999.9999"), "__NULL__"),
+        FixtureRow("0004", date(2026, 9, 4), Decimal("123.4500"), "<script>[red]x[/red]</script>"),
+    )
+    result = dataclasses.replace(result, preview_rows=rows)
+    output = terminal_summary(result, width=100, capable=True)
+    styled = Text.from_ansi(output)
+    assert "<null>" in styled.plain and '""' in styled.plain and "__NULL__" in styled.plain
+    assert "<script>[red]x[/red]</script>" in styled.plain
+    assert "99,999,999,999.9999" in styled.plain
+    console = Console(color_system="standard")
+    zero = styled.get_style_at_offset(console, styled.plain.index("0.0000"))
+    nonzero = styled.get_style_at_offset(console, styled.plain.index("123.4500"))
+    assert zero.color is not None and zero.color.number == 8  # ANSI muted slate
+    assert nonzero != zero
+    html = result._repr_html_()
+    assert '<span class="nv-null" aria-label="Null value">&lt;null&gt;</span>' in html
+    assert '<span class="nv-empty" aria-label="Empty text">&quot;&quot; (empty)</span>' in html
+    assert '<td class="nv-number nv-zero">0.0000</td>' in html
+    assert "__NULL__</td>" in html
+    assert "&lt;script&gt;[red]x[/red]&lt;/script&gt;" in html and "<script>" not in html
+    assert "99,999,999,999.9999" in html
+
+
+def test_notebook_dashboard_is_scoped_and_self_contained(tmp_path: Path) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    html = result._repr_html_()
+    assert "max-width:780px" in html and "padding:18px 28px" in html
+    assert "tabular-nums slashed-zero" in html
+    assert "grid-template-columns:repeat(4" in html
+    assert "Geist Mono" in html and "JetBrains Mono" in html and "Inter" in html
+    assert html.count("class='nv-dtype'") == 4
+    assert "Input hash" in html and result.raw_sha256[:12] in html
+    assert "Exact decimals &middot; Nulls preserved" in html
+    assert "<details" not in html
+    assert "<script" not in html and "@import" not in html and "https://" not in html

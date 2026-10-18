@@ -5,16 +5,16 @@
 ## Active work
 
 - **Phase:** 01 - Package and offline vertical slice; authorized only through PH-01-GATE.
-- **Status:** active and incomplete; notebook/layout accepted. Owner requested stronger terminal headers and a cohesive palette; this revision is implemented, checked and ready for review. CI/macOS verification and final remote delivery remain; PH-01-GATE is open.
+- **Status:** active and incomplete; owner requested a new shared research display. Three-zone terminal and four-zone notebook cards are implemented, checked and ready for review. CI/macOS verification and final remote delivery remain; PH-01-GATE is open.
 - **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
-- **Current checkpoint:** NV-01-03 - stronger terminal hierarchy/palette verified; final appearance review pending.
-- **Next action:** owner reviews `docs/evidence/artifacts/phase01-terminal-hierarchy/review.html`. Then run authorized GitHub CI/macOS checks, repair actual failures and push final Phase 01 completion when verified. Do not start Phase 02.
+- **Current checkpoint:** NV-01-03 - shared Rich/notebook display verified; revised appearance review pending.
+- **Next action:** owner reviews `docs/evidence/artifacts/phase01-research-card/review.html`. Then run authorized GitHub CI/macOS checks, repair actual failures and push final Phase 01 completion when verified. Do not start Phase 02.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
 2. [Phase 01 gate](docs/phases/01.md#gate), [NV-01-03](docs/phases/01.md#nv-01-03), and [NV-01-01 verification](docs/phases/01.md#nv-01-01) for pending platform checks.
-3. [Terminal hierarchy observations](docs/evidence/01-20261018-terminal-hierarchy.md) and `docs/evidence/artifacts/phase01-terminal-hierarchy/review.html` (current appearance review). Consult [previous colors](docs/evidence/01-20261018-terminal-colors.md), [preview polish](docs/evidence/01-20261018-preview-polish.md), [prior integration](docs/evidence/01-20261018-integration.md), [package](docs/evidence/01-20261018-package.md) or [slice evidence](docs/evidence/01-20261018-slice.md) only for an affected check.
+3. [Research display observations](docs/evidence/01-20261018-research-card.md) and `docs/evidence/artifacts/phase01-research-card/review.html` (current appearance review). Consult [previous hierarchy](docs/evidence/01-20261018-terminal-hierarchy.md), [prior integration](docs/evidence/01-20261018-integration.md), [package](docs/evidence/01-20261018-package.md) or [slice evidence](docs/evidence/01-20261018-slice.md) only for an affected check.
 4. For actual display repair only: [static display contract](docs/specs/experience.md#s15-1), [terminal rules](docs/specs/experience.md#s14-3), [ADR](docs/decisions/0001-phase01-api.md). For CI repair: [platform contract](docs/specs/verification.md#s16-3).
 
 ## Verified evidence and acceptance mapping
@@ -27,18 +27,18 @@ Phase 00 prerequisite: baseline `14fdf2c`, completion `a41f5a5`, retained [resum
 | NV-01-01-AC2/AC4 | Frozen minimal imports, separate Yahoo lock/consumer, isolated optional stacks and unselected filings candidate checks | Passed Windows core/Yahoo/notebook/pandas/filings and Yahoo consumer lanes; actual optional APIs exercised; candidate installs/imports pass without parser selection. |
 | NV-01-01-AC3 / verification design | Exact environment/lock, strict checks and declared platform matrix | Evidence recorded; Windows/Linux pass. Required macOS smoke and hosted CI unrun. Checkpoint not fully closed. |
 | NV-01-02-AC1 through AC4 | Independent expected typed rows through msgspec/Arrow/DuckDB/Polars and direct CSV; invalid/mixed batches cause no sink effects | Verified, including exact decimals/nulls/zero/text/IDs, immutability, duplicate/order boundaries, original destination rows/schema/bytes and no DB store in direct mode. |
-| NV-01-03-AC1/AC2 | Bounded escaped preview and honest committed event; no render I/O/full materialization; plain fallback | Current header/palette revision: 35 Windows tests, lint/types and offline browser inspection pass; notebook/plain/ANSI-stripped contents unchanged. Prior wheel/Linux evidence retained. |
-| NV-01-03-AC3 / PH-01-GATE | Type/naming ADR, captures, owner visual feedback, clean wheel integrated technologies and complete platform checks | Notebook/layout accepted; final terminal-color feedback and macOS/hosted CI pending. Gate unverified. |
+| NV-01-03-AC1/AC2 | Bounded escaped previews, Rich protocol and honest committed event; no render I/O/full materialization; plain fallback | New dashboard/card revision: 41 Windows/Linux tests, lint/types, offline light/dark/narrow browser checks, fresh core wheels on both platforms and Windows notebook-extra wheel pass. |
+| NV-01-03-AC3 / PH-01-GATE | Type/naming ADR, captures, owner visual feedback, clean wheel integrated technologies and complete platform checks | Revised notebook/terminal design awaits owner review; macOS/hosted CI pending. Gate unverified. |
 
-Earlier clean-source documentation snapshot passed with matching static hashes/IDs/links; current preview record adds one project Markdown document. Historical source/checker hashes are unchanged.
+Current clean-source documentation check passes (59 project Markdown files) with matching static hashes/IDs/links. Historical source/checker hashes are unchanged.
 
-Latest palette revision: 35 Windows tests, format/lint/strict mypy pass. Previous source `a597727` also passed 35 Linux tests and fresh wheels: Windows SHA-256 `aa98ef4ba10cedf15b2cfd64f4846f478da5852a2f11258471e009e74a2b2551`, Linux `197ec62f84754524d62e4fb4f6f3abdd48662090e64d0e9113090660a147dc85`. Lock SHA-256 remains `569bbd9a2d4daea3d86f55690014f8cb965aff95ac3eddd0303b453ab0672724`. Current platform/wheel CI is next after review; no market-source or dataset readiness is claimed.
+Latest display revision: 41 Windows/Linux tests and format/lint/strict mypy pass. Fresh wheel SHA-256: Windows core/notebook `885e20fc7c965cf28986f2e515f1a682d361092eb38b539d7425441dc381b7e7`, Linux core `76ddcea57e72813e592fb0a809c89d7ae3a3175895ae7b0b6b6a42200cbab9cc`. Lock SHA-256 remains `569bbd9a2d4daea3d86f55690014f8cb965aff95ac3eddd0303b453ab0672724`. Hosted platform/wheel CI is next after review; no market-source or dataset readiness is claimed.
 
 ## Blockers and external inputs
 
-- Owner accepted notebook/layout and requested stronger headers with a cohesive palette. The revised hierarchy is checked and visually inspected; final feedback remains pending. Notebook MIME and all plain terminal captures are unchanged.
+- Owner requested a new shared display after the earlier visual iterations. Revised notebook/terminal cards are checked and visually inspected; final feedback remains pending. Fresh captures supersede earlier appearance acceptance.
 - GitHub repository supplied: `https://github.com/Shrikant94-prog/niftyverse.git`. Owner authorizes local/remote Phase 01 delivery after preview review. Access/empty-repo status verified; origin configured. No push yet; required macOS smoke and hosted CI have not run.
-- Former appearance blocker now has an actionable owner change request. Work resumes within Phase 01; prior tests/commits are retained and affected display evidence will have a new historical record.
+- Display work remains within Phase 01; prior tests/commits and historical captures are retained.
 - Historical NIFTY 500 input remains unbundled; later dataset-readiness limit only.
 
 ## Phase ledger
@@ -46,7 +46,7 @@ Latest palette revision: 35 Windows tests, format/lint/strict mypy pass. Previou
 | Phase | State | Evidence |
 |---|---|---|
 | 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
-| 01 | active - terminal hierarchy awaiting review | [Terminal hierarchy](docs/evidence/01-20261018-terminal-hierarchy.md) |
+| 01 | active - revised research display awaiting review | [Research display](docs/evidence/01-20261018-research-card.md) |
 | 02 | not started | - |
 | 03 | not started | - |
 | 04 | not started | - |

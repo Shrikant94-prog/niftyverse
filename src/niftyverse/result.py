@@ -1,10 +1,14 @@
 """An eager typed result with an immutable display snapshot."""
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 import polars as pl
 
 from niftyverse.core import BuildEvent, FixtureRow
+
+if TYPE_CHECKING:
+    from rich.console import Console, ConsoleOptions, RenderResult
 
 
 @dataclass(frozen=True, slots=True, repr=False)
@@ -38,6 +42,17 @@ class SliceResult:
         from niftyverse.display import render_html
 
         return render_html(self)
+
+    def __rich_console__(self, console: Console, options: ConsoleOptions) -> RenderResult:
+        from niftyverse.display import render_terminal
+
+        capable = (
+            console.is_terminal
+            and console.color_system is not None
+            and not console.no_color
+            and not options.legacy_windows
+        )
+        yield render_terminal(self, width=options.max_width, capable=capable)
 
     def _repr_mimebundle_(
         self,

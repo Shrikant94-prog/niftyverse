@@ -2,6 +2,7 @@
 
 import importlib.metadata as metadata
 import importlib.util
+import io
 import json
 import socket
 import subprocess
@@ -107,6 +108,11 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
         assert converted["close"].tolist() == [Decimal("123.4500"), None, Decimal("0.0000")]
     niftyverse.SliceResult.to_polars = denied
     assert "3 committed rows" in direct._repr_html_()
+    from rich.console import Console
+
+    stream = io.StringIO()
+    Console(file=stream, width=100, height=25, color_system=None).print(direct)
+    assert "Preview only: 3 of 3 rows" in stream.getvalue()
     if lane == "notebook":
         from IPython.core.formatters import DisplayFormatter
 
