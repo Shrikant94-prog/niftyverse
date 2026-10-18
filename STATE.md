@@ -5,7 +5,7 @@
 ## Active work
 
 - **Phase:** 01 - Package and offline vertical slice; authorized only through PH-01-GATE.
-- **Status:** incomplete; implementation and local Windows/Linux checks pass. Owner appearance feedback, macOS installation smoke and hosted CI are unverified; PH-01-GATE remains open.
+- **Status:** blocked and incomplete; implementation and local Windows/Linux checks pass. Owner appearance feedback, macOS installation smoke and hosted CI are unverified; PH-01-GATE remains open.
 - **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
 - **Current checkpoint:** NV-01-03 software verified; visual acceptance and integrated platform evidence pending.
 - **Next action:** obtain feedback on the actual preview and execute the configured platform CI/macOS smoke in an authorized environment. Repair demonstrated failures if any, then close Phase 01 only when all required checks pass. Do not start Phase 02.
@@ -38,7 +38,7 @@ Current tests: 33 pass on Windows and Linux; format/lint/strict mypy pass. Lock 
 
 - Owner appearance feedback was requested against the actual linked preview and remains pending. Do not infer acceptance from elapsed time or artifact existence.
 - No macOS runtime is available here. Required installation smoke remains unrun. Configured GitHub Actions has not executed; `git remote` is empty and push/publication is not authorized. Local Linux WSL is actual behavior evidence, not hosted CI.
-- No remaining demonstrated implementation failure or live verification process. Goal remains active at this first external-wait observation; no Phase 01 completion claim.
+- Third consecutive goal-turn observation of the same external blockers: no owner appearance reply, no new platform evidence, no Git remote, and no live verification process. The preceding continuation made no progress; this audit reconfirmed clean source at `ce52e2e` and unchanged evidence. No independent required implementation remains. Goal blocked pending external input; Phase 01 and its gate remain incomplete.
 - Historical NIFTY 500 input remains unbundled; later dataset-readiness limit only.
 
 ## Phase ledger
@@ -46,7 +46,7 @@ Current tests: 33 pass on Windows and Linux; format/lint/strict mypy pass. Lock 
 | Phase | State | Evidence |
 |---|---|---|
 | 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
-| 01 | incomplete - external checks pending | [Integration evidence](docs/evidence/01-20261018-integration.md) |
+| 01 | blocked - external checks pending | [Integration evidence](docs/evidence/01-20261018-integration.md) |
 | 02 | not started | - |
 | 03 | not started | - |
 | 04 | not started | - |
