@@ -1,0 +1,107 @@
+{
+  "version": "NSE-IndAS-2020-03-31+arelle-release-2.46.1-resources",
+  "entrypoint": "https://taxonomy.local.invalid/2020/Ind-AS_entry_point_2020-03-31.xsd",
+  "entry_refs": [
+    "Ind-AS_entry_point_2020-03-31.xsd"
+  ],
+  "aliases": {
+    "https://taxonomy.local.invalid/2020/xbrl-instance-2003-12-31.xsd": "http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd"
+  },
+  "resources": {
+    "http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd",
+      "sha256": "5dbad94cecf42918b976449a8e1cb800d57e96442a9d0f5c00ca77e4da831827"
+    },
+    "http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd",
+      "sha256": "f906cd30bc47a81bd1c97e24447f4917b21eb3d8a8b4fc520129ce2534ac5bca"
+    },
+    "http://www.xbrl.org/2003/xl-2003-12-31.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2003/xl-2003-12-31.xsd",
+      "sha256": "e28b0965d34f4879833b433a62d0d1e86e8b1f22e6b7642bab861983f5bb5818"
+    },
+    "http://www.xbrl.org/2003/xlink-2003-12-31.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2003/xlink-2003-12-31.xsd",
+      "sha256": "5ffa8cb747ccd11e0d6420cf5668b60e3b7a64e20915d0e1774e5559d3343971"
+    },
+    "http://www.xbrl.org/2005/xbrldt-2005.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2005/xbrldt-2005.xsd",
+      "sha256": "caf850f08d74c087c7946e6ea6d9fb5c0e9f8edf63bf639ccb9143e77e3390c7"
+    },
+    "http://www.xbrl.org/2006/ref-2006-02-27.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/2006/ref-2006-02-27.xsd",
+      "sha256": "fae0144a41edf741c3b74c866988f64d24714dba4ca822258dea8b490b7904b7"
+    },
+    "http://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd",
+      "sha256": "8d932e134a34b692d917919b1bf38c3106cf54b3f085f02850a51eb8db8f347b"
+    },
+    "http://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/dtr/type/numeric-2009-12-16.xsd",
+      "sha256": "5d5a951356396ca5cdedae38def3a7c243ac49394b77670e6b76e00a3a9b966e"
+    },
+    "http://www.xbrl.org/lrr/role/negated-2009-12-16.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/lrr/role/negated-2009-12-16.xsd",
+      "sha256": "b6b3fdd3bb93dad157f13586b5b9f14998b4940875c78af3f29d28116cc0092a"
+    },
+    "http://www.xbrl.org/lrr/role/net-2009-12-16.xsd": {
+      "archive": "standards.zip",
+      "member": "http/www.xbrl.org/lrr/role/net-2009-12-16.xsd",
+      "sha256": "de7db88c29983dab5668dd437fdf659f9b66c1235e1e0240b79573305982a446"
+    },
+    "https://taxonomy.local.invalid/2020/Calculation/in-bse-fin-cal-2020-03-31.xml": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/Calculation/in-bse-fin-cal-2020-03-31.xml",
+      "sha256": "bfc191eafa3e16172911dcfdce189cacf6898307bbabfa2100879dc8fce57988"
+    },
+    "https://taxonomy.local.invalid/2020/Definition/in-bse-fin-def-2020-03-31.xml": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/Definition/in-bse-fin-def-2020-03-31.xml",
+      "sha256": "037b31505117eaba7c2dcf288ef30b01ba40b0e009717f296cd72419005ea344"
+    },
+    "https://taxonomy.local.invalid/2020/Ind-AS_entry_point_2020-03-31.xsd": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/Ind-AS_entry_point_2020-03-31.xsd",
+      "sha256": "1c1499fe45569cb5184cc1440d73ad9cd5e98fa3d531cee5b999056f64250b09"
+    },
+    "https://taxonomy.local.invalid/2020/Presentation/in-bse-fin-pre-2020-03-31.xml": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/Presentation/in-bse-fin-pre-2020-03-31.xml",
+      "sha256": "0b74750aeba076660ccc1bc299ca98a06a232a5eb6a1111d30899dc8939b40c7"
+    },
+    "https://taxonomy.local.invalid/2020/in-bse-fin-2020-03-31.xsd": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/in-bse-fin-2020-03-31.xsd",
+      "sha256": "7fc28585286405a87171b6d2c8741bb1e931669869a306fc396fae1c24488ee6"
+    },
+    "https://taxonomy.local.invalid/2020/in-bse-fin-label-2020-03-31.xml": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/in-bse-fin-label-2020-03-31.xml",
+      "sha256": "f65b687e5f3d2a1d6f0c18a41b10dadea6114ae779ff4d8e7c67f506d09134d6"
+    },
+    "https://taxonomy.local.invalid/2020/in-bse-fin-ref-2020-03-31.xml": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/in-bse-fin-ref-2020-03-31.xml",
+      "sha256": "155a5d827bb6369c79a4ad129cbb73b920bc859720587ff2f8017b835be75620"
+    },
+    "https://taxonomy.local.invalid/2020/in-bse-fin-roles-2020-03-31.xsd": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/in-bse-fin-roles-2020-03-31.xsd",
+      "sha256": "0c5e90086ce8af138a1c32e5850be87b06e3db643070ae2eb5c85febbf0bfc3d"
+    },
+    "https://taxonomy.local.invalid/2020/in-bse-fin-types-2020-03-31.xsd": {
+      "archive": "nse2020.zip",
+      "member": "Financial Results_Ind AS Taxonomy/Ind AS Taxonomy 2020-03-31/in-bse-fin-types-2020-03-31.xsd",
+      "sha256": "21790bceabd77f18e7d76edcfd3e7bb1d827f30653c95f8b70448a28f855e447"
+    }
+  }
+}

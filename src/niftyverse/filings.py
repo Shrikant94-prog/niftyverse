@@ -1,8 +1,8 @@
-"""Bounded source assertions for specifically evidenced rendered financial HTML.
+"""Bounded dispatch and source assertions for evidenced financial filing families.
 
 This module performs no economic mapping, taxonomy downloads or publication.
-Structured XML/inline/older legacy families remain explicit failures until their
-real source/taxonomy contracts can be verified; no summary replaces missing facts.
+XML decoding requires an explicit closed local taxonomy. Unsupported versions
+and genuine inline inputs fail explicitly; no summary replaces missing facts.
 """
 
 import asyncio
@@ -13,7 +13,7 @@ import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, overload
 
 # Exact real specimens contain known malformed attributes/optional closures.
 # Do not generalize their recovery profile to newly acquired broken documents.
@@ -21,11 +21,14 @@ _RECOVERED_SPECIMENS = frozenset(
     {
         "2fdffa2d19d0b275b0d3dae9b95ecf515a90c29ad0e84f7fe3134213579e6747",
         "0a22cb0aad493e026a0775fb889341ccbd5f61be355ef3ad194d46592889c629",
+        "baa0c6c7a6c59ded283c4f0bd118d8a8f9d487048e4c285d2baaaae6834d2556",
     }
 )
 
 if TYPE_CHECKING:
     from lxml import etree
+
+    from niftyverse.filing_xml import TaxonomyPackage, XmlAssertions
 
 
 class FilingFailure(ValueError):
@@ -62,6 +65,13 @@ class FilingLimits:
     max_text: int = 1024 * 1024
     max_total_text: int = 16 * 1024 * 1024
     max_span: int = 256
+    max_facts: int = 100000
+    max_contexts: int = 10000
+    max_resources: int = 32
+    max_taxonomy_bytes: int = 32 * 1024 * 1024
+    max_attributes: int = 64
+    max_namespaces: int = 64
+    max_name_chars: int = 2048
     deadline: float = 30
 
     def __post_init__(self) -> None:
@@ -74,6 +84,13 @@ class FilingLimits:
             self.max_text,
             self.max_total_text,
             self.max_span,
+            self.max_facts,
+            self.max_contexts,
+            self.max_resources,
+            self.max_taxonomy_bytes,
+            self.max_attributes,
+            self.max_namespaces,
+            self.max_name_chars,
         ) <= 0 or (not math.isfinite(self.deadline) or self.deadline <= 0):
             raise ValueError("invalid filing limits")
 
@@ -98,7 +115,7 @@ class HtmlTable:
 
 @dataclass(frozen=True)
 class HtmlAssertions:
-    family: Literal["integrated_rendered_financial_html"]
+    family: Literal["integrated_rendered_financial_html", "legacy_financial_html"]
     source: str
     sha256: str
     metadata: tuple[tuple[str, str], ...]
@@ -119,13 +136,36 @@ def _span(value: str | None, limits: FilingLimits) -> int:
     return int(value)
 
 
+@overload
 async def decode_filing(
     body: bytes,
     *,
     source: str = "",
     limits: FilingLimits | None = None,
     clock: Callable[[], float] = time.monotonic,
-) -> HtmlAssertions:
+    taxonomy: None = None,
+) -> HtmlAssertions: ...
+
+
+@overload
+async def decode_filing(
+    body: bytes,
+    *,
+    taxonomy: TaxonomyPackage,
+    source: str = "",
+    limits: FilingLimits | None = None,
+    clock: Callable[[], float] = time.monotonic,
+) -> HtmlAssertions | XmlAssertions: ...
+
+
+async def decode_filing(
+    body: bytes,
+    *,
+    source: str = "",
+    limits: FilingLimits | None = None,
+    clock: Callable[[], float] = time.monotonic,
+    taxonomy: TaxonomyPackage | None = None,
+) -> HtmlAssertions | XmlAssertions:
     """Decode exact table/column contexts, captions, original values and locators.
 
     Native parser receives 4096-byte chunks with a cancellation/time checkpoint
@@ -174,6 +214,12 @@ async def decode_filing(
 
     # Root detection uses actual parsed XML, not URL, year or context names.
     is_html = bool(re.search(rb"<(?:[a-z0-9_-]+:)?html(?:\s|>)", lower[:4096]))
+    if not is_html and taxonomy is not None:
+        from niftyverse.filing_xml import decode_xml_filing
+
+        return await decode_xml_filing(
+            body, taxonomy, source=source, limits=limits, clock=clock, _expires=expires
+        )
     parser: etree.HTMLPullParser | etree.XMLPullParser
     if is_html:
         for tag in (b"table", b"tr", b"td", b"th"):
@@ -246,25 +292,32 @@ async def decode_filing(
     if not is_html or root.tag != "html":
         raise FilingFailure("unsupported_family")
     titles = root.findall(".//title")
-    if len(titles) != 1 or _text(titles[0]).strip() != "IndAS Details":
+    legacy = (
+        b"net sales/income from operation" in lower and b"consolidated / non-consolidated" in lower
+    )
+    if not legacy and (len(titles) != 1 or _text(titles[0]).strip() != "IndAS Details"):
         raise FilingFailure("unsupported_family")
     tables: list[HtmlTable] = []
     headings: list[str] = []
+    table_index = -1
     for element in root.iter():
         await checkpoint()
         if element.tag in {"h1", "h2", "h3", "caption"}:
             headings.append(" ".join(_text(element).split()))
         if element.tag != "table":
             continue
-        if len(tables) >= limits.max_tables:
+        table_index += 1
+        if table_index >= limits.max_tables:
             raise FilingFailure("table_limit")
-        if element.findall(".//table"):
+        if element.findall(".//table") and not legacy:
             raise FilingFailure("unsupported_nested_table")
         table_cells: list[HtmlCell] = []
         occupied: dict[tuple[int, int], bool] = {}
         rows = element.xpath("./tr | ./thead/tr | ./tbody/tr | ./tfoot/tr")
         for row_no, row in enumerate(rows):
             await checkpoint()
+            if legacy and row.findall(".//table"):
+                continue
             column = 0
             for cell in row:
                 if cell.tag not in {"td", "th"}:
@@ -294,15 +347,43 @@ async def decode_filing(
                         colspan,
                         raw,
                         " ".join(raw.split()),
-                        f"table[{len(tables)}]/row[{row_no}]/column[{column}]",
+                        f"table[{table_index}]/row[{row_no}]/column[{column}]",
                         cell.tag == "th",
                     )
                 )
                 column += colspan
-        tables.append(HtmlTable(tuple(headings), tuple(table_cells)))
+        if table_cells or not legacy:
+            tables.append(HtmlTable(tuple(headings), tuple(table_cells)))
         headings.clear()
     if not tables:
         raise FilingFailure("unsupported_family")
+    if legacy:
+        legacy_rows: dict[int, list[str]] = {}
+        for cell in tables[0].cells:
+            legacy_rows.setdefault(cell.row, []).append(cell.text)
+        legacy_metadata = tuple(
+            (values[index], values[index + 1])
+            for values in legacy_rows.values()
+            if len(values) == 4
+            for index in (0, 2)
+        )
+        expected = {
+            "Symbol",
+            "Company",
+            "Audited / Un-Audited",
+            "Period",
+            "Consolidated / Non-Consolidated",
+            "Period Ended",
+        }
+        cell_texts = {c.text for t in tables[1:] for c in t.cells}
+        if (
+            not expected <= {k for k, v in legacy_metadata if v}
+            or not {"Amount(Rs. in lakhs)", "Net Sales/Income from Operation"} <= cell_texts
+        ):
+            raise FilingFailure("unsupported_family")
+        return HtmlAssertions(
+            "legacy_financial_html", source, digest, legacy_metadata, tuple(tables), diagnostics
+        )
     metadata_rows: dict[int, list[str]] = {}
     for cell in tables[0].cells:
         metadata_rows.setdefault(cell.row, []).append(cell.text)

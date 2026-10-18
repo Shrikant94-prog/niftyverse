@@ -9,6 +9,7 @@ import socket
 import subprocess
 import sys
 import tempfile
+import zipfile
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -35,6 +36,7 @@ else:
     raise AssertionError("child process guard failed")
 
 import niftyverse  # noqa: E402
+import niftyverse.filing_xml  # noqa: E402
 import niftyverse.filings  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
 import niftyverse.recon  # noqa: E402
@@ -91,6 +93,28 @@ elif lane == "filings":
         assert any(
             cell.text == "3,11,85,000.00" for table in assertions.tables for cell in table.cells
         )
+        from niftyverse.filing_xml import TaxonomyPackage, TaxonomyResource
+
+        folder = specimen.parent / "taxonomy2020"
+        manifest = json.loads((folder / "manifest.json").read_text())
+        resources = []
+        for uri, record in manifest["resources"].items():
+            with zipfile.ZipFile(folder / record["archive"]) as archive:
+                resources.append(
+                    TaxonomyResource(uri, archive.read(record["member"]), record["sha256"])
+                )
+        taxonomy = TaxonomyPackage(
+            manifest["version"],
+            manifest["entrypoint"],
+            tuple(manifest["entry_refs"]),
+            tuple(resources),
+            tuple(manifest["aliases"].items()),
+        )
+        xml = loop.run_until_complete(
+            decode_filing((specimen.parent / "older-indas.xml").read_bytes(), taxonomy=taxonomy)
+        )
+        assert xml.family == "older_financial_xbrl"
+        assert any(fact.value == "1282600000000.00" for fact in xml.facts)
     finally:
         loop.close()
 

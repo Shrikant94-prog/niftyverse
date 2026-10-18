@@ -14,6 +14,7 @@ import stat
 import struct
 import zipfile
 import zlib
+from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import date
 from typing import Literal
@@ -132,10 +133,15 @@ def _parse(
     if b"\x00" in body:
         raise IngestionFailure("invalid_csv")
     text = body.decode("utf-8-sig", errors="strict")
-    lines = text.splitlines(keepends=True)
-    if any(len(line) > limits.max_row_chars for line in lines):
-        raise IngestionFailure("row_size_limit")
-    reader = csv.reader(lines, dialect="excel", strict=True)
+
+    def physical_lines() -> Iterator[str]:
+        with io.StringIO(text, newline="") as stream:
+            while line := stream.readline(limits.max_row_chars + 1):
+                if len(line) > limits.max_row_chars:
+                    raise IngestionFailure("row_size_limit")
+                yield line
+
+    reader = csv.reader(physical_lines(), dialect="excel", strict=True)
     try:
         raw_headers = next(reader)
     except StopIteration:
@@ -179,6 +185,17 @@ def _parse(
         timestamp = values[indices["TIMESTAMP" if legacy else "TradDt"]]
         if _source_date(timestamp, legacy) != session:
             raise IngestionFailure("session_mismatch")
+        expiry_fields = (
+            ("EXPIRY_DT",)
+            if legacy and dataset == "fo"
+            else (("XpryDt", "FininstrmActlXpryDt") if not legacy else ())
+        )
+        for field in expiry_fields:
+            value = values[indices[field]]
+            if value:
+                _source_date(value, legacy)
+            elif dataset == "fo":
+                raise IngestionFailure("missing_expiry")
         if not legacy:
             if values[indices["Sgmt"]] != dataset.upper() or values[indices["Src"]] != "NSE":
                 raise IngestionFailure("source_mismatch")

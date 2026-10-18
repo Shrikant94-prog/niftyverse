@@ -172,3 +172,16 @@ def test_expansion_rejected_before_allocation() -> None:
         assert peak < 1_000_000
     finally:
         tracemalloc.stop()
+
+
+def test_ambiguous_expiry_rejects_entire_derivative_report() -> None:
+    body = (Path(__file__).parent / "fixtures/reports/fo-legacy.csv").read_bytes()
+    body = body.replace(b"29-Sep-2016", b"09/10/2016")
+    with pytest.raises(IngestionFailure, match="invalid_date"):
+        read_report(archive(("fo.csv", body)), dataset="fo", session=date(2016, 9, 1))
+
+
+def test_csv_control_text_is_preserved_without_creating_records() -> None:
+    body = CM.rstrip(b"\n") + b"Note\n" + ROW.rstrip(b"\n") + b"source\vtext\n"
+    report = read_report(archive(("cm.csv", body)), dataset="cm", session=date(2016, 9, 1))
+    assert len(report.rows) == 1 and report.rows[0].values[-1] == "source\vtext"

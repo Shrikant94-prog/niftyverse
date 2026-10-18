@@ -1,2 +1,4 @@
 # Source specimens have byte-exact identities across platforms.
 tests/fixtures/filings/*.html binary
+tests/fixtures/filings/*.xml binary
+tests/fixtures/filings/taxonomy2020/ARELLE-LICENSE.md binary

@@ -2,7 +2,7 @@
   "version": 1,
   "complete": false,
   "purpose": "Finite Phase 03 family/taxonomy observations, not decoder or dataset certification",
-  "request_policy": "5 exact official locators; one attempt each; no redirects; 8 MiB body cap; prior www NSE challenge circuit not retried",
+  "request_policy": "Seven exact NSE locator attempts: initial five, one explicit archive-only 32 MiB recapture, owner-provided legacy URL. One attempt per declared operation; no redirects/circuit bypass. Nine explicit standard-schema requests each time out. Arelle wheel separately retrieved through pip (internal request count not represented as one HTTP request).",
   "sets": [
     {
       "directory": "taxonomies",
@@ -153,6 +153,152 @@
           }
         ]
       }
+    },
+    {
+      "directory": "archive32",
+      "results": {
+        "budget": {
+          "max_requests": 1,
+          "max_bytes": 33554432,
+          "max_total_bytes": 33554432,
+          "deadline_seconds": 60,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 1,
+        "received_bytes": 8922025,
+        "results": [
+          {
+            "name": "taxonomy-archive-32m",
+            "url": "https://nsearchives.nseindia.com//web/mediaattachment/2026-07/Taxonomy_Archives_20260731164437.zip",
+            "scope": "One explicit archive-only 32 MiB bound within approved 128 MiB archive cap; inspect 2026 package, no recursive fetch",
+            "format": "zip",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:38:34.588384+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/zip",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 8922025,
+            "sha256": "b5fcb7e20e3bee034c58c45af8f19a3425d7a524938b5c09190a6651043ff182"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "legacy",
+      "results": {
+        "budget": {
+          "max_requests": 1,
+          "max_bytes": 8388608,
+          "max_total_bytes": 50331648,
+          "deadline_seconds": 45,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 1,
+        "received_bytes": 9031,
+        "results": [
+          {
+            "name": "legacy-reliance",
+            "url": "https://nsearchives.nseindia.com/archives/financial_results/financial_res_RELIANCE_71071.html",
+            "scope": "Owner-supplied official legacy RELIANCE filing locator; verify period/unit/table from content",
+            "format": "html",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:48:42.302843+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "text/html",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 9031,
+            "sha256": "baa0c6c7a6c59ded283c4f0bd118d8a8f9d487048e4c285d2baaaae6834d2556"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "standards",
+      "results": [
+        {
+          "url": "https://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/2005/xbrldt-2005.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/lrr/role/negated-2009-12-16.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/lrr/role/net-2009-12-16.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/2006/ref-2006-02-27.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/2003/xlink-2003-12-31.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        },
+        {
+          "url": "https://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd",
+          "complete": false,
+          "attempts": 1,
+          "outcome": "ConnectTimeout"
+        }
+      ]
+    }
+  ],
+  "closed_taxonomy": {
+    "version": "NSE-IndAS-2020-03-31+arelle-release-2.46.1-resources",
+    "resources": 19,
+    "bytes": 1601655,
+    "fixture_manifest": "tests/fixtures/filings/taxonomy2020/manifest.json",
+    "arelle_wheel_sha256": "87a5369913471afa02d6d464d48a04a20acc073cc1df1fdaaae14d8b7b5229d0"
+  },
+  "owner_inputs": [
+    {
+      "path": "Sample_Files/INDAS_117298_1348254_16012025082021.xml",
+      "bytes": 57587,
+      "sha256": "d3cd5194a894a02be9b6523d07c9b7c9311e7fc05f2d8e7aa52929bb9da04bcb"
+    },
+    {
+      "path": "Sample_Files/INDAS_37522_30151_27072018083745_WEB.xml",
+      "bytes": 37496,
+      "sha256": "0b4f87aee493fd0416e8ede3b8deb7f556ead6693b348425964daa3cf6c50648"
     }
   ]
 }

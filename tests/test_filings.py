@@ -158,3 +158,18 @@ def test_parser_python_allocation_bound(rendered: bytes) -> None:
         assert result.tables and peak < 16 * 1024 * 1024
     finally:
         tracemalloc.stop()
+
+
+def test_real_legacy_financial_html() -> None:
+    body = (Path(__file__).parent / "fixtures/filings/legacy-reliance.html").read_bytes()
+    result = _loop.run_until_complete(decode_filing(body, source="official-legacy"))
+    assert result.family == "legacy_financial_html" and result.complete is False
+    assert ("Period Ended", "31-Dec-2009") in result.metadata
+    assert ("Consolidated / Non-Consolidated", "Non-Consolidated") in result.metadata
+    assert len(result.tables) == 3  # layout wrappers do not duplicate their nested facts
+    cells = [c for t in result.tables for c in t.cells]
+    assert sum(c.text == "5685600.00" for c in cells) == 1
+    assert any(c.text == "Amount(Rs. in lakhs)" for c in cells)
+    assert any(c.text == "12.30" for c in cells)
+    assert any(c.text == "-" for c in cells)
+    assert any(c.locator.startswith("table[5]") for c in cells)

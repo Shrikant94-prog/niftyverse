@@ -182,19 +182,20 @@
     },
     {
       "id": "legacy_financial_html",
-      "status": "blocked",
-      "samples": [],
-      "reason": "older locator not available under closed catalogue circuit; no inherited sample adopted",
-      "next_action": "Obtain one official document and independently inspect exact table before registration."
+      "status": "experimental",
+      "samples": [
+        "phase03:legacy-reliance"
+      ],
+      "next_action": "Source-table assertions verified on exact owner-linked 2009 quarterly specimen; no continuous history or semantic mapper claim."
     },
     {
       "id": "older_financial_xbrl",
-      "status": "blocked",
+      "status": "experimental",
       "samples": [
         "phase03:older-indas"
       ],
-      "taxonomy": "Official NSE package confirms 2020-03-31 namespace; XBRL standard dependencies absent, closed package incomplete",
-      "next_action": "Close and hash all dependencies before decoding; see phase03-filing-observations.json and Phase 03 evidence."
+      "taxonomy": "2020-03-31 namespace, closed 19-resource local package; individual hashes and version pinned in test manifest. No economic mapper.",
+      "next_action": "Expand real held-out/2018/taxonomy-generation samples; 2018 owner input has 2017-named schemaRef and remains unsupported. Decoder evidence: 03-20261019-xml-legacy.md."
     },
     {
       "id": "integrated_financial_xbrl",
