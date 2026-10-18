@@ -1,0 +1,10 @@
++- niftyverse ---------------------------------------------+
+|                                                          |
+|  SAVED  Observation fixture                              |
+|  4 committed rows | CSV bundle                           |
+|                                                          |
+|  Source         Owned offline fixture                    |
+|  Preview dates  01 Sep 2026 - 04 Sep 2026                |
+|  Input          277226b74...                             |
+|                                                          |
++----------------------------------------------------------+

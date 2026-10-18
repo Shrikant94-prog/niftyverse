@@ -60,7 +60,7 @@ def _terminal_window(contents: str, label: str) -> str:
 
 
 def main() -> None:
-    output = ROOT / "docs/evidence/artifacts/phase01-polished"
+    output = ROOT / "docs/evidence/artifacts/phase01-terminal-colors"
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="niftyverse-preview-") as folder:
         result = extract_fixture(

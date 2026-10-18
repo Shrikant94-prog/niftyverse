@@ -75,7 +75,7 @@ def _table(result: SliceResult, config: PreviewConfig, *, capable: bool) -> Tabl
         box=None,
         padding=(0, 1),
         pad_edge=False,
-        header_style="dim" if capable else "",
+        header_style="dim cyan" if capable else "",
         expand=False,
     )
     table.add_column("Instrument", no_wrap=True, max_width=16)
@@ -83,10 +83,16 @@ def _table(result: SliceResult, config: PreviewConfig, *, capable: bool) -> Tabl
     table.add_column("Close", justify="right", no_wrap=True)
     table.add_column("Label", overflow="ellipsis", max_width=40)
     for cells in _rows(result, config):
+        styles = ("cyan", "bright_blue", "bold", "") if capable else ("",) * 4
         table.add_row(
             *[
-                Text(cell, style="dim" if capable and cell in {"<null>", '""'} else "")
-                for cell in cells
+                Text(
+                    cell,
+                    style=("yellow" if cell == "<null>" else "dim")
+                    if capable and cell in {"<null>", '""'}
+                    else styles[index],
+                )
+                for index, cell in enumerate(cells)
             ]
         )
     return table
@@ -224,14 +230,20 @@ def terminal_summary(result: SliceResult, *, width: int = 80, capable: bool = Fa
         highlight=False,
     )
     detail = Table.grid(padding=(0, 2))
-    detail.add_column(style="dim" if capable else "")
+    detail.add_column(style="dim cyan" if capable else "")
     detail.add_column()
     detail.add_row(Text("Source"), Text("Owned offline fixture"))
-    detail.add_row(Text("Preview dates"), Text(_dates(result)))
-    detail.add_row(Text("Input"), Text(_text(result.raw_sha256, 12)))
+    detail.add_row(
+        Text("Preview dates"), Text(_dates(result), style="bright_blue" if capable else "")
+    )
+    detail.add_row(
+        Text("Input"), Text(_text(result.raw_sha256, 12), style="dim" if capable else "")
+    )
+    counts = Text(f"{result.event.committed_rows} committed rows | ")
+    counts.append(_mode(result), style="cyan" if capable else "")
     contents: list[Text | Table] = [
         Text("SAVED  Observation fixture", style="bold green" if capable else ""),
-        Text(f"{result.event.committed_rows} committed rows | {_mode(result)}"),
+        counts,
         Text(""),
         detail,
     ]
