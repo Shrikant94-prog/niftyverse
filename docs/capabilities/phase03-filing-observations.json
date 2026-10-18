@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "complete": false,
+  "purpose": "Finite Phase 03 family/taxonomy observations, not decoder or dataset certification",
+  "request_policy": "5 exact official locators; one attempt each; no redirects; 8 MiB body cap; prior www NSE challenge circuit not retried",
+  "sets": [
+    {
+      "directory": "taxonomies",
+      "results": {
+        "budget": {
+          "max_requests": 2,
+          "max_bytes": 8388608,
+          "max_total_bytes": 50331648,
+          "deadline_seconds": 90,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 2,
+        "received_bytes": 441902,
+        "results": [
+          {
+            "name": "taxonomy-indas",
+            "url": "https://nsearchives.nseindia.com/web/sites/default/files/inline-files/Financial%20Results_Ind%20AS%20Taxonomy.zip",
+            "scope": "Official NSE published IndAS taxonomy; content/dependencies unverified",
+            "format": "zip",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:27:55.788045+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/zip",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 209120,
+            "sha256": "2760bdcda96c4ed472add9559a7001c215cd2a8aad9cb0db195f69af791c45af"
+          },
+          {
+            "name": "taxonomy-integrated",
+            "url": "https://nsearchives.nseindia.com/web/sites/default/files/inline-files/Taxonomy%20Integrated%20filing%20finance%20%28IndAS%29.zip",
+            "scope": "Official NSE published integrated IndAS taxonomy; content/dependencies unverified",
+            "format": "zip",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:27:55.944802+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/zip",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 232782,
+            "sha256": "d06512f59f06a6ca126a90f185884a5679c9c666c0ab1c9d38b32449004c0441"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "xml",
+      "results": {
+        "budget": {
+          "max_requests": 1,
+          "max_bytes": 8388608,
+          "max_total_bytes": 50331648,
+          "deadline_seconds": 45,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 1,
+        "received_bytes": 57588,
+        "results": [
+          {
+            "name": "older-indas",
+            "url": "https://nsearchives.nseindia.com/corporate/xbrl/INDAS_117298_1348254_16012025082021.xml",
+            "scope": "Explicit public locator; issuer/period/context to verify in official response",
+            "format": "xml",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:28:28.258263+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/xml",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 57588,
+            "sha256": "7a4376e20bcff469a6674116f0e45a76233d6358517d082a0a714ba78e6c2e96"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "integrated",
+      "results": {
+        "budget": {
+          "max_requests": 1,
+          "max_bytes": 8388608,
+          "max_total_bytes": 50331648,
+          "deadline_seconds": 45,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 1,
+        "received_bytes": 53642,
+        "results": [
+          {
+            "name": "integrated-indas",
+            "url": "https://nsearchives.nseindia.com/corporate/xbrl/INTEGRATED_FILING_INDAS_1700136_23072026054446_WEB.xml",
+            "scope": "Explicit published locator; issuer/period/taxonomy to verify from content",
+            "format": "xml",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:29:00.187677+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/xml",
+            "outcome": "observed_unverified",
+            "schema": null,
+            "bytes": 53642,
+            "sha256": "5928e8ca820f60f944a66367291a7dc76c8df4536dfaf5627f3d3ff077487bae"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "archive",
+      "results": {
+        "budget": {
+          "max_requests": 1,
+          "max_bytes": 8388608,
+          "max_total_bytes": 50331648,
+          "deadline_seconds": 45,
+          "spacing_seconds": 2,
+          "max_window_days": 31
+        },
+        "requests": 1,
+        "received_bytes": 8454144,
+        "results": [
+          {
+            "name": "taxonomy-archive",
+            "url": "https://nsearchives.nseindia.com//web/mediaattachment/2026-07/Taxonomy_Archives_20260731164437.zip",
+            "scope": "Exact official taxonomy archive link, inspect for 2026 entry point; no guessed substitution",
+            "format": "zip",
+            "window_days": 1,
+            "method": "GET",
+            "observed_at": "2026-10-18T18:29:20.927396+00:00",
+            "complete": false,
+            "attempts": 1,
+            "status": 200,
+            "content_type": "application/zip",
+            "outcome": "byte_limit"
+          }
+        ]
+      }
+    }
+  ]
+}

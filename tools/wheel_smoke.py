@@ -1,5 +1,6 @@
 """Executed inside a clean installed-wheel interpreter, never the source tree."""
 
+import asyncio
 import importlib.metadata as metadata
 import importlib.util
 import io
@@ -18,6 +19,7 @@ def deny_io(event: str, args: tuple[object, ...]) -> None:
         raise PermissionError(f"Offline smoke denied {event}")
 
 
+loop = asyncio.new_event_loop() if sys.argv[1] == "filings" else None
 sys.addaudithook(deny_io)
 try:
     socket.create_connection(("127.0.0.1", 9), timeout=0.1)
@@ -33,16 +35,28 @@ else:
     raise AssertionError("child process guard failed")
 
 import niftyverse  # noqa: E402
+import niftyverse.filings  # noqa: E402
+import niftyverse.ingestion  # noqa: E402
 import niftyverse.recon  # noqa: E402
+import niftyverse.transport  # noqa: E402
 
 assert "site-packages" in niftyverse.__file__, niftyverse.__file__
 assert Path(niftyverse.__file__).with_name("py.typed").exists()
 assert set(metadata.metadata("niftyverse")["Requires-Python"].split(",")) == {">=3.14", "<3.15"}
-for name in ("pandas", "yfinance", "IPython", "ipywidgets", "plotly", "arelle", "xbrl"):
+for name in ("pandas", "yfinance", "IPython", "ipywidgets", "plotly", "arelle", "xbrl", "lxml"):
     assert name not in sys.modules, name
 lane = sys.argv[1]
 if lane == "core":
-    for name in ("pandas", "yfinance", "IPython", "ipywidgets", "plotly", "arelle", "xbrl"):
+    for name in (
+        "pandas",
+        "yfinance",
+        "IPython",
+        "ipywidgets",
+        "plotly",
+        "arelle",
+        "xbrl",
+        "lxml",
+    ):
         assert importlib.util.find_spec(name) is None, name
 elif lane.startswith("yahoo"):
     import yfinance
@@ -60,14 +74,25 @@ elif lane == "pandas":
 
     assert pl.DataFrame({"id": ["001"]}).to_pandas().equals(pd.DataFrame({"id": ["001"]}))
 elif lane == "filings":
-    from niftyverse.filings import FilingProcessorUnavailable, require_filing_processor
+    from niftyverse.filings import require_filing_processor
 
+    require_filing_processor()
+    from lxml import etree
+
+    assert etree.LXML_VERSION[:3] == (6, 1, 3)
+    print("Bounded rendered-HTML processor:", etree.LXML_VERSION, etree.LIBXML_VERSION)
+    from niftyverse.filings import decode_filing
+
+    specimen = Path(__file__).resolve().parents[1] / "tests/fixtures/filings/rendered-2026.html"
+    assert loop is not None
     try:
-        require_filing_processor()
-    except FilingProcessorUnavailable:
-        pass
-    else:
-        raise AssertionError("unselected filing processor")
+        assertions = loop.run_until_complete(decode_filing(specimen.read_bytes()))
+        assert ("Level of rounding used in financial results", "Lakhs") in assertions.metadata
+        assert any(
+            cell.text == "3,11,85,000.00" for table in assertions.tables for cell in table.cells
+        )
+    finally:
+        loop.close()
 
 payload = json.dumps(
     [

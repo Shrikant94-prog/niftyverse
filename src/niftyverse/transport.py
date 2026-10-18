@@ -173,6 +173,12 @@ class DirectTransport:
             if seen & policy.hosts:
                 raise ValueError("family hosts overlap")
             seen.update(policy.hosts)
+        for related in (
+            HOSTS - {"www.niftyindices.com", "niftyindices.com"},
+            frozenset({"www.niftyindices.com", "niftyindices.com"}),
+        ):
+            if sum(bool(p.hosts & related) for p in self.policies) > 1:
+                raise ValueError("related source hosts must share one family budget")
         if len({p.name for p in self.policies}) != len(self.policies):
             raise ValueError("duplicate family name")
         self._transport = transport

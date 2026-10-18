@@ -1,0 +1,2 @@
+# Source specimens have byte-exact identities across platforms.
+tests/fixtures/filings/*.html binary

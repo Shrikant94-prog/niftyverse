@@ -168,7 +168,7 @@
         "03:filing-2026"
       ],
       "publication_precision": "collection instant known; prior public availability unknown",
-      "next_action": "Register only exact evidenced financial table signatures, unit captions and context columns before parsing; no universal date cutoff."
+      "next_action": "Bounded source-table assertions tested on two exact real specimens with explicit recovery diagnostics; economic mapping/coverage remains Phase 13."
     },
     {
       "id": "rendered_ownership_html",
@@ -190,16 +190,20 @@
     {
       "id": "older_financial_xbrl",
       "status": "blocked",
-      "samples": [],
-      "taxonomy": "unverified; inherited 2020 namespace observation is only a lead",
-      "next_action": "Acquire real XML and closed taxonomy package in Phase 03."
+      "samples": [
+        "phase03:older-indas"
+      ],
+      "taxonomy": "Official NSE package confirms 2020-03-31 namespace; XBRL standard dependencies absent, closed package incomplete",
+      "next_action": "Close and hash all dependencies before decoding; see phase03-filing-observations.json and Phase 03 evidence."
     },
     {
       "id": "integrated_financial_xbrl",
       "status": "blocked",
-      "samples": [],
-      "taxonomy": "unverified",
-      "next_action": "Acquire real XML, units/context examples and closed taxonomy dependencies."
+      "samples": [
+        "phase03:integrated-indas"
+      ],
+      "taxonomy": "Sample uses 2026-01-31 namespace; official linked package is 2025-01-31 and must not substitute. Archive exceeds 8 MiB capture cap.",
+      "next_action": "Obtain matching 2026 taxonomy plus closed dependencies; no namespace/version alias."
     },
     {
       "id": "genuine_inline_xbrl",

@@ -496,3 +496,11 @@ def test_cancel_stream_closes_response() -> None:
 
     started = asyncio.Event()
     _loop.run_until_complete(check())
+
+
+def test_related_hosts_cannot_multiply_family_budgets() -> None:
+    with pytest.raises(ValueError, match="share one family budget"):
+        DirectTransport(
+            policy(hosts=frozenset({"www.nseindia.com"})),
+            policy(name="archive", hosts=frozenset({"nsearchives.nseindia.com"})),
+        )
