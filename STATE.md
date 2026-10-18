@@ -6,9 +6,9 @@
 
 - **Phase:** 03 ? Transport and safe archive ingestion. Owner authorizes sequential implementation, local commits, merge into local main, GitHub push; retain `phase-03`. Do not start Phase 04.
 - **Status:** in progress; branch `phase-03` starts at clean local/GitHub main `a481636`.
-- **Current checkpoint:** NV-03-03 ? bounded ZIP/CSV and evidenced report schema dispatch.
+- **Current checkpoint:** NV-03-04 ? evidenced filing dispatch/decoding and source blockers.
 - **Prerequisite:** Phase 02 merged at `5bc94ba`; completion evidence and relevant report/filing observations inspected. Current frozen CPython 3.14.7 suite: 68 pass. Missing XML/inline/legacy/taxonomy evidence remains a dependent filing limitation, not a pass.
-- **Next action:** test-first ZIP/CSV boundary, then evidenced filing checkpoint. Final gate remains pending.
+- **Next action:** inspect exact rendered filing signatures and narrowly resolve missing-family evidence; implement only evidenced contracts. Final gate remains pending.
 
 ## Read first
 
@@ -23,7 +23,7 @@
 |---|---|---|
 | NV-03-01 AC1?3 | Fake transport/clock; shared concurrency, admission/request/byte/deadline bounds, cleanup and HTTP protocol fallback | [8 transport cases pass; 76 total tests; types/lint pass](docs/evidence/03-20261018-transport.md). |
 | NV-03-02 AC1?3 | Deterministic 429/403/5xx/timeout, refresh serialization, retry/cancel/redaction | [23 transport cases; 91 total tests; types/lint pass](docs/evidence/03-20261018-retries.md). |
-| NV-03-03 AC1?3 | Real verified report headers plus owned hostile ZIP/CSV, atomic rejection and provenance | Pending. |
+| NV-03-03 AC1?3 | Real verified report headers plus owned hostile ZIP/CSV, atomic rejection and provenance | [24 ingestion cases; all four official report replays; 115 total tests](docs/evidence/03-20261018-ingestion.md). |
 | NV-03-04 AC1?3 | Independently checked real-family facts, isolated bounded decoder and taxonomy denial | Pending; XML/inline/legacy/taxonomy source prerequisites unavailable in Phase 02. |
 | PH-03-GATE | Integrated fault/safety suite and affected regressions, no unsupported source claims | Pending. |
 
