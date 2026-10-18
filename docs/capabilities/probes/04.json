@@ -1,0 +1,15 @@
+{
+  "budget": {"max_requests": 10, "deadline_seconds": 180},
+  "blocked_hosts": ["www.nseindia.com"],
+  "probes": [
+    {"name": "etf-catalogue", "url": "https://nsearchives.nseindia.com/content/equities/ETF_L.csv", "scope": "current ETF catalogue; not historical identity intervals", "format": "csv"},
+    {"name": "equity-catalogue", "url": "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv", "scope": "current equity catalogue symbol/name/ISIN search candidates", "format": "csv"},
+    {"name": "sme-catalogue", "url": "https://nsearchives.nseindia.com/emerge/corporates/content/SME_EQUITY_L.csv", "scope": "current SME catalogue candidate", "format": "csv"},
+    {"name": "symbol-changes", "url": "https://nsearchives.nseindia.com/content/equities/symbolchange.csv", "scope": "symbol-change events; source event dates not full identity lifetimes", "format": "csv"},
+    {"name": "name-changes", "url": "https://nsearchives.nseindia.com/content/equities/namechange.csv", "scope": "name-change events; ambiguous aliases require dated identity evidence", "format": "csv"},
+    {"name": "chart-discovery", "url": "https://charting.nseindia.com/v1/exchanges/symbolsDynamic?search=RELIANCE", "scope": "discovery candidate only; identity/intraday contracts not certified", "format": "json"},
+    {"name": "etf-history", "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?symbol=NIFTYBEES&series=EQ&from=14-10-2026&to=16-10-2026", "scope": "NIFTYBEES EQ October 14..16 2026 history candidate; source circuit carried", "format": "json", "window_days": 3},
+    {"name": "etf-metadata", "url": "https://www.nseindia.com/api/quote-equity?symbol=NIFTYBEES", "scope": "NIFTYBEES current metadata candidate; mandate/history unknown", "format": "json"},
+    {"name": "ambiguous-discovery", "url": "https://www.nseindia.com/api/search/autocomplete?q=RELIANCE", "scope": "ambiguous name/alias discovery candidate; source circuit carried", "format": "json"}
+  ]
+}

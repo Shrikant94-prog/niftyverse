@@ -100,8 +100,31 @@ def _inspect(body: bytes, kind: str) -> tuple[str, object]:
             return "format_mismatch", None
         try:
             value = json.loads(body)
-        except ValueError, UnicodeDecodeError:
+        except ValueError, UnicodeDecodeError, RecursionError:
             return "invalid_json", None
+        pending = [(value, 0)]
+        nodes = 0
+        sensitive = {
+            "token",
+            "access_token",
+            "refresh_token",
+            "cookie",
+            "authorization",
+            "crumb",
+            "password",
+            "api_key",
+        }
+        while pending:
+            item, depth = pending.pop()
+            nodes += 1
+            if depth > 64 or nodes > 100000:
+                return "invalid_json", None
+            if isinstance(item, dict):
+                if any(str(key).lower().replace("-", "_") in sensitive for key in item):
+                    return "sensitive_payload", None
+                pending.extend((child, depth + 1) for child in item.values())
+            elif isinstance(item, list):
+                pending.extend((child, depth + 1) for child in item)
         return ("observed_unverified" if value else "empty"), _schema(value)
     if kind == "zip" and not body.startswith(b"PK\x03\x04"):
         return "format_mismatch", None
@@ -182,6 +205,9 @@ async def capture(
                 continue
             if requests >= budget.max_requests:
                 record["outcome"] = "request_limit"
+                continue
+            if total_bytes >= budget.max_total_bytes:
+                record["outcome"] = "total_byte_limit"
                 continue
             remaining = budget.deadline_seconds - (time.monotonic() - started)
             if remaining <= 0:

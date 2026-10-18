@@ -215,3 +215,69 @@ def test_carried_circuit_and_existing_destination(tmp_path: Path) -> None:
     with pytest.raises(FileExistsError):
         _loop.run_until_complete(capture([], tmp_path / "capture"))
     assert (tmp_path / "capture/evidence.json").read_bytes() == before
+
+
+def test_total_bytes_stop_further_requests(tmp_path: Path) -> None:
+    calls: list[str] = []
+
+    def reply(request: httpx.Request) -> httpx.Response:
+        calls.append(str(request.url))
+        return httpx.Response(200, content=b"a,b\n1,2\n")
+
+    probes = [
+        Probe(str(n), "https://nsearchives.nseindia.com/test.csv", "negative", "csv")
+        for n in range(3)
+    ]
+    result = run_capture(tmp_path, reply, probes, max_total_bytes=8)
+    assert len(calls) == 1
+    assert [r["outcome"] for r in result] == [
+        "observed_unverified",
+        "total_byte_limit",
+        "total_byte_limit",
+    ]
+
+
+def test_deep_json_is_failed_evidence(tmp_path: Path) -> None:
+    result = run_capture(
+        tmp_path,
+        lambda r: httpx.Response(200, content=b"[" * 2000 + b"]" * 2000),
+        [Probe("deep", "https://www.nseindia.com/api/test", "negative", "json")],
+    )
+    assert result[0]["outcome"] == "invalid_json"
+    assert not list(tmp_path.rglob("*.body"))
+
+
+def test_sensitive_json_not_retained_or_hashed(tmp_path: Path) -> None:
+    result = run_capture(
+        tmp_path,
+        lambda r: httpx.Response(200, json={"data": [1], "access_token": "secret"}),
+        [Probe("sensitive", "https://www.nseindia.com/api/test", "negative", "json")],
+    )
+    assert result[0]["outcome"] == "sensitive_payload"
+    assert "sha256" not in result[0]
+    assert not list(tmp_path.rglob("*.body"))
+    assert "secret" not in (tmp_path / "capture/evidence.json").read_text()
+
+
+@pytest.mark.parametrize("depth,outcome", [(64, "observed_unverified"), (65, "invalid_json")])
+def test_json_depth_boundary(tmp_path: Path, depth: int, outcome: str) -> None:
+    body = b"[" * depth + b"0" + b"]" * depth
+    result = run_capture(
+        tmp_path,
+        lambda r: httpx.Response(200, content=body),
+        [Probe("depth", "https://www.nseindia.com/api/test", "boundary", "json")],
+    )
+    assert result[0]["outcome"] == outcome
+
+
+@pytest.mark.parametrize(
+    "leaves,outcome", [(99999, "observed_unverified"), (100000, "invalid_json")]
+)
+def test_json_node_boundary(tmp_path: Path, leaves: int, outcome: str) -> None:
+    body = json.dumps([0] * leaves).encode()
+    result = run_capture(
+        tmp_path,
+        lambda r: httpx.Response(200, content=body),
+        [Probe("nodes", "https://www.nseindia.com/api/test", "boundary", "json")],
+    )
+    assert result[0]["outcome"] == outcome

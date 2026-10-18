@@ -383,6 +383,153 @@
           "sha256": "4a2c6577b55fc1c60ed53b0265cfbcdfa6f44b7710bd63075b140de44c4148f1"
         }
       ]
+    },
+    {
+      "plan": "04.json",
+      "plan_sha256": "0746a88f3ce84b39da5c0e1e5fa221fe79545f1eebffae6335bb6fad85ef7d61",
+      "capture_sha256": "5c9d0f21f9adef0f333eb9a434b1eed898ad1e3a2f98a8dd120f36671871f715",
+      "budget": {
+        "max_requests": 10,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 180,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 6,
+      "results": [
+        {
+          "name": "etf-catalogue",
+          "observed_at": "2026-10-18T17:40:27.751482+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "equity-catalogue",
+          "observed_at": "2026-10-18T17:40:27.904390+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 183984,
+          "sha256": "474ad748f65c9ffa4cf9aa2e483117dfd0f68ccafd6c4c8a0cca02583556f765"
+        },
+        {
+          "name": "sme-catalogue",
+          "observed_at": "2026-10-18T17:40:29.844762+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 40251,
+          "sha256": "87774596af5595649725573309e2e91bdc2017e1c3481178cca0a47a9e384154"
+        },
+        {
+          "name": "symbol-changes",
+          "observed_at": "2026-10-18T17:40:31.875017+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 69219,
+          "sha256": "69c0c5e18cca3350c2e07f7c8c4c1ebbfe38d81c8fa32c51f6ca9ea332e85f17"
+        },
+        {
+          "name": "name-changes",
+          "observed_at": "2026-10-18T17:40:33.903445+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 240291,
+          "sha256": "b41026bdec13d5135cf128e75c6cba4e67dd5c9ed3310abaa8412a306ab43534"
+        },
+        {
+          "name": "chart-discovery",
+          "observed_at": "2026-10-18T17:40:35.908290+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "observed_unverified",
+          "schema": {
+            "status": "bool",
+            "data": [
+              {
+                "symbol": "str",
+                "instrumentType": "str",
+                "scripcode": "str",
+                "description": "str",
+                "exchange": "str",
+                "fullname": "str",
+                "type": "str"
+              }
+            ]
+          },
+          "bytes": 3163,
+          "sha256": "3726cc83cdbf850842d32d69038629425a631dd99c76dd89c8967dfc10b85cf5"
+        },
+        {
+          "name": "etf-history",
+          "observed_at": "2026-10-18T17:40:37.988562+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "etf-metadata",
+          "observed_at": "2026-10-18T17:40:37.988598+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "ambiguous-discovery",
+          "observed_at": "2026-10-18T17:40:37.988617+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        }
+      ]
+    },
+    {
+      "plan": "04-linked.json",
+      "plan_sha256": "8c22e565b5fec2940be85f7de67cbaaaff33663a237dfe93451e691f272819d7",
+      "capture_sha256": "718d8afb9384b90298537b92e4f889646bdbf131333b36ca28a8ef5d3d458b06",
+      "budget": {
+        "max_requests": 1,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 30,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 1,
+      "results": [
+        {
+          "name": "etf-linked-catalogue",
+          "observed_at": "2026-10-18T17:41:27.504915+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 37957,
+          "sha256": "9d90ef6e4b7aa1f23a1b493677191f5a17615d088c377ac7b1999f653e9bbac2"
+        }
+      ]
     }
   ],
   "yahoo": {
@@ -474,5 +621,6 @@
         ]
       }
     ]
-  }
+  },
+  "plan_hash_encoding": "UTF-8 with LF newlines (canonical text bytes)"
 }
