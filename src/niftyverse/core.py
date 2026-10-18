@@ -10,6 +10,17 @@ class ValidationError(ValueError):
     """Fixture input failed before opening a destination."""
 
 
+@dataclass(frozen=True, slots=True)
+class BuildEvent:
+    """A thin-slice success event, constructed only after the sink returns."""
+
+    committed_rows: int
+
+    def __post_init__(self) -> None:
+        if self.committed_rows < 0:
+            raise ValueError("committed row count cannot be negative")
+
+
 def validate_price(value: Decimal | None) -> None:
     """Require a finite, exactly representable fixture decimal128(18,4)."""
     if value is None:

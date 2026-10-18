@@ -5,68 +5,72 @@
 ## Active work
 
 - **Phase:** 01 - Package and offline vertical slice; authorized only through PH-01-GATE.
-- **Status:** active; Phase 00 prerequisite verified against recorded evidence and current baseline checker.
-- **Project location:** selected fresh niftyverse workspace; no legacy imports or files adopted.
-- **Current checkpoint:** NV-01-02 - shared offline fixture validation and DB/direct-file slice.
-- **Next action:** implement and verify NV-01-02, then NV-01-03. Do not begin Phase 02.
+- **Status:** incomplete; implementation and local Windows/Linux checks pass. Owner appearance feedback, macOS installation smoke and hosted CI are unverified; PH-01-GATE remains open.
+- **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
+- **Current checkpoint:** NV-01-03 software verified; visual acceptance and integrated platform evidence pending.
+- **Next action:** obtain feedback on the actual preview and execute the configured platform CI/macOS smoke in an authorized environment. Repair demonstrated failures if any, then close Phase 01 only when all required checks pass. Do not start Phase 02.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
-2. [Phase 01 entry](docs/phases/01.md#entry), [gate](docs/phases/01.md#gate), [NV-01-01](docs/phases/01.md#nv-01-01); then [NV-01-02](docs/phases/01.md#nv-01-02) and [NV-01-03](docs/phases/01.md#nv-01-03) at checkpoint entry.
-3. Current checkpoint only: [dependencies](docs/specs/architecture.md#s6-5), [CI](docs/specs/verification.md#s16-3), [conventions](docs/specs/architecture.md#s6-6). Phase 00 prerequisite: [resume evidence](docs/evidence/00-20261018-resume.md).
-
-Package observations: [NV-01-01 evidence](docs/evidence/01-20261018-package.md).
+2. [Phase 01 gate](docs/phases/01.md#gate), [NV-01-03](docs/phases/01.md#nv-01-03), and [NV-01-01 verification](docs/phases/01.md#nv-01-01) for pending platform checks.
+3. [Integration observations](docs/evidence/01-20261018-integration.md) and `docs/evidence/artifacts/phase01/review.html` (concrete appearance preview). Read [package](docs/evidence/01-20261018-package.md) or [slice evidence](docs/evidence/01-20261018-slice.md) only for an affected check.
+4. For actual display repair only: [static display contract](docs/specs/experience.md#s15-1), [terminal rules](docs/specs/experience.md#s14-3), [ADR](docs/decisions/0001-phase01-api.md). For CI repair: [platform contract](docs/specs/verification.md#s16-3).
 
 ## Verified evidence and acceptance mapping
 
-Phase 00 baseline `14fdf2c`, completion `a41f5a5`; clean working tree at Phase 01 entry. `python tools/check_docs.py --baseline --self-test` passed (50 Markdown files; all static hashes/IDs/links/dependencies). Existing Phase 00 evidence remains historical. Phase 01 uses CPython 3.14.7, uv 0.12.9, Windows 11; new source/dependencies only.
+Phase 00 prerequisite: baseline `14fdf2c`, completion `a41f5a5`, retained [resume evidence](docs/evidence/00-20261018-resume.md). Phase 01 checkpoints: `644c11e` packaging, `0bfce43` offline slice; current display/integration source is the commit containing the integration record. [Development commands](docs/DEVELOPMENT.md) are available.
 
-| Acceptance | Input / independent expected result / procedure | Result |
+| Acceptance | Independent expectation / procedure | Current result |
 |---|---|---|
-| NV-01-01-AC1 | Fresh wheel; Python 3.14 install/py.typed/naming; reject 3.12 and 3.15 | Passed locally; fresh wheel, py.typed, pip rejection for 3.12/3.15. |
-| NV-01-01-AC2 | Frozen minimal import excludes optional stacks; separate Yahoo resolution/lock/import | Passed all frozen core/extras lanes and separate Yahoo consumer lane. |
-| NV-01-01-AC3/AC4 | Evidence and optional unselected filings boundary; candidate checks | Passed candidate wheel/import checks; parsers unselected. |
-| NV-01-02 | Owned expected rows; exact shared validation; DB/direct equivalence and no side effects | Next implementation checkpoint. |
-| NV-01-03 / PH-01-GATE | Bounded safe display, type conventions, wheel integration and owner visual preview | Not started; owner feedback will remain separate. |
+| NV-01-01-AC1 | Fresh 3.14 wheel, names, py.typed, metadata exclusion | Passed Windows 3.14.7 and Linux 3.14.4; pip rejects 3.12/3.15. uv pip ignores upper bounds; project pin unchanged. |
+| NV-01-01-AC2/AC4 | Frozen minimal imports, separate Yahoo lock/consumer, isolated optional stacks and unselected filings candidate checks | Passed Windows core/Yahoo/notebook/pandas/filings and Yahoo consumer lanes; actual optional APIs exercised; candidate installs/imports pass without parser selection. |
+| NV-01-01-AC3 / verification design | Exact environment/lock, strict checks and declared platform matrix | Evidence recorded; Windows/Linux pass. Required macOS smoke and hosted CI unrun. Checkpoint not fully closed. |
+| NV-01-02-AC1 through AC4 | Independent expected typed rows through msgspec/Arrow/DuckDB/Polars and direct CSV; invalid/mixed batches cause no sink effects | Verified, including exact decimals/nulls/zero/text/IDs, immutability, duplicate/order boundaries, original destination rows/schema/bytes and no DB store in direct mode. |
+| NV-01-03-AC1/AC2 | Bounded escaped preview and honest committed event; no render I/O/full materialization; plain fallback | Verified automated checks plus actual minimal/optional wheel MIME paths. |
+| NV-01-03-AC3 / PH-01-GATE | Type/naming ADR, captures, owner visual feedback, clean wheel integrated technologies and complete platform checks | Software portions pass; owner feedback and macOS/hosted CI pending. Gate unverified. |
+
+Clean staged-source snapshot: 96 byte-identical files; documentation checker passes for 55 project Markdown files with matching static hashes/IDs/links.
+
+Current tests: 33 pass on Windows and Linux; format/lint/strict mypy pass. Lock SHA-256 `569bbd9a2d4daea3d86f55690014f8cb965aff95ac3eddd0303b453ab0672724`. Final core-source wheel SHA-256: Windows `c8ef5178c75befd7db70377028a51b5cff7ee747f4b6e6dc6bee5623d1128e2b`, Linux `aafd09eb51e0367fd33964144b8f5a11ce62e7f4db9ad29829e0c9f3eab45177`. Details, exact procedures and limits are in evidence; no market-source or dataset readiness is claimed.
 
 ## Blockers and external inputs
 
-- No current implementation blocker.
-- Hosted Linux/Windows CI and macOS smoke cannot be claimed from local Windows checks; retain actual execution limits.
-- Phase 01 requires owner visual feedback on concrete previews; prepare artifacts before requesting it.
-- Historical NIFTY 500 input remains unbundled; later dataset readiness only.
+- Owner appearance feedback was requested against the actual linked preview and remains pending. Do not infer acceptance from elapsed time or artifact existence.
+- No macOS runtime is available here. Required installation smoke remains unrun. Configured GitHub Actions has not executed; `git remote` is empty and push/publication is not authorized. Local Linux WSL is actual behavior evidence, not hosted CI.
+- No remaining demonstrated implementation failure or live verification process. Goal remains active at this first external-wait observation; no Phase 01 completion claim.
+- Historical NIFTY 500 input remains unbundled; later dataset-readiness limit only.
 
 ## Phase ledger
 
 | Phase | State | Evidence |
 |---|---|---|
-| 00 | verified | [Resume and gate evidence](docs/evidence/00-20261018-resume.md) |
-| 01 | not started | â€” |
-| 02 | not started | â€” |
-| 03 | not started | â€” |
-| 04 | not started | â€” |
-| 05 | not started | â€” |
-| 06 | not started | â€” |
-| 07 | not started | â€” |
-| 08 | not started | â€” |
-| 09 | not started | â€” |
-| 12 | not started | â€” |
-| 13 | not started | â€” |
-| 14 | not started | â€” |
-| 15 | not started | â€” |
-| 16 | not started | â€” |
-| 17 | not started | â€” |
-| 18 | not started | â€” |
-| 10 | not started | â€” |
-| 11 | not started | â€” |
-| 19 | not started | â€” |
-| 20 | not started | â€” |
-| 21 | not started | â€” |
-| 22 | not started | â€” |
+| 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
+| 01 | incomplete - external checks pending | [Integration evidence](docs/evidence/01-20261018-integration.md) |
+| 02 | not started | - |
+| 03 | not started | - |
+| 04 | not started | - |
+| 05 | not started | - |
+| 06 | not started | - |
+| 07 | not started | - |
+| 08 | not started | - |
+| 09 | not started | - |
+| 12 | not started | - |
+| 13 | not started | - |
+| 14 | not started | - |
+| 15 | not started | - |
+| 16 | not started | - |
+| 17 | not started | - |
+| 18 | not started | - |
+| 10 | not started | - |
+| 11 | not started | - |
+| 19 | not started | - |
+| 20 | not started | - |
+| 21 | not started | - |
+| 22 | not started | - |
 
 ## Checkpoint handoff
 
-- **Accepted checkpoints:** Phase 00 complete; NV-01-01 local checks passed; cross-platform execution unobserved.
-- **Git:** local checkpoint commits authorized; no remote action authorized or performed.
-- **Next smallest action:** test-first exact shared validation and sink non-mutation; continue Phase 01 only.
+- **Verified:** Phase 00, Phase 01 offline slice, automated display, local core/extras packaging and Windows/Linux behavior. Remaining required checks are explicitly unverified above.
+- **Git:** local checkpoint commits only; no push or other external write. No Phase 02 work begun.
+- **Next smallest action:** review the linked appearance artifacts; obtain macOS/hosted CI results in an authorized environment, then rerun only affected checks and close Phase 01 if all pass.

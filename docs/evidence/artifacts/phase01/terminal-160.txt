@@ -1,0 +1,3 @@
+niftyverse | fixture complete
+4 committed rows | direct-csv
+Owned offline fixture; no provider readiness claimed.
