@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "capture_kind": "direct_http_metadata",
+  "complete": false,
+  "sets": [
+    {
+      "plan": "01.json",
+      "plan_sha256": "fdd176b4b20da520cff4905e2ef0ea15eba649621b3f5000dd0fd71f00642209",
+      "capture_sha256": "df5d8711a7ef166333f16df9c7be511f004d1169e626de5fcbaf9b1531476c3b",
+      "budget": {
+        "max_requests": 12,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 180,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 5,
+      "results": [
+        {
+          "name": "bootstrap",
+          "observed_at": "2026-10-18T17:29:00.398675+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 403,
+          "content_type": "text/html",
+          "outcome": "challenge"
+        },
+        {
+          "name": "equity-recent",
+          "observed_at": "2026-10-18T17:29:00.571064+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "equity-old",
+          "observed_at": "2026-10-18T17:29:00.571347+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "actions",
+          "observed_at": "2026-10-18T17:29:00.571378+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "events",
+          "observed_at": "2026-10-18T17:29:00.571393+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "announcements",
+          "observed_at": "2026-10-18T17:29:00.571415+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "asm-json",
+          "observed_at": "2026-10-18T17:29:00.571425+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "gsm-csv",
+          "observed_at": "2026-10-18T17:29:00.571432+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "band-csv",
+          "observed_at": "2026-10-18T17:29:02.557041+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 328,
+          "sha256": "f9a1beebcd2534dc68f5052fc1a24af4a9f25ddff08f331ce31665a241c09cc8"
+        },
+        {
+          "name": "surveillance-zip",
+          "observed_at": "2026-10-18T17:29:04.613921+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "band-old",
+          "observed_at": "2026-10-18T17:29:06.529657+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 188,
+          "sha256": "fd41c65568a4ffc2327dbfab5fd559feb1e44a203ebfdca30e36766e01ef8860"
+        }
+      ]
+    },
+    {
+      "plan": "02.json",
+      "plan_sha256": "26bc891aae5faeea24a1322ce2a5dea0e2bd74a275aa7577fad14b7aaff82437",
+      "capture_sha256": "ec793ffb07c9a2bd00d900eef3c7fee90a728f263a04e05f7c8e7437ce3a445d",
+      "budget": {
+        "max_requests": 16,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 240,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 12,
+      "results": [
+        {
+          "name": "cm-legacy",
+          "observed_at": "2026-10-18T17:30:19.780440+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 62108,
+          "sha256": "7886c5d991ef8447964c58fda054710bc8983c5d27dc098ac2293722b11e7ce7"
+        },
+        {
+          "name": "fo-legacy",
+          "observed_at": "2026-10-18T17:30:19.932779+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 381121,
+          "sha256": "d85b2d69640e56c2e37fb67b5ffbec947a471769e81be618c041e70c7b016c02"
+        },
+        {
+          "name": "cm-udiff",
+          "observed_at": "2026-10-18T17:30:21.910779+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 206122,
+          "sha256": "d2c4406c1ecbfbcb9acdafa424f921caad7467d97da47c65973b34aa0aac70bc"
+        },
+        {
+          "name": "fo-udiff",
+          "observed_at": "2026-10-18T17:30:23.853253+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 1210210,
+          "sha256": "28648e52e5bd5fc108aacaafa461a0acd60577d2657e9bf806ed60cfecd18b99"
+        },
+        {
+          "name": "delivery-old",
+          "observed_at": "2026-10-18T17:30:25.915011+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/octet-stream",
+          "outcome": "format_mismatch",
+          "schema": null,
+          "bytes": 60408
+        },
+        {
+          "name": "delivery-recent",
+          "observed_at": "2026-10-18T17:30:27.874385+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 397218,
+          "sha256": "8afbcce6d74f667f910213f8e1405092676f977f6e0693e1c082d7e13966a162"
+        },
+        {
+          "name": "participant-oi",
+          "observed_at": "2026-10-18T17:30:29.830211+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 982,
+          "sha256": "714386d5b8094915f93fd80c2aa7b279983204c43d82f251eee4bcb180bb8381"
+        },
+        {
+          "name": "participant-volume",
+          "observed_at": "2026-10-18T17:30:31.886276+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 982,
+          "sha256": "438876c52f96572efeeb8173084ef53ebc78ced140102b4339de6c365161a4d8"
+        },
+        {
+          "name": "lots-current",
+          "observed_at": "2026-10-18T17:30:33.882765+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 47736,
+          "sha256": "a94b41b6e42a2a7ce898df7c50b08c4843ebe24664145826a9b0652733d17452"
+        },
+        {
+          "name": "index-price",
+          "observed_at": "2026-10-18T17:30:35.850519+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "index-tri",
+          "observed_at": "2026-10-18T17:30:38.018753+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "index-valuations",
+          "observed_at": "2026-10-18T17:30:39.928467+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "delisted",
+          "observed_at": "2026-10-18T17:30:41.951098+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "fo-metadata",
+          "observed_at": "2026-10-18T17:30:41.951162+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "vix",
+          "observed_at": "2026-10-18T17:30:41.951203+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "bulk",
+          "observed_at": "2026-10-18T17:30:41.951235+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "block",
+          "observed_at": "2026-10-18T17:30:41.951265+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "short",
+          "observed_at": "2026-10-18T17:30:41.951294+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "fii-dii",
+          "observed_at": "2026-10-18T17:30:41.951313+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        }
+      ]
+    },
+    {
+      "plan": "03.json",
+      "plan_sha256": "cf5a7a50cc426ed32e833fafdde1a9aba9103839db5c212b25408d974e6e960e",
+      "capture_sha256": "67f4738af14bcbbf067ed40c26d0320c9523f219a0b858f602799489619081e3",
+      "budget": {
+        "max_requests": 6,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 120,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 3,
+      "results": [
+        {
+          "name": "financial-catalogue-old",
+          "observed_at": "2026-10-18T17:34:12.898717+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "financial-catalogue-integrated",
+          "observed_at": "2026-10-18T17:34:12.898744+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "ownership-catalogue",
+          "observed_at": "2026-10-18T17:34:12.898755+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "filing-2025",
+          "observed_at": "2026-10-18T17:34:12.898761+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 92661,
+          "sha256": "2fdffa2d19d0b275b0d3dae9b95ecf515a90c29ad0e84f7fe3134213579e6747"
+        },
+        {
+          "name": "filing-2026",
+          "observed_at": "2026-10-18T17:34:13.012968+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 51858,
+          "sha256": "0a22cb0aad493e026a0775fb889341ccbd5f61be355ef3ad194d46592889c629"
+        },
+        {
+          "name": "ownership-filing",
+          "observed_at": "2026-10-18T17:34:15.071044+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/html",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 541780,
+          "sha256": "4a2c6577b55fc1c60ed53b0265cfbcdfa6f44b7710bd63075b140de44c4148f1"
+        }
+      ]
+    },
+    {
+      "plan": "04.json",
+      "plan_sha256": "0746a88f3ce84b39da5c0e1e5fa221fe79545f1eebffae6335bb6fad85ef7d61",
+      "capture_sha256": "5c9d0f21f9adef0f333eb9a434b1eed898ad1e3a2f98a8dd120f36671871f715",
+      "budget": {
+        "max_requests": 10,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 180,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 6,
+      "results": [
+        {
+          "name": "etf-catalogue",
+          "observed_at": "2026-10-18T17:40:27.751482+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "equity-catalogue",
+          "observed_at": "2026-10-18T17:40:27.904390+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 183984,
+          "sha256": "474ad748f65c9ffa4cf9aa2e483117dfd0f68ccafd6c4c8a0cca02583556f765"
+        },
+        {
+          "name": "sme-catalogue",
+          "observed_at": "2026-10-18T17:40:29.844762+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 40251,
+          "sha256": "87774596af5595649725573309e2e91bdc2017e1c3481178cca0a47a9e384154"
+        },
+        {
+          "name": "symbol-changes",
+          "observed_at": "2026-10-18T17:40:31.875017+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 69219,
+          "sha256": "69c0c5e18cca3350c2e07f7c8c4c1ebbfe38d81c8fa32c51f6ca9ea332e85f17"
+        },
+        {
+          "name": "name-changes",
+          "observed_at": "2026-10-18T17:40:33.903445+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 240291,
+          "sha256": "b41026bdec13d5135cf128e75c6cba4e67dd5c9ed3310abaa8412a306ab43534"
+        },
+        {
+          "name": "chart-discovery",
+          "observed_at": "2026-10-18T17:40:35.908290+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "observed_unverified",
+          "schema": {
+            "status": "bool",
+            "data": [
+              {
+                "symbol": "str",
+                "instrumentType": "str",
+                "scripcode": "str",
+                "description": "str",
+                "exchange": "str",
+                "fullname": "str",
+                "type": "str"
+              }
+            ]
+          },
+          "bytes": 3163,
+          "sha256": "3726cc83cdbf850842d32d69038629425a631dd99c76dd89c8967dfc10b85cf5"
+        },
+        {
+          "name": "etf-history",
+          "observed_at": "2026-10-18T17:40:37.988562+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "etf-metadata",
+          "observed_at": "2026-10-18T17:40:37.988598+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "ambiguous-discovery",
+          "observed_at": "2026-10-18T17:40:37.988617+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        }
+      ]
+    },
+    {
+      "plan": "04-linked.json",
+      "plan_sha256": "8c22e565b5fec2940be85f7de67cbaaaff33663a237dfe93451e691f272819d7",
+      "capture_sha256": "718d8afb9384b90298537b92e4f889646bdbf131333b36ca28a8ef5d3d458b06",
+      "budget": {
+        "max_requests": 1,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 30,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 1,
+      "results": [
+        {
+          "name": "etf-linked-catalogue",
+          "observed_at": "2026-10-18T17:41:27.504915+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 37957,
+          "sha256": "9d90ef6e4b7aa1f23a1b493677191f5a17615d088c377ac7b1999f653e9bbac2"
+        }
+      ]
+    }
+  ],
+  "yahoo": {
+    "capture_kind": "sdk_result",
+    "complete": false,
+    "sets": [
+      {
+        "experiment": "yahoo",
+        "summary_sha256": "e2d635f4058ff8f6bfaa41de25951c92e03726bf4a162cddaf5d216608f2bcf8",
+        "results": [
+          {
+            "symbol": "^GSPC",
+            "start": "2016-09-01",
+            "end": "2016-09-07",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "GSPC-2016-09-01.json",
+            "sha256": "4f1d59cd039ec435eeb60d55a25dcbdae7b44b2242e74f9219caec0e6720e7d9",
+            "error_type": null
+          },
+          {
+            "symbol": "^GSPC",
+            "start": "2025-11-26",
+            "end": "2025-12-02",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "GSPC-2025-11-26.json",
+            "sha256": "b5a9d06417b8987d771011a6ea5d35a748e9260aa720d08880c9ffeb144eff3f",
+            "error_type": null
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2016-09-01",
+            "end": "2016-09-07",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "IXIC-2016-09-01.json",
+            "sha256": "28cfe59ff87a99ca9f668700c7a4e639bc6846ce6fb833c463e16b2fe436a3a9",
+            "error_type": null
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2025-11-26",
+            "end": "2025-12-02",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "observed_unverified",
+            "artifact": "IXIC-2025-11-26.json",
+            "sha256": "95d7c238b7aba45affb509351fe47e7b2d2ca2d71b61533b6083b7b0096d52ad",
+            "error_type": null
+          }
+        ]
+      },
+      {
+        "experiment": "yahoo-negative",
+        "summary_sha256": "81af463b06c624f2b45996765b9cfc8ebba23e520c205ac5a1d38d44c6a9c564",
+        "results": [
+          {
+            "symbol": "^GSPC",
+            "start": "2025-11-27",
+            "end": "2025-11-28",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "sdk_error",
+            "artifact": "GSPC-2025-11-27.json",
+            "sha256": "9492a03a65e4785362752487dfb63d216cc533faf52cd11e4aff0ee7ab1ef0ea",
+            "error_type": "YFPricesMissingError"
+          },
+          {
+            "symbol": "^IXIC",
+            "start": "2025-11-27",
+            "end": "2025-11-28",
+            "sdk_calls": 1,
+            "underlying_http_requests": "unknown",
+            "complete": false,
+            "outcome": "sdk_error",
+            "artifact": "IXIC-2025-11-27.json",
+            "sha256": "571643e2d5c24f6823c4059adef845adc7d6359be5c5c65e5fc62cba65007780",
+            "error_type": "YFPricesMissingError"
+          }
+        ]
+      }
+    ]
+  },
+  "plan_hash_encoding": "UTF-8 with LF newlines (canonical text bytes)"
+}

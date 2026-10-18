@@ -33,6 +33,7 @@ else:
     raise AssertionError("child process guard failed")
 
 import niftyverse  # noqa: E402
+import niftyverse.recon  # noqa: E402
 
 assert "site-packages" in niftyverse.__file__, niftyverse.__file__
 assert Path(niftyverse.__file__).with_name("py.typed").exists()

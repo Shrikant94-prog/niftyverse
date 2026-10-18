@@ -1,0 +1,6 @@
+{
+  "budget": {"max_requests": 1, "deadline_seconds": 30},
+  "probes": [
+    {"name": "etf-linked-catalogue", "url": "https://nsearchives.nseindia.com/content/equities/eq_etfseclist.csv", "scope": "official linked ETF securities CSV; one evidence-backed follow-up after ETF_L.csv 404", "format": "csv"}
+  ]
+}

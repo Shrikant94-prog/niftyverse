@@ -1,0 +1,335 @@
+{
+  "manifest_version": 1,
+  "as_of": "2026-10-18",
+  "meaning": "Initial concrete research targets; no production adapter is certified. Experimental means real but bounded evidence, blocked means missing access/format/semantics; neither means complete history.",
+  "partition_contract": "partitions.md",
+  "observations": "observations.json",
+  "fixed_workload": "[2016-09-01,2026-09-01); not assessed or certified by this investigation",
+  "financial_targets": {
+    "basis": [
+      "consolidated",
+      "standalone"
+    ],
+    "observed_basis": "consolidated only; standalone mapping unverified",
+    "reference_periods": [
+      "RELIANCE 2025-01-01..2025-03-31 quarter",
+      "RELIANCE 2024-04-01..2025-03-31 year",
+      "RELIANCE 2026-04-01..2026-06-30 quarter"
+    ],
+    "units_policy": "Preserve source unit/caption per fact; monetary INR actuals or lakhs do not scale EPS or percentages. No QName mapping is certified from HTML.",
+    "concepts": [
+      {
+        "id": "revenue_from_operations",
+        "statement": "profit_loss",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "net_profit_loss",
+        "statement": "profit_loss",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "basic_eps",
+        "statement": "profit_loss",
+        "period": "duration",
+        "unit": "INR/share",
+        "additive": false,
+        "status": "experimental"
+      },
+      {
+        "id": "total_assets",
+        "statement": "balance_sheet",
+        "period": "instant",
+        "unit": "INR",
+        "additive": false,
+        "status": "experimental"
+      },
+      {
+        "id": "total_equity",
+        "statement": "balance_sheet",
+        "period": "instant",
+        "unit": "INR",
+        "additive": false,
+        "status": "experimental"
+      },
+      {
+        "id": "net_operating_cash_flow",
+        "statement": "cash_flow",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "net_investing_cash_flow",
+        "statement": "cash_flow",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "net_financing_cash_flow",
+        "statement": "cash_flow",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "segment_revenue",
+        "statement": "segments",
+        "period": "duration",
+        "unit": "INR",
+        "dimensions": [
+          "reported segment",
+          "basis"
+        ],
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "segment_result",
+        "statement": "segments",
+        "period": "duration",
+        "unit": "INR",
+        "dimensions": [
+          "reported segment",
+          "basis"
+        ],
+        "additive": true,
+        "status": "experimental"
+      },
+      {
+        "id": "bank_interest_earned",
+        "statement": "profit_loss_bank",
+        "period": "duration",
+        "unit": "INR",
+        "additive": true,
+        "status": "blocked"
+      }
+    ],
+    "software_status": "unimplemented decoding and mapping; no numerical adapter support",
+    "catalogue_status": "blocked by NSE landing 403; no stable pagination/revision evidence",
+    "next_action": "Phase 03 acquire narrowly evidenced XML/legacy filing locators and closed taxonomy packages; select/pin processor only against real samples and adversarial safety checks. Phase 13 extend basis/sector/concept/held-out coverage before support claims."
+  },
+  "ownership_targets": {
+    "reference": "NETWORK18 equity as of 2025-09-30; rendered shareholding HTML captured 2026-10-18, filename timestamp 2026-02-25 is not the reporting period",
+    "categories": [
+      {
+        "id": "promoter_and_promoter_group",
+        "status": "experimental"
+      },
+      {
+        "id": "public",
+        "status": "experimental"
+      },
+      {
+        "id": "non_promoter_non_public",
+        "status": "experimental"
+      },
+      {
+        "id": "foreign_portfolio_investors",
+        "status": "blocked"
+      },
+      {
+        "id": "domestic_mutual_funds",
+        "status": "blocked"
+      },
+      {
+        "id": "other_public_non_institutions",
+        "status": "blocked"
+      }
+    ],
+    "basis": "reported share class, fully/partly paid and depository receipts kept distinct; hierarchy and denominator required",
+    "units": [
+      "shares",
+      "percentage points of explicitly named denominator"
+    ],
+    "period": "instant/as-of; submission/revision/broadcast separately unknown",
+    "software_status": "unimplemented; arbitrary ownership HTML decoder is outside approved legacy financial HTML scope",
+    "catalogue_status": "blocked by NSE circuit; numerical reference inspection differs from catalogue-only support",
+    "next_action": "Obtain official linked ownership XML/genuine inline XBRL and exact taxonomy/category/denominator contexts before implementing Phase 14 mapper. Do not infer missing categories from zero."
+  },
+  "filing_families": [
+    {
+      "id": "integrated_rendered_financial_html",
+      "status": "experimental",
+      "format": "ordinary HTML; no genuine inline XBRL namespace/elements",
+      "taxonomy": "none in inspected bytes",
+      "samples": [
+        "03:filing-2025",
+        "03:filing-2026"
+      ],
+      "publication_precision": "collection instant known; prior public availability unknown",
+      "next_action": "Register only exact evidenced financial table signatures, unit captions and context columns before parsing; no universal date cutoff."
+    },
+    {
+      "id": "rendered_ownership_html",
+      "status": "blocked",
+      "format": "ordinary HTML",
+      "taxonomy": "none in inspected bytes",
+      "samples": [
+        "03:ownership-filing"
+      ],
+      "next_action": "Research reference only; fetch scoped XML/inline representation for supported decoding."
+    },
+    {
+      "id": "legacy_financial_html",
+      "status": "blocked",
+      "samples": [],
+      "reason": "older locator not available under closed catalogue circuit; no inherited sample adopted",
+      "next_action": "Obtain one official document and independently inspect exact table before registration."
+    },
+    {
+      "id": "older_financial_xbrl",
+      "status": "blocked",
+      "samples": [],
+      "taxonomy": "unverified; inherited 2020 namespace observation is only a lead",
+      "next_action": "Acquire real XML and closed taxonomy package in Phase 03."
+    },
+    {
+      "id": "integrated_financial_xbrl",
+      "status": "blocked",
+      "samples": [],
+      "taxonomy": "unverified",
+      "next_action": "Acquire real XML, units/context examples and closed taxonomy dependencies."
+    },
+    {
+      "id": "genuine_inline_xbrl",
+      "status": "blocked",
+      "samples": [],
+      "reason": "ixbrl URLs inspected are rendered HTML; no genuine inline sample found",
+      "next_action": "Verify actual inline namespaces/transformations before family implementation."
+    },
+    {
+      "id": "bank_financial_xbrl",
+      "status": "blocked",
+      "samples": [],
+      "next_action": "Separate bank sample/taxonomy and concept dictionary required."
+    }
+  ],
+  "global_targets": {
+    "mapping_version": 1,
+    "series": [
+      {
+        "id": "SP500_PRICE",
+        "symbol": "^GSPC"
+      },
+      {
+        "id": "NASDAQ_COMPOSITE_PRICE",
+        "symbol": "^IXIC"
+      }
+    ],
+    "status": "experimental",
+    "basis": "unadjusted daily Close; price-index points, not USD cash or total return",
+    "capture_kind": "sdk_result",
+    "sdk_version": "yfinance==1.7.0",
+    "windows": [
+      "[2016-09-01,2016-09-07)",
+      "[2025-11-26,2025-12-02)"
+    ],
+    "negative_window": "[2025-11-27,2025-11-28); both raise YFPricesMissingError",
+    "operational_buffer_target": "15 minutes after evidenced regular/early session close; assumption, not historical dissemination proof",
+    "timing": "latest-vintage; locally observed availability starts at capture instant; strict historical exact-version timing unavailable",
+    "untested": [
+      "in-progress final-bar exclusion",
+      "same-window refresh corrections",
+      "mid-window DST transition",
+      "duplicate/missing-session rejection",
+      "all-null/column drift normalization",
+      "warmup before reference start",
+      "continuous ten-year coverage"
+    ],
+    "software_status": "bounded research harness only; production worker/normalizer remains Phase 15",
+    "next_action": "Implement completed-session calendar/buffer filter and capture replay with missing/duplicate/revision tests before adapter acceptance."
+  },
+  "filing_safety_targets": {
+    "status": "capture bounds tested; decoder limits are acceptance targets, not yet parser-tested",
+    "max_document_bytes": 8388608,
+    "max_xml_depth": 64,
+    "max_contexts": 10000,
+    "max_facts": 100000,
+    "max_html_cells": 100000,
+    "max_text_node_bytes": 1048576,
+    "deadline_seconds": 30,
+    "external_resolution": "off; explicit closed taxonomy package only",
+    "prohibited": [
+      "DTD/entities",
+      "unapproved redirects/hosts",
+      "document-discovered network fetch",
+      "general market HTML",
+      "PDF/OCR"
+    ],
+    "next_action": "Test each selected processor against these finite limits plus memory/process cancellation before implementing the family. No parser is selected by Phase 02."
+  },
+  "source_family_report": "README.md",
+  "etf_targets": {
+    "status": "experimental",
+    "catalogue": "04-linked:etf-linked-catalogue",
+    "observed_at": "2026-10-18",
+    "reference_symbols": [
+      "NIFTYBEES",
+      "GOLDBEES"
+    ],
+    "reference_sessions": [
+      "2016-09-01",
+      "2026-10-16"
+    ],
+    "series": "EQ from CM reports; catalogue has no series column",
+    "units": "exchange traded fund-unit prices and quantity; versioned monetary scaling still to verify",
+    "fields": [
+      "Symbol",
+      "Underlying Asset",
+      "SecurityName",
+      "DateofListing",
+      "MarketLot",
+      "ISINNumber",
+      "FaceValue",
+      "ETF Underlying",
+      "Underlying Key"
+    ],
+    "validity": "current catalogue assertions only; historical report ISINs differ; continuity unverified",
+    "unknown": [
+      "past mandate",
+      "historic scheme classification",
+      "listing end dates",
+      "expense ratios",
+      "NAV/iNAV history",
+      "holdings history",
+      "tracking error history"
+    ],
+    "next_action": "Phase 05 dated identity reconciliation; Phase 07 validate complete session EOD and field units before adapter support."
+  },
+  "discovery_targets": {
+    "status": "experimental",
+    "sources": [
+      "04:equity-catalogue",
+      "04:sme-catalogue",
+      "04:symbol-changes",
+      "04:name-changes",
+      "04:chart-discovery"
+    ],
+    "match_types": [
+      "exact symbol",
+      "exact ISIN",
+      "company-name substring",
+      "dated alias candidate"
+    ],
+    "reference_cases": [
+      "INE002A01018 -> RELIANCE",
+      "Reliance -> seven ambiguous company-name matches",
+      "MCDOWELL-N -> UNITDSPR event 2024-06-07",
+      "LTI -> LTIM -> LTM events 2022-12-05 and 2026-02-27",
+      "DHFL current absent; delisting/history unknown"
+    ],
+    "chart_limit": "candidate search filter not verified; returns 20 index entries and no RELIANCE; no dated identity or intraday claim",
+    "next_action": "Phase 05/19 preserve provenance/staleness and all ambiguous matches; no automatic first candidate."
+  }
+}
