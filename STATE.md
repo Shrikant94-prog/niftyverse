@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase:** 03 - Transport and safe archive ingestion. Owner authorizes sequential implementation, local commits, final merge commit into local main, GitHub push; retain phase-03. Do not start Phase 04.
-- **Status:** incomplete. NV-03-01 through 03 verified. Source assertions verified for older 2020 XML with a closed package, owner-linked legacy HTML and two integrated HTML specimens. Genuine-inline/newer-taxonomy acceptance remains unfinished.
+- **Status:** incomplete; execution blocked on the pending non-NSE decoder-fixture scope decision after three consecutive goal turns. NV-03-01 through 03 verified. Source assertions verified for older 2020 XML with a closed package, owner-linked legacy HTML and two integrated HTML specimens. Genuine-inline/newer-taxonomy acceptance remains unfinished.
 - **Current checkpoint:** NV-03-04; extensive research found a genuine XBRL International issuer report. Owner scope clarification is pending before using non-NSE report/taxonomy bytes solely for shared-decoder verification.
 - **Prerequisite:** Phase 02 integrated at 5bc94ba; current starting baseline a481636, clean initial tree. All 68 frozen baseline tests passed before changes. Earlier Phase 02 [completion](docs/evidence/02-20261018-completion.md) and relevant report/filing evidence inspected.
-- **Git:** branch from local main a481636; runtime checkpoint f8bb373 and research checkpoint a944a1c pushed to origin/phase-03. Both pass all eight hosted jobs. Main/origin unchanged at last fetch; no merge yet.
+- **Git:** branch from local main a481636; runtime checkpoint f8bb373 and research checkpoints a944a1c/f85c447 pushed to origin/phase-03. All pass eight hosted jobs. Main/origin unchanged at last fetch; no merge yet.
 - **Next action:** await the pending non-NSE fixture scope answer. If owner accepts codec-only use of the real XII report, acquire a bounded closed taxonomy package and implement/test evidenced inline constructs. NSE inline acquisition stays unsupported. No final integration while PH-03-GATE is incomplete.
 
 ## Read first
@@ -33,7 +33,7 @@
 - Current code: CPython 3.14.7, uv 0.12.9. Frozen default suite: **118 pass, 2 optional modules skipped** (lxml absent). Explicit filings extra: **142 pass**. Ruff format/lint and strict mypy pass (30 source files).
 - Fresh core and filings wheel hash 5650cb178a9b761683bf5e1d9da850884f233a26256e9a65a1e071b7ec0f3d75; installed core imports new boundaries without optional parser, installed extra decodes real HTML/XML with closed local package. Python audit denial is not an OS firewall or RSS sandbox.
 - Lock 4b4b8542e9473f2ed5a77ef8c549efe62db7bbbdf9a65f368ebbd9a0228ec58f. lxml 6.1.3 optional; types-lxml development signatures. No Arelle runtime installed/imported: only explicit research-wheel resource bytes form the pinned 19-resource local taxonomy package.
-- Runtime f8bb373 and research-only a944a1c pass all eight hosted jobs; [current research run](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39157859675) includes Windows/Ubuntu core, explicit filings subset and fresh installed filings wheel. Details in the research/hosted evidence.
+- Runtime f8bb373 and research-only a944a1c/f85c447 pass all eight hosted jobs; [latest observed research run](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39158106346) includes Windows/Ubuntu core, explicit filings subset and fresh installed filings wheel. Details in the research/hosted evidence.
 - Owner supplied legacy URL and two Sample_Files XML inputs; originals remain untouched/untracked. Legacy content is 31-Dec-2009. 2018 XML has a 2018 namespace but a 2017-named schemaRef; 2025 input matches already acquired older-taxonomy facts. Neither is genuine inline.
 - Owner-requested extensive research: eight additional named public NSE HTML specimens returned 200, all with zero inline namespace/fact/context elements; two announcement specimens are ordinary XML. NSE circular identifies an entity-facing NEAPS report route. No qualifying public NSE inline specimen was verified; no claim that none exists. SEC Infosys download returned 403, respected. XII's actual 2023 report returned 200 and contains 316 numeric facts, 7 text facts and 4 continuations. Exact twelve direct-request observations and primary sources are recorded. No new provider host was added to production/recon registries.
 - Older 2020 package now closes offline. Integrated 2026 XML needs a matching package; published/archive collection inspected contains 2025, with no silent substitution. Source assertions are separate from full XBRL calculation/formula/dimensional validity and financial/ownership economic mapping.
@@ -48,9 +48,9 @@
 | 00 | verified | [Resume](docs/evidence/00-20261018-resume.md) |
 | 01 | verified through PH-01-GATE | [Completion](docs/evidence/01-20261018-completion.md) |
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
-| 03 | in progress, gate incomplete | Current acceptance mapping above |
+| 03 | incomplete; execution blocked pending fixture-scope answer | Current acceptance mapping above |
 | 04-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
 
 ## Checkpoint handoff
 
-Continue Phase 03 on retained phase-03. The XML/legacy checkpoint is pushed and hosted-green. Research located a real inline report from XII; the asynchronous question asks whether it may be used with its closed taxonomy only as decoder verification input under the phase's no-new-provider boundary. Preserve evidence while waiting; do not implement that dependent scope before the answer. No upload question remains pending. Preserve untracked Sample_Files. Do not begin Phase 04, merge an incomplete gate, or report Phase 03 complete.
+Resume Phase 03 on retained phase-03 when the pending scope answer arrives. The XML/legacy checkpoint and research are pushed and hosted-green. Research located a real inline report from XII; the asynchronous question asks whether it may be used with its closed taxonomy only as decoder verification input under the phase's no-new-provider boundary. This same decision remains pending across three goal turns; independent common work, public-source research, archived-2018 inspection and latest CI observation have completed. Do not repeat those checks or implement the dependent scope before the answer. No upload question remains pending. Preserve untracked Sample_Files. Do not begin Phase 04, merge an incomplete gate, or report Phase 03 complete.
