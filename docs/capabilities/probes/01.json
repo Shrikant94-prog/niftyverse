@@ -1,0 +1,16 @@
+{
+  "budget": {"max_requests": 12, "deadline_seconds": 180},
+  "probes": [
+    {"name": "bootstrap", "url": "https://www.nseindia.com/", "scope": "session bootstrap only; no market extraction", "format": "bootstrap"},
+    {"name": "equity-recent", "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?symbol=RELIANCE&series=EQ&from=14-10-2026&to=16-10-2026", "scope": "RELIANCE EQ 2026-10-14..16 inclusive candidate parameters", "format": "json", "window_days": 3},
+    {"name": "equity-old", "url": "https://www.nseindia.com/api/historical/cm/equity?symbol=RELIANCE&series=%5B%22EQ%22%5D&from=01-09-2016&to=02-09-2016", "scope": "RELIANCE EQ 2016-09-01..02", "format": "json", "window_days": 2},
+    {"name": "actions", "url": "https://www.nseindia.com/api/corporates-corporateActions?index=equities&symbol=RELIANCE&from_date=01-10-2026&to_date=16-10-2026", "scope": "RELIANCE corporate action catalogue October 1..16 2026", "format": "json", "window_days": 16},
+    {"name": "events", "url": "https://www.nseindia.com/api/event-calendar?index=equities", "scope": "current event catalogue; effective/publication precision to inspect", "format": "json"},
+    {"name": "announcements", "url": "https://www.nseindia.com/api/corporate-announcements?index=equities&symbol=RELIANCE&from_date=14-10-2026&to_date=16-10-2026", "scope": "RELIANCE 2026-10-14..16 announcements metadata only", "format": "json", "window_days": 3},
+    {"name": "asm-json", "url": "https://www.nseindia.com/api/reportASM", "scope": "current ASM list candidate; no historical inference", "format": "json"},
+    {"name": "gsm-csv", "url": "https://nsearchives.nseindia.com/content/equities/gsm_latest.csv", "scope": "current GSM candidate CSV", "format": "csv"},
+    {"name": "band-csv", "url": "https://nsearchives.nseindia.com/content/equities/eq_band_changes_16102026.csv", "scope": "band changes 2026-10-16 candidate dated CSV", "format": "csv"},
+    {"name": "surveillance-zip", "url": "https://nsearchives.nseindia.com/content/equities/PR161026.zip", "scope": "2026-10-16 CM report bundle; optional state fields unverified", "format": "zip"},
+    {"name": "band-old", "url": "https://nsearchives.nseindia.com/content/equities/eq_band_changes_01092016.csv", "scope": "band changes 2016-09-01 candidate CSV; not continuous history", "format": "csv"}
+  ]
+}

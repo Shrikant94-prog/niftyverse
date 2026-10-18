@@ -4,18 +4,18 @@
 
 ## Active work
 
-- **Phase:** 01 - Package and offline vertical slice; complete through PH-01-GATE.
-- **Status:** verified. Owner accepted notebook/terminal appearance; final review repaired one CSV checksum/read defect. All 43 tests and all eight hosted CI jobs pass on final runtime source. No remaining Phase 01 blockers.
+- **Phase:** 02 - Source contracts and coverage reconnaissance; authorized by the owner goal.
+- **Status:** in progress on `phase-02`, created from clean local `main` at `b95eecd`. No existing phase branch or user changes. Phase 01 prerequisite rechecked: 43 offline tests pass; hosted run 39145886497 is successful at the recorded source.
 - **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
-- **Current checkpoint:** NV-01-01, NV-01-02, NV-01-03 and PH-01-GATE verified; completion evidence recorded.
-- **Next action:** await owner authorization for Phase 02, source contracts and coverage reconnaissance. Do not start it automatically.
+- **Current checkpoint:** NV-02-01 complete as bounded investigation; [capture evidence](docs/evidence/02-20261018-capture.md). JSON source remains blocked, not supported. NV-02-02 report/terms/index sample inspection next.
+- **Next action:** capture official representative equity/action/event/surveillance samples, then continue checkpoints sequentially. Local commits, local merge and GitHub push authorized; retain phase branch. Do not start Phase 03.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
 2. [Phase 01 completion](docs/evidence/01-20261018-completion.md) and [gate](docs/phases/01.md#gate).
-3. For a specific Phase 01 follow-up only: [CSV repair](docs/evidence/01-20261018-bundle-read.md), [accepted display](docs/evidence/01-20261018-research-card.md), [package](docs/evidence/01-20261018-package.md), [slice](docs/evidence/01-20261018-slice.md) or [ADR](docs/decisions/0001-phase01-api.md).
-4. After separate Phase 02 authorization, update the reading route from that phase brief. No Phase 02 work is currently authorized.
+3. [Phase 02 contract and gate](docs/phases/02.md), active checkpoint NV-02-01; [workflow](docs/WORKFLOW.md#phase-loop).
+4. Only the active family in [source contracts](docs/specs/sources.md#s5), [transport budgets](docs/specs/transport.md#s9-1), [partition completeness](docs/specs/builder.md#s10-2), and assigned R9/AM-01/09/13/14/15/16 rows in [requirements](docs/specs/requirements.md#s18-2).
 
 ## Verified evidence and acceptance mapping
 
@@ -39,7 +39,7 @@ Documentation IDs, links, dependencies and static baseline fingerprints pass. Hi
 - No Phase 01 blocker. Accepted captures: `docs/evidence/artifacts/phase01-research-card/`.
 - Authorized repository: `https://github.com/Shrikant94-prog/niftyverse.git`, branch `main`; runtime source and repair pushed. The containing commit records completion.
 - Owned fixtures establish software behavior, not market-source/dataset readiness. Historical NIFTY 500 input remains unbundled. Filings candidates remain unselected; durable publication/full CLI/explorer remain later-phase scope.
-- Phase 02 is eligible but unstarted and awaits owner authorization.
+- Phase 02 investigation is authorized. Source failures may satisfy bounded reconnaissance only; they never certify supported adapters or complete historical partitions.
 
 ## Phase ledger
 
@@ -47,7 +47,7 @@ Documentation IDs, links, dependencies and static baseline fingerprints pass. Hi
 |---|---|---|
 | 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
 | 01 | verified, including PH-01-GATE | [Completion evidence](docs/evidence/01-20261018-completion.md) |
-| 02 | not started | - |
+| 02 | in progress: NV-02-02 | [Capture evidence](docs/evidence/02-20261018-capture.md); 15 boundary tests pass |
 | 03 | not started | - |
 | 04 | not started | - |
 | 05 | not started | - |
@@ -72,5 +72,6 @@ Documentation IDs, links, dependencies and static baseline fingerprints pass. Hi
 ## Checkpoint handoff
 
 - **Verified:** Phase 00; all Phase 01 acceptance criteria and PH-01-GATE, including current hosted CI and owner appearance acceptance.
-- **Git:** runtime `a563c9c` delivered to `origin/main`; this completion checkpoint preserves the evidence and phase state.
-- **Next smallest action:** await an instruction to begin Phase 02. No next-phase work was started.
+- **Git:** `phase-02` from local `main` at `b95eecd`; no user changes displaced.
+- **Active acceptance:** NV-02-02-AC1/2: inspect legacy/current report bytes, dated terms and index variants; declare exact session partitions and unavailable history. Expect no ten-year inference from two sessions. Fixed archive/index probes and manual headers/row checks; evidence pending.
+- **Next smallest action:** finish report/terms/index evidence and initial partition contracts, then checkpoint 03.
