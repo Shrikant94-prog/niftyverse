@@ -53,4 +53,4 @@
 
 ## Checkpoint handoff
 
-Resume Phase 03 on retained phase-03 when the pending scope answer arrives. The XML/legacy checkpoint and research are pushed and hosted-green. Research located a real inline report from XII; the asynchronous question asks whether it may be used with its closed taxonomy only as decoder verification input under the phase's no-new-provider boundary. This same decision remains pending across three goal turns; independent common work, public-source research, archived-2018 inspection and latest CI observation have completed. Do not repeat those checks or implement the dependent scope before the answer. No upload question remains pending. Preserve untracked Sample_Files. Do not begin Phase 04, merge an incomplete gate, or report Phase 03 complete.
+Resume retained phase-03 after the pending XII fixture-scope answer. The same decision spans three goal turns; independent common work, source research, archived-2018 inspection and CI observation have completed. Avoid repeating checks or implementing dependent scope before the answer. No upload request is pending. Preserve Sample_Files. No Phase 04, incomplete-gate merge or completion claim.
