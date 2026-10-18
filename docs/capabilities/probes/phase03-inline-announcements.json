@@ -1,0 +1,23 @@
+{
+  "budget": {
+    "max_requests": 2,
+    "max_bytes": 8388608,
+    "max_total_bytes": 16777216,
+    "deadline_seconds": 60,
+    "spacing_seconds": 2
+  },
+  "probes": [
+    {
+      "name": "trading-window-xml",
+      "url": "https://nsearchives.nseindia.com/corporate/xbrl/CLOSURE_TRADING_WINDOW_1473127_27062025041559_WEB.xml",
+      "scope": "Published official announcement locator; inspect actual root/namespace only, no event mapper",
+      "format": "xml"
+    },
+    {
+      "name": "prior-intimation-xml",
+      "url": "https://nsearchives.nseindia.com/corporate/xbrl/PRIOR_INTIMATION_60954_1493994_25072025074112_WEB.xml",
+      "scope": "Published official announcement locator; distinguish XML from inline, no event mapper",
+      "format": "xml"
+    }
+  ]
+}
