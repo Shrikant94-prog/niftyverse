@@ -1,0 +1,6 @@
+[
+  {"instrument_id":"0001","session_date":"2026-09-01","close":"123.4500","label":""},
+  {"instrument_id":"0002","session_date":"2026-09-02","close":null,"label":null},
+  {"instrument_id":"0003","session_date":"2026-09-03","close":"0.0000","label":"__NULL__"},
+  {"instrument_id":"0004","session_date":"2026-09-04","close":"99999999999999.9999","label":"<script>alert('x')</script>"}
+]
