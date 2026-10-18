@@ -8,9 +8,11 @@ submit an independently approved target through the same budgets.
 
 import asyncio
 import math
+import random
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 from typing import ClassVar, Self
 from urllib.parse import urlsplit
 
@@ -22,8 +24,9 @@ from niftyverse.recon import HOSTS
 class TransportFailure(RuntimeError):
     """Safe diagnostic: never contains request/response text or credentials."""
 
-    def __init__(self, code: str) -> None:
+    def __init__(self, code: str, *, deferred_until: float | None = None) -> None:
         self.code = code
+        self.deferred_until = deferred_until
         super().__init__(code)
 
 
@@ -38,6 +41,8 @@ class FamilyPolicy:
     max_total_bytes: int = 128 * 1024 * 1024
     deadline: float = 120
     spacing: float = 2
+    attempts: int = 3
+    refresh_url: str | None = None
 
     def __post_init__(self) -> None:
         if (
@@ -47,12 +52,28 @@ class FamilyPolicy:
             or min(self.concurrency, self.max_requests, self.max_body_bytes, self.max_total_bytes)
             <= 0
             or self.pending < 0
+            or not 1 <= self.attempts <= 3
             or not math.isfinite(self.deadline)
             or self.deadline <= 0
             or not math.isfinite(self.spacing)
             or self.spacing < 0
         ):
             raise ValueError("invalid family policy")
+        if self.refresh_url is not None:
+            try:
+                parts = urlsplit(self.refresh_url)
+                valid = (
+                    parts.scheme == "https"
+                    and parts.hostname in self.hosts
+                    and parts.port in {None, 443}
+                    and not parts.username
+                    and not parts.password
+                    and not parts.fragment
+                )
+            except ValueError:
+                valid = False
+            if not valid:
+                raise ValueError("invalid refresh URL")
 
 
 @dataclass
@@ -82,6 +103,12 @@ class _Family:
         self.rate_lock = asyncio.Lock()
         self.next_start = 0.0
         self.http1 = False
+        self.blocked = False
+        self.deferred_until = 0.0
+        self.spacing = policy.spacing
+        self.refresh_lock = asyncio.Lock()
+        self.generation = 0
+        self.refresh_failed = False
         self.client = httpx.AsyncClient(
             http2=True,
             follow_redirects=False,
@@ -108,7 +135,7 @@ class _Family:
                     max_keepalive_connections=self.policy.concurrency,
                 ),
             )
-        self.fallback.cookies.update(self.client.cookies)
+            self.fallback.cookies.update(self.client.cookies)
         return self.fallback
 
     async def close(self) -> None:
@@ -133,6 +160,8 @@ class DirectTransport:
         *policies: FamilyPolicy,
         transport: httpx.AsyncBaseTransport | None = None,
         global_concurrency: int = 4,
+        wall_clock: Callable[[], float] = time.time,
+        jitter: Callable[[], float] = random.random,
         clock: Callable[[], float] = time.monotonic,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
     ) -> None:
@@ -148,6 +177,8 @@ class DirectTransport:
             raise ValueError("duplicate family name")
         self._transport = transport
         self._clock = clock
+        self._wall_clock = wall_clock
+        self._jitter = jitter
         self._sleep = sleep
         self._global_limit = global_concurrency
         self._families: list[_Family] = []
@@ -223,16 +254,7 @@ class DirectTransport:
         self._tasks.add(task)
         try:
             async with asyncio.timeout(policy.deadline):
-                try:
-                    return await self._attempt(family, url)
-                except httpx.RemoteProtocolError:
-                    # HTTPX negotiates HTTP/1 via ALPN normally. One counted
-                    # read-only fallback also handles a broken HTTP/2 handshake.
-                    if family.http1:
-                        raise TransportFailure("protocol_error") from None
-                    family.http1 = True
-                    stats.http1_fallbacks += 1
-                    return await self._attempt(family, url)
+                return await self._retry(family, url, self._clock() + policy.deadline)
         except TimeoutError:
             raise TransportFailure("deadline") from None
         except httpx.TimeoutException:
@@ -246,19 +268,85 @@ class DirectTransport:
             stats.admitted -= 1
             self._tasks.discard(task)
 
-    async def _attempt(self, family: _Family, url: str) -> Download:
+    def _check_source(self, family: _Family) -> None:
+        if family.blocked:
+            raise TransportFailure("source_blocked")
+        if family.deferred_until > self._wall_clock():
+            raise TransportFailure("deferred", deferred_until=family.deferred_until)
+
+    async def _wait(self, delay: float, expires: float) -> None:
+        remaining = expires - self._clock()
+        if remaining <= 0 or delay >= remaining:
+            raise TransportFailure("deadline")
+        if delay > 0:
+            await self._sleep(delay)
+        if self._clock() >= expires:
+            raise TransportFailure("deadline")
+
+    async def _retry(self, family: _Family, url: str, expires: float) -> Download:
+        refreshed = False
+        for attempt in range(family.policy.attempts):
+            self._check_source(family)
+            await self._wait(0, expires)
+            generation = family.generation
+            delay = min(8.0, 2.0**attempt) * min(1.0, max(0.0, self._jitter()))
+            try:
+                return await self._attempt(family, url, expires)
+            except httpx.RemoteProtocolError:
+                if family.http1:
+                    raise TransportFailure("protocol_error") from None
+                family.http1 = True
+                family.stats.http1_fallbacks += 1
+                delay = 0
+            except httpx.TimeoutException, httpx.NetworkError:
+                pass
+            except _RetryResponse as failure:
+                if failure.status == 401:
+                    if refreshed or family.policy.refresh_url is None or family.refresh_failed:
+                        raise TransportFailure("session_invalid") from None
+                    async with family.refresh_lock:
+                        if family.refresh_failed:
+                            raise TransportFailure("session_invalid") from None
+                        if generation == family.generation:
+                            # The caller's explicitly configured, verified bootstrap
+                            # goes through the same request/byte/time/rate budget.
+                            try:
+                                await self._attempt(family, family.policy.refresh_url, expires)
+                            except TransportFailure, _RetryResponse, httpx.HTTPError:
+                                family.refresh_failed = True
+                                raise TransportFailure("session_refresh_failed") from None
+                            family.generation += 1
+                    refreshed = True
+                    delay = 0
+                elif failure.status == 429:
+                    family.spacing = max(2.0, family.spacing * 2)
+                    delay = max(delay, failure.retry_after)
+                    if delay >= expires - self._clock():
+                        family.deferred_until = self._wall_clock() + delay
+                        raise TransportFailure(
+                            "deferred", deferred_until=family.deferred_until
+                        ) from None
+                    family.next_start = max(family.next_start, self._clock() + delay)
+            if attempt + 1 == family.policy.attempts:
+                raise TransportFailure("retry_exhausted") from None
+            await self._wait(delay, expires)
+        raise AssertionError("finite retry loop")
+
+    async def _attempt(self, family: _Family, url: str, expires: float) -> Download:
         stats, policy = family.stats, family.policy
         async with family.slots, self._global:
             async with family.rate_lock:
-                delay = max(0.0, family.next_start - self._clock())
-                if delay:
-                    await self._sleep(delay)
+                self._check_source(family)
+                await self._wait(0, expires)
+                while family.next_start > self._clock():
+                    await self._wait(family.next_start - self._clock(), expires)
+                    self._check_source(family)
                 if stats.requests >= policy.max_requests:
                     raise TransportFailure("request_budget")
                 if stats.bytes_read >= policy.max_total_bytes:
                     raise TransportFailure("byte_budget")
                 stats.requests += 1
-                family.next_start = self._clock() + policy.spacing
+                family.next_start = self._clock() + family.spacing
             return await self._send(family, url)
 
     async def _send(self, family: _Family, url: str) -> Download:
@@ -272,6 +360,14 @@ class DirectTransport:
             ) as response:
                 if 300 <= response.status_code < 400:
                     raise TransportFailure("redirect_blocked")
+                if response.status_code == 403:
+                    family.blocked = True
+                    raise TransportFailure("source_blocked")
+                if response.status_code in {401, 429, 500, 502, 503, 504}:
+                    raise _RetryResponse(
+                        response.status_code,
+                        self._retry_after(response.headers.get("retry-after")),
+                    )
                 if response.status_code != 200:
                     raise TransportFailure(f"http_{response.status_code}")
                 if response.headers.get("content-encoding", "identity").lower() != "identity":
@@ -284,8 +380,40 @@ class DirectTransport:
                     if len(body) + len(chunk) > policy.max_body_bytes:
                         raise TransportFailure("body_limit")
                     body.extend(chunk)
+                head = bytes(body[:8192]).lstrip().lower()
+                if head.startswith(b"<") and any(
+                    marker in head
+                    for marker in (
+                        b"access denied",
+                        b"captcha",
+                        b"verify you are human",
+                        b"request rejected",
+                    )
+                ):
+                    family.blocked = True
+                    raise TransportFailure("source_blocked")
                 return Download(
                     bytes(body), response.headers.get("content-type", ""), response.http_version
                 )
         finally:
             stats.active -= 1
+
+    def _retry_after(self, value: str | None) -> float:
+        if not value:
+            return 0
+        try:
+            seconds = float(value)
+            if math.isfinite(seconds):
+                return max(0, seconds)
+            return 0
+        except ValueError:
+            try:
+                return max(0, parsedate_to_datetime(value).timestamp() - self._wall_clock())
+            except ValueError, TypeError, OverflowError:
+                return 0
+
+
+class _RetryResponse(Exception):
+    def __init__(self, status: int, retry_after: float) -> None:
+        self.status = status
+        self.retry_after = retry_after

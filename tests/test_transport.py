@@ -257,3 +257,242 @@ def test_compressed_http_body_rejected_before_decode() -> None:
             assert client.stats.bytes_read == 0
 
     _loop.run_until_complete(check())
+
+
+@pytest.mark.parametrize(
+    "status,code,calls",
+    [
+        (403, "source_blocked", 1),
+        (500, "retry_exhausted", 3),
+        (502, "retry_exhausted", 3),
+        (404, "http_404", 1),
+        (401, "session_invalid", 1),
+    ],
+)
+def test_retry_policy_and_circuit(status: int, code: str, calls: int) -> None:
+    async def check() -> None:
+        async def sleep(delay: float) -> None:
+            pass
+
+        async with DirectTransport(
+            policy(),
+            sleep=sleep,
+            jitter=lambda: 0.5,
+            transport=httpx.MockTransport(
+                lambda r: httpx.Response(
+                    status, headers={"set-cookie": "secret"}, content=b"password=secret"
+                )
+            ),
+        ) as client:
+            with pytest.raises(TransportFailure) as caught:
+                await client.get(URL + "?token=secret")
+            assert caught.value.code == code
+            assert "secret" not in repr(caught.value)
+            assert client.stats.requests == calls
+            if status == 403:
+                with pytest.raises(TransportFailure, match="source_blocked"):
+                    await client.get(URL)
+                assert client.stats.requests == 1
+
+    _loop.run_until_complete(check())
+
+
+def test_retry_after_deferred_and_virtual_elapsed_budget() -> None:
+    async def check() -> None:
+        now = 0.0
+        waits: list[float] = []
+        calls = 0
+
+        async def sleep(delay: float) -> None:
+            nonlocal now
+            now += delay
+            waits.append(delay)
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            nonlocal calls
+            calls += 1
+            return httpx.Response(429, headers={"retry-after": "4" if calls == 1 else "60"})
+
+        async with DirectTransport(
+            policy(deadline=10),
+            clock=lambda: now,
+            wall_clock=lambda: 1000 + now,
+            sleep=sleep,
+            jitter=lambda: 0.5,
+            transport=httpx.MockTransport(handle),
+        ) as client:
+            with pytest.raises(TransportFailure) as caught:
+                await client.get(URL)
+            assert caught.value.code == "deferred"
+            assert caught.value.deferred_until == 1064
+            assert waits == [4] and calls == 2
+            # Source-wide deferral also stops new jobs without another call.
+            with pytest.raises(TransportFailure, match="deferred"):
+                await client.get(URL)
+            assert calls == 2
+
+    _loop.run_until_complete(check())
+
+
+def test_timeouts_retry_and_cancel_during_backoff() -> None:
+    async def check() -> None:
+        waiting = asyncio.Event()
+        calls = 0
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            nonlocal calls
+            calls += 1
+            raise httpx.ReadTimeout("cookie=secret", request=request)
+
+        async def sleep(delay: float) -> None:
+            waiting.set()
+            await asyncio.Event().wait()
+
+        async with DirectTransport(
+            policy(), sleep=sleep, jitter=lambda: 0.5, transport=httpx.MockTransport(handle)
+        ) as client:
+            job = asyncio.create_task(client.get(URL))
+            await waiting.wait()
+            job.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await job
+            assert calls == 1 and client.stats.cancelled == 1
+            assert client.stats.active == client.stats.admitted == 0
+
+    _loop.run_until_complete(check())
+
+
+def test_refresh_is_serial_and_counted() -> None:
+    async def check() -> None:
+        first_wave = 0
+        both = asyncio.Event()
+        refreshed = False
+        refreshes = 0
+
+        async def handle(request: httpx.Request) -> httpx.Response:
+            nonlocal first_wave, refreshed, refreshes
+            if request.url.path == "/bootstrap":
+                refreshes += 1
+                refreshed = True
+                return httpx.Response(200, headers={"set-cookie": "session=secret"})
+            if not refreshed:
+                first_wave += 1
+                if first_wave == 2:
+                    both.set()
+                await both.wait()
+                return httpx.Response(401)
+            return httpx.Response(200, content=b"ok")
+
+        async with DirectTransport(
+            policy(refresh_url="https://www.nseindia.com/bootstrap"),
+            transport=httpx.MockTransport(handle),
+        ) as client:
+            results = await asyncio.gather(client.get(URL), client.get(URL))
+            assert [r.body for r in results] == [b"ok", b"ok"]
+            assert refreshes == 1 and client.stats.requests == 5
+
+    _loop.run_until_complete(check())
+
+
+def test_html_challenge_opens_circuit() -> None:
+    async def check() -> None:
+        async with DirectTransport(
+            policy(),
+            transport=httpx.MockTransport(
+                lambda r: httpx.Response(200, text="<html>Access Denied token=secret</html>")
+            ),
+        ) as client:
+            with pytest.raises(TransportFailure, match="source_blocked"):
+                await client.get(URL)
+            with pytest.raises(TransportFailure, match="source_blocked"):
+                await client.get(URL)
+            assert client.stats.requests == 1
+
+    _loop.run_until_complete(check())
+
+
+@pytest.mark.parametrize(
+    "retry_after,expected",
+    [("Thu, 01 Jan 1970 00:16:45 GMT", 5), ("invalid", 0.5), ("-1", 0.5), ("nan", 0.5)],
+)
+def test_retry_after_forms_and_success(retry_after: str, expected: float) -> None:
+    async def check() -> None:
+        now = 0.0
+        calls = 0
+
+        async def sleep(delay: float) -> None:
+            nonlocal now
+            now += delay
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                return httpx.Response(429, headers={"retry-after": retry_after})
+            return httpx.Response(200, content=b"ok")
+
+        async with DirectTransport(
+            policy(),
+            clock=lambda: now,
+            wall_clock=lambda: 1000 + now,
+            sleep=sleep,
+            jitter=lambda: 0.5,
+            transport=httpx.MockTransport(handle),
+        ) as client:
+            assert (await client.get(URL)).body == b"ok"
+            assert now == expected and calls == 2
+
+    _loop.run_until_complete(check())
+
+
+def test_timeout_retry_exhaustion_virtual_time() -> None:
+    async def check() -> None:
+        now = 0.0
+
+        async def sleep(delay: float) -> None:
+            nonlocal now
+            now += delay
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            raise httpx.ConnectTimeout("secret", request=request)
+
+        async with DirectTransport(
+            policy(),
+            clock=lambda: now,
+            sleep=sleep,
+            jitter=lambda: 0.5,
+            transport=httpx.MockTransport(handle),
+        ) as client:
+            with pytest.raises(TransportFailure, match="retry_exhausted"):
+                await client.get(URL)
+            assert client.stats.requests == 3 and now == 1.5
+
+    _loop.run_until_complete(check())
+
+
+def test_cancel_stream_closes_response() -> None:
+    class Stream(httpx.AsyncByteStream):
+        closed = False
+
+        async def __aiter__(self) -> AsyncIterator[bytes]:
+            yield b"ok"
+            started.set()
+            await asyncio.Event().wait()
+
+        async def aclose(self) -> None:
+            self.closed = True
+
+    async def check() -> None:
+        stream = Stream()
+        async with DirectTransport(
+            policy(), transport=httpx.MockTransport(lambda r: httpx.Response(200, stream=stream))
+        ) as client:
+            job = asyncio.create_task(client.get(URL))
+            await started.wait()
+            job.cancel()
+            with pytest.raises(asyncio.CancelledError):
+                await job
+            assert stream.closed and client.stats.active == client.stats.admitted == 0
+
+    started = asyncio.Event()
+    _loop.run_until_complete(check())
