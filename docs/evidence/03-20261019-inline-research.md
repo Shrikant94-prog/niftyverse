@@ -77,6 +77,11 @@ and macOS core lanes also pass. lxml is 6.1.3; hosted Linux libxml2 2.14.6 diffe
 from local Windows 2.11.9. Wheel hashes differ across platform/checkout bytes;
 artifact identity across platforms is not claimed.
 
+The containing research-only commit `a944a1c065badc2bf0b2b2231d22b74f701be743`
+also passes all eight jobs in
+[run 39157859675](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39157859675),
+observed completed successfully. Its runtime source is unchanged from f8bb373.
+
 The existing local full-extra result remains **142 passed**. This research
 changes no runtime code, dependency or tests, so those unchanged checks were
 not rerun. Current green checks certify implemented common/XML/HTML behavior;
@@ -88,3 +93,18 @@ the baseline checker and its positive/negative self-tests: 77 Markdown files,
 local links/anchors, dependency order and root budgets. Static requirement,
 decision, amendment, outcome, acceptance and gate fingerprints match. Staged
 diff whitespace check passes. The owner's untracked Sample_Files remain untouched.
+
+## Independent 2018 package check
+
+While the non-NSE decoder-fixture scope question remained unanswered, a bounded
+in-memory inspection of the already hashed official taxonomy archive examined
+the older Ind-AS collection's schema names and the four 2018 schema bodies.
+No acquisition or extraction occurred. The archive contains 2018, 2019 and
+2020 entrypoints; no 2017-named entrypoint occurs in that collection.
+The 2018 core schema explicitly declares
+`http://www.bseindia.com/xbrl/fin/2018-03-31/in-bse-fin`, and its entrypoint is
+`Ind-AS_entry_point_2018-03-31.xsd`. This matches the owner's 2018 concept
+namespace but does not explain the document's `Ind-AS_entry_point_2017-03-31.xsd`
+reference. File metadata alone cannot establish that a 2018 package may replace
+the referenced 2017 entrypoint. No implicit alias or new support claim was added.
+Local inspection metadata is retained in .local/phase03/archive2018-inspection.json.
