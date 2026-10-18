@@ -10,6 +10,7 @@ import duckdb
 import polars as pl
 import pytest
 from click.testing import CliRunner
+from rich.text import Text
 
 from niftyverse import SliceResult, extract_fixture
 from niftyverse.cli import main
@@ -65,7 +66,7 @@ def test_bounds_empty_and_malicious_metadata(tmp_path: Path) -> None:
     )
     html = render_html(huge)
     assert len(html.encode()) < 65536
-    assert "<img" not in html and "</style>" not in html
+    assert "<img" not in html and "&lt;/style&gt;" in html
     assert "1000000 committed rows" in html
     assert "10 of 1000000" in html
     assert "\x1b" not in render_text(huge)
@@ -83,6 +84,8 @@ def test_plain_and_capable_terminals(tmp_path: Path) -> None:
         assert "\x1b[" not in plain
         assert "\x1b[" in capable
         assert all(len(line) <= width for line in plain.splitlines())
+        assert len(plain.splitlines()[0]) == width
+        assert len(Text.from_ansi(capable).plain.splitlines()[0]) == width
         assert "4 committed rows" in plain
 
 
@@ -118,3 +121,39 @@ def test_explicit_materialization_limit(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="max_rows=3"):
         result.to_polars(max_rows=3)
     assert result.to_polars(max_rows=4).height == 4
+
+
+def test_polished_preview_preserves_display_semantics(tmp_path: Path) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    html = result._repr_html_()
+    text = repr(result)
+    assert "Observation preview" in html
+    assert "Owned offline fixture" in html
+    assert "CSV bundle" in html
+    assert "Provenance" in html
+    assert "123.4500" in html and "99,999,999,999,999.9999" in html
+    assert "0001" in html and "__NULL__" in html
+    assert 'aria-label="Empty text"' in html
+    assert 'aria-label="Null value"' in html
+    assert '""' in text and "<null>" in text
+    assert sum(len(value.encode()) for value in result._repr_mimebundle_().values()) <= 65536
+    narrow = terminal_summary(result, width=60, capable=False)
+    wide = terminal_summary(result, width=100, capable=False)
+    assert "4 committed rows" in narrow
+    assert "CSV bundle" in narrow
+    assert "Instrument" in wide and "Session" in wide
+    assert "0001" in wide and "__NULL__" in wide
+    assert "123.4500" in wide
+
+
+def test_explicit_terminal_capability_is_reproducible(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    result = extract_fixture(PAYLOAD, tmp_path / "out")
+    monkeypatch.setenv("NO_COLOR", "1")
+    monkeypatch.setenv("TERM", "dumb")
+    colored = terminal_summary(result, width=100, capable=True)
+    assert "36m" in colored
+    assert len(Text.from_ansi(colored).plain.splitlines()[0]) == 100
+    assert "\x1b" not in terminal_summary(result, width=100, capable=False)
