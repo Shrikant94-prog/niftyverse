@@ -4,47 +4,46 @@
 
 ## Active work
 
-- **Phase:** 00 - Fresh baseline and lean workflow; authorized only through PH-00-GATE.
-- **Status:** incomplete; blocked on Git metadata writes and fresh-session resume evidence. Goal blocked after three consecutive observations of the same external blockers; no Phase 01 work authorized or begun.
+- **Phase:** 00 - Fresh baseline and lean workflow; verified through PH-00-GATE.
+- **Status:** complete; NV-00-01, NV-00-02, NV-00-03 and PH-00-GATE verified. No Phase 01 work authorized or begun.
 - **Project location:** `C:\Users\Shrikant Maurya\OneDrive\Documents\Git_Projects\niftyverse`, explicitly selected by owner.
-- **Current checkpoint:** NV-00-01 - document baseline verified; intentional Git baseline commit pending.
-- **Next action:** restore normal Git write access in this selected workspace, inspect inventory/staging, stage the adopted documents/checker plus STATE/evidence and commit the baseline. Then accept NV-00-01, retain the already-verified independent NV-00-02 checks, and complete NV-00-03 with genuine fresh-session evidence.
+- **Current checkpoint:** NV-00-03 complete; Phase 00 completion retained for owner review.
+- **Next action:** stop for owner review. Phase 01 is the next eligible phase; enter it only after explicit authorization.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
-2. [Phase 00 entry](docs/phases/00.md#entry), [NV-00-01](docs/phases/00.md#nv-00-01), [gate](docs/phases/00.md#gate).
-3. [Observed blocker/evidence](docs/evidence/00-20261018-bootstrap.md); [workflow blockers](docs/WORKFLOW.md#blockers) on recovery.
-4. Only when Git baseline is resolved: [NV-00-02](docs/phases/00.md#nv-00-02), then [NV-00-03](docs/phases/00.md#nv-00-03).
+2. [Phase 00 gate](docs/phases/00.md#gate) and [resume criterion](docs/phases/00.md#nv-00-03).
+3. [Fresh-session completion evidence](docs/evidence/00-20261018-resume.md); consult [bootstrap observations](docs/evidence/00-20261018-bootstrap.md) only for the earlier checks or historical blockers.
 
-Do not load all topic specifications or future phases. STATE supplies the checkpoint; evidence records historical observations only.
+Do not load future phases or all topic specifications for this completed-phase review.
 
 ## Verified evidence and acceptance mapping
 
-Evidence: [18 October bootstrap observations](docs/evidence/00-20261018-bootstrap.md). Input: 51-file fresh document bundle, revision `2026-10-18-lean-fresh-start-r2`. Manifest SHA-256: `f5183c6753e2d663f1559c06a85a10ce0bb6237077ffb55e6164794403b8fe4a`; pre-edit bundle digest and environment in evidence. No implementation/source support claimed.
+Input: document bundle revision `2026-10-18-lean-fresh-start-r2`. Manifest SHA-256: `f5183c6753e2d663f1559c06a85a10ce0bb6237077ffb55e6164794403b8fe4a`. Intentional 52-file Git baseline: `14fdf2cb58fdfea251831cbde95c1c174c3bcd51`. Completion changes are confined to STATE and the linked resume evidence; their exact revision is the Git commit containing that evidence.
 
-| Acceptance | Independent expected result / procedure | Current result |
+| Acceptance | Independent expected result / procedure | Result |
 |---|---|---|
-| NV-00-01-AC1/AC3 | Fresh inventory, resolving links, actual commands/identity | Passed document/inventory checks; observations recorded. |
-| NV-00-01-AC2 | Matching delivered hashes and intentional Git baseline | Hashes passed; commit blocked. |
-| NV-00-02-AC1 through AC3 | All stable IDs have owners/verification; dependency and negative checks; one status authority | Independent checks passed; checkpoint acceptance waits for NV-00-01. |
-| NV-00-03-AC1/AC3 | Selective effective routing and actual runtime/loading observations | Observations recorded with limits; closure waits for resume. |
-| NV-00-03-AC2 | Fresh runtime reports the disk checkpoint/next action without prior conversation | Pending owner/external fresh-session observation. |
-| PH-00-GATE | Copy resolves spec/hashes/ownership; intentional baseline and fresh resume; no legacy/Phase 01 | Copy and structural portions passed; Git and resume portions incomplete. |
+| NV-00-01-AC1/AC3 | Inventory, links, commands and workspace identity | Passed; bootstrap evidence plus current inventory/checker. |
+| NV-00-01-AC2 | Delivered hashes and intentional Git baseline | Passed; matching manifest, successful staging/commit, inspected root commit. |
+| NV-00-02-AC1 through AC3 | Stable IDs, ownership, dependencies, negative checks and sole status authority | Passed; unchanged bootstrap ownership observations plus current checker/self-tests. |
+| NV-00-03-AC1/AC3 | Selective actual loading, runtime limits, recorded observation and stop | Passed; fresh-session trace/evidence; Phase 01 untouched. |
+| NV-00-03-AC2 | Fresh session reports disk checkpoint/blockers/next action without previous conversation | Passed; this owner-identified fresh session reported the former NV-00-01 checkpoint before edits; comparison recorded. |
+| PH-00-GATE | Fresh checkout resolves specification/hashes/IDs; intentional baseline and genuine resume; no legacy/Phase 01 | Verified; clean local checkout with 52 byte-identical files and passing checker, plus fresh runtime observation. |
 
-`python tools/check_docs.py`, `--baseline`, and `--baseline --self-test` exited 0 before STATE/evidence edits. Counts: 30 requirements, 17 decisions, 26 amendments, 76 outcomes, 259 ACs, 23 gates. Ownership assertions and byte-identical fresh-copy checker passed. No baseline contract changed. After STATE/evidence edits, `python tools/check_docs.py --baseline --self-test` also exited 0: 49 Markdown files, identical stable-ID counts and matching static hashes.
+`python tools/check_docs.py --baseline --self-test` passed in the workspace and fresh baseline checkout: 49 Markdown files; 30 requirements, 17 decisions, 26 amendments, 76 outcomes, 259 ACs, 23 gates. After completion-document edits, the same check passed with 50 Markdown files and unchanged ID counts/static hashes. No application/software verification or provider support is claimed.
 
 ## Blockers and external inputs
 
-- `git init --initial-branch=main` succeeded. Staging failed creating `.git/index.lock`: permission denied. Session policy explicitly marks `.git` read-only; no commit exists. Needs a runtime/filesystem policy permitting ordinary Git metadata writes, or owner creation of the local baseline commit. No broader permission or remote action required.
-- NV-00-03-AC2 explicitly requires a genuinely fresh session. In a new conversation with this workspace, ask: "Read AGENTS.md then STATE.md and only its routed material. Do not edit or start Phase 01. Report the active phase, checkpoint, blockers, exact next action and documents opened." Retain that actual response/trace for comparison. No same-session check substitutes for this.
-- Historical NIFTY 500 input is not bundled; see [INPUTS](docs/INPUTS.md). This is a later dataset-readiness limit, not the Phase 00 blocker.
+- No Phase 00 blockers remain. Git writes succeeded; actual fresh-session observation is recorded.
+- Historical NIFTY 500 input is not bundled; see [INPUTS](docs/INPUTS.md). This remains a later dataset-readiness limit, not a Phase 00 blocker.
+- Owner review and explicit authorization are required before starting Phase 01. Review is not claimed as performed.
 
 ## Phase ledger
 
 | Phase | State | Evidence |
 |---|---|---|
-| 00 | blocked | [Observed evidence](docs/evidence/00-20261018-bootstrap.md) |
+| 00 | verified | [Resume and gate evidence](docs/evidence/00-20261018-resume.md) |
 | 01 | not started | — |
 | 02 | not started | — |
 | 03 | not started | — |
@@ -70,9 +69,8 @@ Evidence: [18 October bootstrap observations](docs/evidence/00-20261018-bootstra
 
 ## Checkpoint handoff
 
-- **Accepted checkpoints:** none closed; NV-00-01 Git criterion pending. Independent NV-00-02 static checks completed without implementing later phases.
-- **Last verification:** document, fingerprint, self-test, ownership and fresh-copy checks passed; no software tests applicable in document-only Phase 00.
-- **Git:** initialized `main`, unborn HEAD; no staged files, no baseline commit. Delivered files preserved; only STATE and new historical evidence intentionally edited/added.
-- **Failed attempts:** staging denied; system-temp copy denied (workspace copy succeeded and was removed). Structural audit heading assumption corrected without specification edits. Recursive cleanup rejected by automatic approval review; safer individual byte-verified duplicate deletion succeeded.
-- **Continuation audit:** third consecutive blocker observation: `git log -1` still reports unborn main; `git status --short` shows only untracked adopted files; evidence directory contains only the bootstrap record. Policy still marks `.git` read-only; no fresh-session response supplied. Previous turn made a bounded STATE correction, but neither external prerequisite changed. No live process to wait for or independent required work remains. Goal marked blocked; resume after the external inputs above.
-- **Next smallest action:** resolve Git metadata write access, then commit baseline. Fresh-session observation can be obtained independently.
+- **Accepted checkpoints:** NV-00-01, NV-00-02, NV-00-03; PH-00-GATE verified.
+- **Last verification:** current baseline fingerprints, links, stable IDs, dependencies, checker self-tests and byte-identical clean fresh checkout passed. Detailed commands and limits are in resume evidence.
+- **Git:** local `main`; baseline commit above, followed by the Phase 00 completion-record commit. No remote action performed.
+- **Historical failures:** retained unchanged in bootstrap evidence; they no longer describe current Git/resume capability.
+- **Next smallest action:** owner reviews Phase 00 completion; wait for Phase 01 authorization.
