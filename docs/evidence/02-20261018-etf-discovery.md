@@ -88,4 +88,4 @@ expected rows above independently checked from captured official CSV/ZIP bytes.
 No production discovery/ETF adapter, scheme-history reconstruction or continuous
 ten-year claim. [Partition contracts](../capabilities/partitions.md) keep the
 catalogue, metadata attributes, dated EOD listing and discovery matches separate.
-Source blockers have explicit phase impacts in the [capability report](README.md).
+Source blockers have explicit phase impacts in the [capability report](../capabilities/README.md).
