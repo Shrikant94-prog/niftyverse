@@ -7,14 +7,14 @@
 - **Phase:** 02 - Source contracts and coverage reconnaissance; authorized by the owner goal.
 - **Status:** in progress on `phase-02`, created from clean local `main` at `b95eecd`. No existing phase branch or user changes. Phase 01 prerequisite rechecked: 43 offline tests pass; hosted run 39145886497 is successful at the recorded source.
 - **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
-- **Current checkpoint:** NV-02-01 complete as bounded investigation; [capture evidence](docs/evidence/02-20261018-capture.md). JSON source remains blocked, not supported. NV-02-02 report/terms/index sample inspection next.
+- **Current checkpoint:** NV-02-01 complete as bounded investigation; [capture evidence](docs/evidence/02-20261018-capture.md). JSON source remains blocked, not supported. NV-02-02 complete; report/terms/index evidence recorded. NV-02-03 filing/Yahoo investigation next.
 - **Next action:** capture official representative equity/action/event/surveillance samples, then continue checkpoints sequentially. Local commits, local merge and GitHub push authorized; retain phase branch. Do not start Phase 03.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
 2. [Phase 01 completion](docs/evidence/01-20261018-completion.md) and [gate](docs/phases/01.md#gate).
-3. [Phase 02 contract and gate](docs/phases/02.md), active checkpoint NV-02-01; [workflow](docs/WORKFLOW.md#phase-loop).
+3. [Phase 02 contract and gate](docs/phases/02.md), active checkpoint NV-02-03; [workflow](docs/WORKFLOW.md#phase-loop).
 4. Only the active family in [source contracts](docs/specs/sources.md#s5), [transport budgets](docs/specs/transport.md#s9-1), [partition completeness](docs/specs/builder.md#s10-2), and assigned R9/AM-01/09/13/14/15/16 rows in [requirements](docs/specs/requirements.md#s18-2).
 
 ## Verified evidence and acceptance mapping
@@ -47,7 +47,7 @@ Documentation IDs, links, dependencies and static baseline fingerprints pass. Hi
 |---|---|---|
 | 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
 | 01 | verified, including PH-01-GATE | [Completion evidence](docs/evidence/01-20261018-completion.md) |
-| 02 | in progress: NV-02-02 | [Capture evidence](docs/evidence/02-20261018-capture.md); 15 boundary tests pass |
+| 02 | in progress: NV-02-03 | [Capture evidence](docs/evidence/02-20261018-capture.md); 15 boundary tests pass |
 | 03 | not started | - |
 | 04 | not started | - |
 | 05 | not started | - |
@@ -74,4 +74,6 @@ Documentation IDs, links, dependencies and static baseline fingerprints pass. Hi
 - **Verified:** Phase 00; all Phase 01 acceptance criteria and PH-01-GATE, including current hosted CI and owner appearance acceptance.
 - **Git:** `phase-02` from local `main` at `b95eecd`; no user changes displaced.
 - **Active acceptance:** NV-02-02-AC1/2: inspect legacy/current report bytes, dated terms and index variants; declare exact session partitions and unavailable history. Expect no ten-year inference from two sessions. Fixed archive/index probes and manual headers/row checks; evidence pending.
-- **Next smallest action:** finish report/terms/index evidence and initial partition contracts, then checkpoint 03.
+- **Next smallest action:** inspect real filing samples and pinned Yahoo SDK under bounded windows; publish minimum concepts/categories and actual blockers.
+
+Checkpoint 02: [report evidence](docs/evidence/02-20261018-reports.md) and [initial partition contracts](docs/capabilities/partitions.md). Four archive schemas observed at two dates; index redirects, dated-term gaps and API circuit are explicit. No supported adapter claim.

@@ -1,0 +1,315 @@
+{
+  "version": 1,
+  "capture_kind": "direct_http_metadata",
+  "complete": false,
+  "sets": [
+    {
+      "plan": "01.json",
+      "plan_sha256": "fdd176b4b20da520cff4905e2ef0ea15eba649621b3f5000dd0fd71f00642209",
+      "capture_sha256": "df5d8711a7ef166333f16df9c7be511f004d1169e626de5fcbaf9b1531476c3b",
+      "budget": {
+        "max_requests": 12,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 180,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 5,
+      "results": [
+        {
+          "name": "bootstrap",
+          "observed_at": "2026-10-18T17:29:00.398675+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 403,
+          "content_type": "text/html",
+          "outcome": "challenge"
+        },
+        {
+          "name": "equity-recent",
+          "observed_at": "2026-10-18T17:29:00.571064+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "equity-old",
+          "observed_at": "2026-10-18T17:29:00.571347+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "actions",
+          "observed_at": "2026-10-18T17:29:00.571378+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "events",
+          "observed_at": "2026-10-18T17:29:00.571393+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "announcements",
+          "observed_at": "2026-10-18T17:29:00.571415+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "asm-json",
+          "observed_at": "2026-10-18T17:29:00.571425+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "gsm-csv",
+          "observed_at": "2026-10-18T17:29:00.571432+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "band-csv",
+          "observed_at": "2026-10-18T17:29:02.557041+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 328,
+          "sha256": "f9a1beebcd2534dc68f5052fc1a24af4a9f25ddff08f331ce31665a241c09cc8"
+        },
+        {
+          "name": "surveillance-zip",
+          "observed_at": "2026-10-18T17:29:04.613921+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 404,
+          "content_type": "text/html;charset=UTF-8",
+          "outcome": "missing"
+        },
+        {
+          "name": "band-old",
+          "observed_at": "2026-10-18T17:29:06.529657+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 188,
+          "sha256": "fd41c65568a4ffc2327dbfab5fd559feb1e44a203ebfdca30e36766e01ef8860"
+        }
+      ]
+    },
+    {
+      "plan": "02.json",
+      "plan_sha256": "26bc891aae5faeea24a1322ce2a5dea0e2bd74a275aa7577fad14b7aaff82437",
+      "capture_sha256": "ec793ffb07c9a2bd00d900eef3c7fee90a728f263a04e05f7c8e7437ce3a445d",
+      "budget": {
+        "max_requests": 16,
+        "max_bytes": 8388608,
+        "max_total_bytes": 50331648,
+        "deadline_seconds": 240,
+        "spacing_seconds": 2,
+        "max_window_days": 31
+      },
+      "requests": 12,
+      "results": [
+        {
+          "name": "cm-legacy",
+          "observed_at": "2026-10-18T17:30:19.780440+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 62108,
+          "sha256": "7886c5d991ef8447964c58fda054710bc8983c5d27dc098ac2293722b11e7ce7"
+        },
+        {
+          "name": "fo-legacy",
+          "observed_at": "2026-10-18T17:30:19.932779+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 381121,
+          "sha256": "d85b2d69640e56c2e37fb67b5ffbec947a471769e81be618c041e70c7b016c02"
+        },
+        {
+          "name": "cm-udiff",
+          "observed_at": "2026-10-18T17:30:21.910779+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 206122,
+          "sha256": "d2c4406c1ecbfbcb9acdafa424f921caad7467d97da47c65973b34aa0aac70bc"
+        },
+        {
+          "name": "fo-udiff",
+          "observed_at": "2026-10-18T17:30:23.853253+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/zip",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 1210210,
+          "sha256": "28648e52e5bd5fc108aacaafa461a0acd60577d2657e9bf806ed60cfecd18b99"
+        },
+        {
+          "name": "delivery-old",
+          "observed_at": "2026-10-18T17:30:25.915011+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "application/octet-stream",
+          "outcome": "format_mismatch",
+          "schema": null,
+          "bytes": 60408
+        },
+        {
+          "name": "delivery-recent",
+          "observed_at": "2026-10-18T17:30:27.874385+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 397218,
+          "sha256": "8afbcce6d74f667f910213f8e1405092676f977f6e0693e1c082d7e13966a162"
+        },
+        {
+          "name": "participant-oi",
+          "observed_at": "2026-10-18T17:30:29.830211+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 982,
+          "sha256": "714386d5b8094915f93fd80c2aa7b279983204c43d82f251eee4bcb180bb8381"
+        },
+        {
+          "name": "participant-volume",
+          "observed_at": "2026-10-18T17:30:31.886276+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 982,
+          "sha256": "438876c52f96572efeeb8173084ef53ebc78ced140102b4339de6c365161a4d8"
+        },
+        {
+          "name": "lots-current",
+          "observed_at": "2026-10-18T17:30:33.882765+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 200,
+          "content_type": "text/csv",
+          "outcome": "observed_unverified",
+          "schema": null,
+          "bytes": 47736,
+          "sha256": "a94b41b6e42a2a7ce898df7c50b08c4843ebe24664145826a9b0652733d17452"
+        },
+        {
+          "name": "index-price",
+          "observed_at": "2026-10-18T17:30:35.850519+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "index-tri",
+          "observed_at": "2026-10-18T17:30:38.018753+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "index-valuations",
+          "observed_at": "2026-10-18T17:30:39.928467+00:00",
+          "complete": false,
+          "attempts": 1,
+          "status": 302,
+          "content_type": "application/json; charset=utf-8",
+          "outcome": "redirect"
+        },
+        {
+          "name": "delisted",
+          "observed_at": "2026-10-18T17:30:41.951098+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "fo-metadata",
+          "observed_at": "2026-10-18T17:30:41.951162+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "vix",
+          "observed_at": "2026-10-18T17:30:41.951203+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "bulk",
+          "observed_at": "2026-10-18T17:30:41.951235+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "block",
+          "observed_at": "2026-10-18T17:30:41.951265+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "short",
+          "observed_at": "2026-10-18T17:30:41.951294+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        },
+        {
+          "name": "fii-dii",
+          "observed_at": "2026-10-18T17:30:41.951313+00:00",
+          "complete": false,
+          "attempts": 0,
+          "outcome": "circuit_open"
+        }
+      ]
+    }
+  ]
+}

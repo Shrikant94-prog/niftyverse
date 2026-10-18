@@ -1,0 +1,25 @@
+{
+  "budget": {"max_requests": 16, "deadline_seconds": 240},
+  "blocked_hosts": ["www.nseindia.com"],
+  "probes": [
+    {"name": "cm-legacy", "url": "https://nsearchives.nseindia.com/content/historical/EQUITIES/2016/SEP/cm01SEP2016bhav.csv.zip", "scope": "whole CM session 2016-09-01, legacy generation", "format": "zip"},
+    {"name": "fo-legacy", "url": "https://nsearchives.nseindia.com/content/historical/DERIVATIVES/2016/SEP/fo01SEP2016bhav.csv.zip", "scope": "whole FO session 2016-09-01, legacy generation", "format": "zip"},
+    {"name": "cm-udiff", "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20261016_F_0000.csv.zip", "scope": "whole CM session 2026-10-16, UDiFF candidate", "format": "zip"},
+    {"name": "fo-udiff", "url": "https://nsearchives.nseindia.com/content/fo/BhavCopy_NSE_FO_0_0_0_20261016_F_0000.csv.zip", "scope": "whole FO session 2026-10-16, UDiFF candidate", "format": "zip"},
+    {"name": "delivery-old", "url": "https://nsearchives.nseindia.com/archives/equities/mto/MTO_01092016.DAT", "scope": "delivery whole CM session 2016-09-01; preamble/record type unverified", "format": "csv"},
+    {"name": "delivery-recent", "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_16102026.csv", "scope": "CM price/delivery session 2026-10-16", "format": "csv"},
+    {"name": "participant-oi", "url": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_oi_16102026.csv", "scope": "participant OI categories session 2026-10-16", "format": "csv"},
+    {"name": "participant-volume", "url": "https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_16102026.csv", "scope": "participant volume session 2026-10-16", "format": "csv"},
+    {"name": "lots-current", "url": "https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv", "scope": "current lot table; cannot establish 2016 terms", "format": "csv"},
+    {"name": "index-price", "url": "https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString", "scope": "NIFTY 50 price 2016-09-01..02; candidate JSON POST contract", "format": "json", "window_days": 2, "post_json": "{\"name\":\"NIFTY 50\",\"startDate\":\"01-Sep-2016\",\"endDate\":\"02-Sep-2016\"}"},
+    {"name": "index-tri", "url": "https://www.niftyindices.com/Backpage.aspx/getTotalReturnIndexString", "scope": "NIFTY 50 TRI 2026-10-14..16; gross/net identity unverified", "format": "json", "window_days": 3, "post_json": "{\"name\":\"NIFTY 50\",\"startDate\":\"14-Oct-2026\",\"endDate\":\"16-Oct-2026\"}"},
+    {"name": "index-valuations", "url": "https://www.niftyindices.com/Backpage.aspx/getpepbHistoricaldataDBtoString", "scope": "NIFTY 50 PE/PB/yield 2026-10-14..16", "format": "json", "window_days": 3, "post_json": "{\"name\":\"NIFTY 50\",\"startDate\":\"14-Oct-2026\",\"endDate\":\"16-Oct-2026\"}"},
+    {"name": "delisted", "url": "https://www.nseindia.com/api/historical/cm/equity?symbol=DHFL&series=%5B%22EQ%22%5D&from=01-09-2016&to=02-09-2016", "scope": "DHFL delisted access 2016-09-01..02; carried source circuit", "format": "json", "window_days": 2},
+    {"name": "fo-metadata", "url": "https://www.nseindia.com/api/historical/fo/derivatives/meta?symbol=NIFTY", "scope": "dated expiry/lot/strike/settlement availability unknown", "format": "json"},
+    {"name": "vix", "url": "https://www.nseindia.com/api/historicalOR/vixhistory?from=14-10-2026&to=16-10-2026", "scope": "historical India VIX October 14..16 2026", "format": "json", "window_days": 3},
+    {"name": "bulk", "url": "https://www.nseindia.com/api/historical/bulk-deals?from=14-10-2026&to=16-10-2026", "scope": "bulk deals October 14..16 2026", "format": "json", "window_days": 3},
+    {"name": "block", "url": "https://www.nseindia.com/api/historical/block-deals?from=14-10-2026&to=16-10-2026", "scope": "block deals October 14..16 2026", "format": "json", "window_days": 3},
+    {"name": "short", "url": "https://www.nseindia.com/api/historical/short-selling?from=14-10-2026&to=16-10-2026", "scope": "short-selling October 14..16 2026", "format": "json", "window_days": 3},
+    {"name": "fii-dii", "url": "https://www.nseindia.com/api/fiidiiTradeReact", "scope": "current FII/DII aggregate; not participant OI", "format": "json"}
+  ]
+}
