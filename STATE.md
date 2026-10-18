@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase:** 01 - Package and offline vertical slice; authorized only through PH-01-GATE.
-- **Status:** active and incomplete; owner requested a new shared research display. Three-zone terminal and four-zone notebook cards are implemented, checked and ready for review. CI/macOS verification and final remote delivery remain; PH-01-GATE is open.
+- **Status:** active and incomplete; owner accepted the shared notebook/terminal display and requested a final Phase 01 review. Acceptance audit and hosted CI/macOS verification are underway; PH-01-GATE is open.
 - **Project location:** selected fresh niftyverse workspace; no old scaffold, environment, data or legacy imports adopted.
-- **Current checkpoint:** NV-01-03 - shared Rich/notebook display verified; revised appearance review pending.
-- **Next action:** owner reviews `docs/evidence/artifacts/phase01-research-card/review.html`. Then run authorized GitHub CI/macOS checks, repair actual failures and push final Phase 01 completion when verified. Do not start Phase 02.
+- **Current checkpoint:** final Phase 01 acceptance review and integration gate.
+- **Next action:** run authorized GitHub CI/macOS checks, complete the phase review, repair demonstrated failures and deliver Phase 01 when verified. Do not start Phase 02.
 
 ## Read first
 
@@ -28,7 +28,7 @@ Phase 00 prerequisite: baseline `14fdf2c`, completion `a41f5a5`, retained [resum
 | NV-01-01-AC3 / verification design | Exact environment/lock, strict checks and declared platform matrix | Evidence recorded; Windows/Linux pass. Required macOS smoke and hosted CI unrun. Checkpoint not fully closed. |
 | NV-01-02-AC1 through AC4 | Independent expected typed rows through msgspec/Arrow/DuckDB/Polars and direct CSV; invalid/mixed batches cause no sink effects | Verified, including exact decimals/nulls/zero/text/IDs, immutability, duplicate/order boundaries, original destination rows/schema/bytes and no DB store in direct mode. |
 | NV-01-03-AC1/AC2 | Bounded escaped previews, Rich protocol and honest committed event; no render I/O/full materialization; plain fallback | New dashboard/card revision: 41 Windows/Linux tests, lint/types, offline light/dark/narrow browser checks, fresh core wheels on both platforms and Windows notebook-extra wheel pass. |
-| NV-01-03-AC3 / PH-01-GATE | Type/naming ADR, captures, owner visual feedback, clean wheel integrated technologies and complete platform checks | Revised notebook/terminal design awaits owner review; macOS/hosted CI pending. Gate unverified. |
+| NV-01-03-AC3 / PH-01-GATE | Type/naming ADR, captures, owner visual feedback, clean wheel integrated technologies and complete platform checks | Owner accepted the revised notebook/terminal design. Final phase review and macOS/hosted CI pending. Gate unverified. |
 
 Current clean-source documentation check passes (59 project Markdown files) with matching static hashes/IDs/links. Historical source/checker hashes are unchanged.
 
@@ -36,7 +36,7 @@ Latest display revision: 41 Windows/Linux tests and format/lint/strict mypy pass
 
 ## Blockers and external inputs
 
-- Owner requested a new shared display after the earlier visual iterations. Revised notebook/terminal cards are checked and visually inspected; final feedback remains pending. Fresh captures supersede earlier appearance acceptance.
+- Owner accepted the revised notebook/terminal cards and requested one final Phase 01 review. Current captures are in `docs/evidence/artifacts/phase01-research-card/`.
 - GitHub repository supplied: `https://github.com/Shrikant94-prog/niftyverse.git`. Owner authorizes local/remote Phase 01 delivery after preview review. Access/empty-repo status verified; origin configured. No push yet; required macOS smoke and hosted CI have not run.
 - Display work remains within Phase 01; prior tests/commits and historical captures are retained.
 - Historical NIFTY 500 input remains unbundled; later dataset-readiness limit only.
@@ -46,7 +46,7 @@ Latest display revision: 41 Windows/Linux tests and format/lint/strict mypy pass
 | Phase | State | Evidence |
 |---|---|---|
 | 00 | verified | [Resume evidence](docs/evidence/00-20261018-resume.md) |
-| 01 | active - revised research display awaiting review | [Research display](docs/evidence/01-20261018-research-card.md) |
+| 01 | active - final review and hosted CI | [Research display](docs/evidence/01-20261018-research-card.md) |
 | 02 | not started | - |
 | 03 | not started | - |
 | 04 | not started | - |
@@ -73,4 +73,4 @@ Latest display revision: 41 Windows/Linux tests and format/lint/strict mypy pass
 
 - **Verified:** Phase 00, Phase 01 offline slice, automated display, local core/extras packaging and Windows/Linux behavior. Remaining required checks are explicitly unverified above.
 - **Git:** local/remote Phase 01 delivery authorized to the supplied repository after preview review. No remote write performed yet; Phase 02 remains unstarted.
-- **Next smallest action:** obtain owner feedback on the new previews, then continue to authorized CI and Phase 01 closure/delivery.
+- **Next smallest action:** finish the requested phase review and hosted CI, then record Phase 01 closure/delivery. Phase 02 requires a separate instruction.
