@@ -7,13 +7,40 @@ from pathlib import Path
 
 import nbformat
 from rich.console import Console
-from rich.terminal_theme import MONOKAI
+from rich.terminal_theme import TerminalTheme
 from rich.text import Text
 
 from niftyverse import extract_fixture
 from niftyverse.display import terminal_summary
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Coordinated ANSI reference palette for reviewing captured terminal output.
+# Native terminals use their configured ANSI palette for the same semantic roles.
+_TERMINAL_PALETTE = TerminalTheme(
+    background=(17, 27, 36),
+    foreground=(220, 231, 239),
+    normal=[
+        (17, 27, 36),
+        (225, 140, 140),
+        (148, 200, 168),
+        (228, 197, 139),
+        (143, 179, 216),
+        (180, 169, 210),
+        (127, 201, 190),
+        (220, 231, 239),
+    ],
+    bright=[
+        (139, 157, 172),
+        (238, 159, 159),
+        (175, 218, 186),
+        (242, 215, 164),
+        (165, 199, 233),
+        (202, 190, 231),
+        (174, 235, 224),
+        (240, 246, 250),
+    ],
+)
 
 _REVIEW_CSS = """
 *{box-sizing:border-box}body{margin:0;background:#eff4f5;color:#19313d;
@@ -60,7 +87,7 @@ def _terminal_window(contents: str, label: str) -> str:
 
 
 def main() -> None:
-    output = ROOT / "docs/evidence/artifacts/phase01-terminal-colors"
+    output = ROOT / "docs/evidence/artifacts/phase01-terminal-hierarchy"
     output.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="niftyverse-preview-") as folder:
         result = extract_fixture(
@@ -107,7 +134,7 @@ def main() -> None:
         capable_html = console.export_html(
             code_format="{code}",
             inline_styles=True,
-            theme=MONOKAI,
+            theme=_TERMINAL_PALETTE,
         )
         if width != 100:
             blocks.append(
