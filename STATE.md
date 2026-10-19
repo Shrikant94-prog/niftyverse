@@ -1,41 +1,40 @@
-# niftyverse — execution state
+# niftyverse - execution state
 
-**Only execution-status authority.** Updated 18 October 2026 in the selected fresh workspace.
+**Only execution-status authority.** Updated 19 October 2026 in the selected fresh workspace.
 
 ## Active work
 
-- **Phase:** 02 — Source contracts and coverage reconnaissance; owner-authorized goal includes local commits, merge into local main and GitHub push. Retain `phase-02`; do not start Phase 03.
-- **Status:** verified through PH-02-GATE as bounded investigation; all checkpoint criteria have evidence. Locally integrated and pushed to GitHub; retained phase branch also pushed. No production-adapter or historical-dataset certification.
-- **Current checkpoint:** PH-02-GATE verified; [completion evidence](docs/evidence/02-20261018-completion.md).
-- **Git:** local main merge `5bc94bac295679d3b39c57ee8b4e8099982d83df`, parents `b95eecd` and verified phase tip `3746422`. GitHub main and phase-02 refs confirmed after push. Merge tree exactly matched phase-02; no conflicts or main changes. This delivery record changes documentation only.
-- **Next action:** await separate owner authorization for Phase 03; no next-phase work started.
+- **Phase:** 03 - Transport and safe archive ingestion. Resume includes the owner's binding pasted instructions (attachment 7b970635). Local commits, final merge commit into local main and GitHub push are authorized. Retain phase-03; do not start Phase 04.
+- **Status:** Phase 03 verified through PH-03-GATE and integrated into local main by the containing merge commit. All eight hosted jobs and the overall workflow concluded success before integration.
+- **Current checkpoint:** NV-03-04 implemented and locally verified. XII is offline decoder evidence only. Actual 2026 missing-taxonomy and 2018 vendor-mismatch specimens are deterministic negative/quarantine cases under the owner's dependency-exception instruction.
+- **Prerequisite/start:** Phase 02 integrated at 5bc94ba; phase branch started from clean local main a481636. Baseline 68 tests passed. Existing checkpoints 2a081ba, 9af7f46, a4cb3b2, 6666db4, f8bb373 and research db76f08 are retained.
+- **Integration identity:** verified phase head b997b156e2863aac6a857a5cd4b56521af191ad9, software source 180319184a69eb3351d2e7e0675ba5d475e92821, starting main a481636. Main's containing merge commit preserves both parents. Source/test/config trees match the verified phase; only completion metadata differs.
+- **Next eligible phase:** 04, not started. Retain phase-03 and preserve Sample_Files. Git ancestry and remote refs identify the actual integration/publication commits.
 
 ## Read first
 
-1. [PLAN purpose](PLAN.md#purpose) and [phase boundary](PLAN.md#phase-goals).
-2. [Phase 02 acceptance](docs/phases/02.md) and [gate](docs/phases/02.md#gate); [workflow](docs/WORKFLOW.md#phase-loop) read at entry.
-3. Active family: [ETF sources](docs/specs/sources.md#s5-8), [partition contracts](docs/capabilities/partitions.md), [minimum manifest](docs/capabilities/manifest-v1.json), [observations](docs/capabilities/observations.json). Assigned R9/AM-01/09/13/14/15/16 in [requirements](docs/specs/requirements.md#s18-2) read at entry/checkpoints.
-4. Earlier evidence only for a concrete dependency: [capture](docs/evidence/02-20261018-capture.md), [reports](docs/evidence/02-20261018-reports.md), [filings/Yahoo](docs/evidence/02-20261018-filings-yahoo.md).
+1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 03 acceptance/gate](docs/phases/03.md), [workflow](docs/WORKFLOW.md#phase-loop).
+2. [Completion/hosted evidence](docs/evidence/03-20261019-completion.md), [inline gate](docs/evidence/03-20261019-inline-gate.md), [fixture/profile provenance](tests/fixtures/filings/README.md).
+3. For concrete dependencies: [filing safety](docs/specs/transport.md#s9-6), [XML/legacy evidence](docs/evidence/03-20261019-xml-legacy.md), [earlier inline research](docs/evidence/03-20261019-inline-research.md), AM-04/AM-14 in [requirements](docs/specs/requirements.md#s18-2).
 
-## Acceptance mapping and evidence
+## Acceptance mapping
 
-| Checkpoint | Independent expectation / procedure | Observed result |
+| Checkpoint | Independent verification | Observed result |
 |---|---|---|
-| NV-02-01 AC1–4 | Fixed official probes and deterministic capture/error/limit/redaction cases | 15 capture tests pass; landing 403 opens carried circuit; two dated band CSVs observed, no interval/timestamp claim. [Evidence](docs/evidence/02-20261018-capture.md). |
-| NV-02-02 AC1–3 | Legacy/current reports, dated terms/index/delisted negatives; atomic scopes | Four archive schemas at two dates; old multipliers unknown; index redirects and API circuit explicit. [Evidence](docs/evidence/02-20261018-reports.md). |
-| NV-02-03 AC1–4 | Real filings/contexts/units; concrete concepts/categories; both Yahoo symbols/options/errors/timing | Three HTML samples, all four financial statements represented, ownership hierarchy reference. Four SDK windows match session expectations; two holiday-only calls raise errors. Missing families explicit. [Evidence](docs/evidence/02-20261018-filings-yahoo.md). |
-| NV-02-04 AC1–3 | ETF catalogue/history + ambiguous/renamed discovery with dated limitations | 355-row ETF catalogue, changed historical ISINs, two traded EOD sessions; ambiguous names and dated rename events. [Evidence](docs/evidence/02-20261018-etf-discovery.md). |
-| PH-02-GATE | Explicit source/phase impacts; real filings shape schema; current vs historical distinction | Verified: all required bounded source/contracts evidence, 68 local and Windows/Linux hosted tests, all eight hosted CI jobs, fresh wheels and corpus integrity. |
+| NV-03-01 AC1-3 | Concurrent fake streams/clock, shared budgets/queues, fallback/cleanup | [Transport evidence](docs/evidence/03-20261018-transport.md); current integrated regressions pass. |
+| NV-03-02 AC1-3 | Deterministic 429/403/5xx/timeout, waits/counts, refresh/cancel/redaction | [Retry evidence](docs/evidence/03-20261018-retries.md); current integrated regressions pass. |
+| NV-03-03 AC1-3 | Real report generations, hostile ZIP/CSV, atomic rejection | [Ingestion evidence](docs/evidence/03-20261018-ingestion.md); shared member defense retains CSV default, taxonomy defenses and affected regressions pass. |
+| NV-03-04 AC1-3 | Real XML/HTML/inline facts, exact transformations/lineage, closed dictionary, hostile/missing inputs and cancellation | [Current gate observations](docs/evidence/03-20261019-inline-gate.md): all 323 XII facts; explicit 2026/2018 typed quarantines; 41-resource closed package; bounded ZIP loading. |
+| PH-03-GATE | Full integrated safety/fault suite plus affected regressions | Pass: 169 local full-extra tests; 125 core/3 skips; Windows/Linux each 51 filing cases; all eight hosted jobs and overall workflow pass. Main contains the verified software tree. |
 
-Final source `92acb14`: 68 tests pass locally and on hosted Windows/Linux; format/lint/strict types pass. All eight [hosted jobs](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39151248964) pass. Fresh core wheels and offline integrity of 19 direct/six SDK captures pass. [Completion](docs/evidence/02-20261018-completion.md) records exact environments, hashes, repairs and acceptance. Frozen lock unchanged: `569bbd9a2d4daea3d86f55690014f8cb965aff95ac3eddd0303b453ab0672724`. CPython 3.14.7, uv 0.12.9. Source tests and real-source evidence are separate. Documentation and static fingerprints pass in clean staged copies and actual hosted checks.
+## Verification and limitations
 
-## Source limits and prerequisites
-
-- NSE www landing 403: no bypass/retry; dependent API probes are unsent `circuit_open`, not empty successes. Archives work independently. NIFTY POST candidates redirect; variant identities unverified.
-- Missing XML/taxonomy, legacy/bank/genuine-inline samples block dependent decoder/mapper claims. Current lots cannot certify past terms. No ten-year or strict historical-version timing claim. Bounded failures do not yet justify a source/scope change.
-- Yahoo capture is SDK-result, not wire bytes; internal HTTP count/bytes unknown. Production worker/normalizer, final-bar/correction tests and continuous coverage remain later phases.
-- Raw captures/caches stay local in `.local/phase02`; plans/metadata hashes committed. Surveillance adds no price-only dependency. No R1 gate or old scaffold/data/code adopted.
-- Phase 01 prerequisite rechecked: 43 offline tests pass before changes; hosted run 39145886497 success at `a563c9c5f03ba4601b1fe2a24b6b21e0aff30481`. [Completion](docs/evidence/01-20261018-completion.md) retains wheel/platform and owner appearance acceptance. Phase 00 [evidence](docs/evidence/00-20261018-resume.md) retained.
+- CPython 3.14.7, uv 0.12.9. Ruff formatting/lint and strict mypy pass (34 source files). Fresh core/filings wheel hash b733a3c10568fd51c080b889986e14b9fe330f8f7909f1aa35c4cdeab7d29323. Frozen lock unchanged: 4b4b8542e9473f2ed5a77ef8c549efe62db7bbbdf9a65f368ebbd9a0228ec58f.
+- Core imports all boundaries with lxml absent; explicit optional lxml 6.1.3 decodes real XML/HTML/inline. Arelle is research-resource provenance only, never installed/imported. Offline wheel Python audit controls are not a native OS firewall/RSS sandbox.
+- XII fixture has a documented explicit finite profile for its 41-resource/33,862,241-byte closed dictionary. Unsupported inline constructs fail atomically. Source assertions do not certify full XBRL formula/calculation/dimensional validity, signatures or economic mapping.
+- Owner binds unavailable 2026 dictionary and 2018 vendor-mismatched reference as negative cases. No 2025 substitution, year/reference rewrite or historical completeness claim. Genuine public NSE inline availability remains unverified; untagged rendered HTML remains HTML, with no invented inline facts.
+- Existing transport/archive checkpoints and their recorded repairs remain applicable. Raw captures stay ignored under .local; suitable fixed fixtures/manifests are committed. Owner Sample_Files originals remain untouched/untracked.
+- [Hosted source 1803191](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39284993212): Windows/macOS 3.14.8 and Linux 3.14.7 checks pass. All eight jobs and the workflow concluded success. Logs are local; [completion evidence](docs/evidence/03-20261019-completion.md) records patch/build, lock newline hashes, wheel identities and the resolved status-publication delay during GitHub's incident.
 
 ## Phase ledger
 
@@ -43,9 +42,10 @@ Final source `92acb14`: 68 tests pass locally and on hosted Windows/Linux; forma
 |---|---|---|
 | 00 | verified | [Resume](docs/evidence/00-20261018-resume.md) |
 | 01 | verified through PH-01-GATE | [Completion](docs/evidence/01-20261018-completion.md) |
-| 02 | verified, locally integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
-| 03–09, 12–18, 10–11, 19–22 | not started | — |
+| 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
+| 03 | verified through PH-03-GATE; integrated into main | [Completion evidence](docs/evidence/03-20261019-completion.md) |
+| 04-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
 
 ## Checkpoint handoff
 
-Phase 02 is verified and delivered to local/GitHub main with merge commit `5bc94ba`; phase-02 retained locally and remotely at `3746422`. Source/test/tool/capability tree equals hosted-verified `92acb14`; only completion/status documentation follows it. Phase 03 is next eligible and awaits separate owner authorization. No next-phase work started. Remote: `https://github.com/Shrikant94-prog/niftyverse.git`.
+Phase 03 completion is retained here. All required checks have successful execution evidence. Do not re-open settled fixture/quarantine decisions or repeat source research. Preserve Sample_Files and phase-03. Phase 04 needs a new authorization.

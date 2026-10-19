@@ -1,0 +1,355 @@
+{
+  "observed_local_date": "2026-10-19",
+  "purpose": "Owner-requested research for a real inline decoder specimen; no new provider adapter or source support",
+  "complete": false,
+  "direct_requests": 12,
+  "nse_html_budget": {
+    "max_requests": 8,
+    "max_bytes": 8388608,
+    "max_total_bytes": 67108864,
+    "deadline_seconds": 120,
+    "spacing_seconds": 2,
+    "max_window_days": 31
+  },
+  "nse_announcement_budget": {
+    "max_requests": 2,
+    "max_bytes": 8388608,
+    "max_total_bytes": 16777216,
+    "deadline_seconds": 60,
+    "spacing_seconds": 2,
+    "max_window_days": 31
+  },
+  "research_only_notes": [
+    "Search/index discovery is separate from these twelve direct body requests.",
+    "SEC and XBRL International used a separate explicit one-request research client; production and recon host registries were unchanged.",
+    "The research client used no redirects, proxy environment or credentials, a 16 MiB body cap, 30-second socket timeout and elapsed-time checks between chunks. It is not a tested production total-deadline contract.",
+    "SEC 403 was not retried or bypassed.",
+    "Raw bodies remain ignored local captures; no taxonomy closure or decoder support is claimed for the new inline specimen."
+  ],
+  "results": [
+    {
+      "name": "indas-2025",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_98350_16062025144228_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:07.888816+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 93526,
+      "sha256": "10e0379f2f21cf6992f4ac052d429801b1725a846ebfadbe5d267e7efa5b37f3",
+      "inspection": {
+        "name": "indas-2025",
+        "bytes": 93526,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": [
+          "http://www.w3.org/1999/xhtml"
+        ]
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "banking-2026",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_BANKING_201944_16102026192427_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:08.221264+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 62651,
+      "sha256": "a6060f42dd4c7bb7415066f137746dce19c130d9b6f315622c8511095503ecd4",
+      "inspection": {
+        "name": "banking-2026",
+        "bytes": 62651,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "banking-april",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_BANKING_153201_27042026175216_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:09.962065+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 76740,
+      "sha256": "7b21b54c2f846bccd78423977331081f03ee2a2cff174925f03ef761912704d5",
+      "inspection": {
+        "name": "banking-april",
+        "bytes": 76740,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "nonindas",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_NONINDAS_127941_14112025170117_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:11.966892+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 95924,
+      "sha256": "cc8b3408da8177021fe98036c959a00a01f8f1c1bbdc4585bf1ad62f113c48c5",
+      "inspection": {
+        "name": "nonindas",
+        "bytes": 95924,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "life-insurance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/LI_114560_08112024164604_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:13.980325+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 83762,
+      "sha256": "52a3018d71369dd8cf3b92049999668f269ee202fd776a2d0124ddb07b97ec42",
+      "inspection": {
+        "name": "life-insurance",
+        "bytes": 83762,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": [
+          "http://www.w3.org/1999/xhtml"
+        ]
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "nbfc",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_NBFC_INDAS_174202_13072026195308_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:15.988427+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 136567,
+      "sha256": "86fd53709791c7bd8068736c421330ea15ee48d9413df661fc08f66e1b18086f",
+      "inspection": {
+        "name": "nbfc",
+        "bytes": 136567,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "general-insurance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_GI_174881_15072026211206_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:17.982466+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 94488,
+      "sha256": "ab9a3425561b8e3a1c8d975a627003429e5b484a8a745f96e0726aef79a32918",
+      "inspection": {
+        "name": "general-insurance",
+        "bytes": 94488,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "governance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_GOVERNANCE_154669_30042026143605_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T18:57:19.994511+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "text/html",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 107787,
+      "sha256": "1106766e3d4b42144c522d2dc2baa57511410894c89ca5226bd649abbb476e46",
+      "inspection": {
+        "name": "governance",
+        "bytes": 107787,
+        "inline_namespace": false,
+        "inline_fact_elements": 0,
+        "xbrl_context_elements": 0,
+        "namespaces": []
+      },
+      "classification": "rendered_html_without_inline_facts",
+      "support_claim": false
+    },
+    {
+      "name": "trading-window-xml",
+      "url": "https://nsearchives.nseindia.com/corporate/xbrl/CLOSURE_TRADING_WINDOW_1473127_27062025041559_WEB.xml",
+      "scope": "Published official announcement locator; inspect actual root/namespace only, no event mapper",
+      "format": "xml",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T19:07:32.081915+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "application/xml",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 2601,
+      "sha256": "51f3e0af727a1cbaa55fd21f995f3616eb4c456a7117d0535ef8a7e8a4368062",
+      "inspection": {
+        "name": "trading-window-xml",
+        "root": "{http://www.xbrl.org/2003/instance}xbrl",
+        "namespaces": [
+          "http://www.xbrl.org/2003/instance",
+          "http://www.xbrl.org/2003/linkbase",
+          "https://www.sebi.gov.in/xbrl/2023-06-30/in-capmkt"
+        ]
+      },
+      "classification": "ordinary_xbrl_xml",
+      "support_claim": false
+    },
+    {
+      "name": "prior-intimation-xml",
+      "url": "https://nsearchives.nseindia.com/corporate/xbrl/PRIOR_INTIMATION_60954_1493994_25072025074112_WEB.xml",
+      "scope": "Published official announcement locator; distinguish XML from inline, no event mapper",
+      "format": "xml",
+      "window_days": 1,
+      "method": "GET",
+      "observed_at": "2026-10-18T19:07:32.252692+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": 200,
+      "content_type": "application/xml",
+      "outcome": "observed_unverified",
+      "schema": null,
+      "bytes": 2994,
+      "sha256": "97d715ee8260d8f01646bb4304294dabc1aee93cb9f6d0a2d9f00bfe96a08af2",
+      "inspection": {
+        "name": "prior-intimation-xml",
+        "root": "{http://www.xbrl.org/2003/instance}xbrl",
+        "namespaces": [
+          "http://www.xbrl.org/2003/instance",
+          "https://www.sebi.gov.in/xbrl/2023-05-31/in-capmkt",
+          "http://www.xbrl.org/2003/linkbase"
+        ]
+      },
+      "classification": "ordinary_xbrl_xml",
+      "support_claim": false
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/1067491/000095017025091925/infy-20250331.htm",
+      "observed_at": "2026-10-18T19:12:01.629213+00:00",
+      "max_requests": 1,
+      "max_bytes": 16777216,
+      "deadline_seconds": 30,
+      "complete": false,
+      "status": 403,
+      "content_type": "text/html",
+      "bytes": 4819,
+      "sha256": "cc67e01537974b79ad719038c817d1d0b99c8069a670bc062771c00084332af9",
+      "classification": "blocked_http_403",
+      "support_claim": false
+    },
+    {
+      "url": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/reports/xii-financial-statements-2023.html",
+      "observed_at": "2026-10-18T19:12:51.468889+00:00",
+      "max_requests": 1,
+      "max_bytes": 16777216,
+      "deadline_seconds": 30,
+      "complete": false,
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "bytes": 181431,
+      "sha256": "5de9bdec00b9deaecab2f939c3fad8f1228641e36edc616d39fd08011f6d6f4d",
+      "classification": "genuine_inline_xbrl_1_1",
+      "support_claim": false,
+      "inspection": {
+        "root": "{http://www.w3.org/1999/xhtml}html",
+        "inline_elements": {
+          "{http://www.xbrl.org/2013/inlineXBRL}header": 1,
+          "{http://www.xbrl.org/2013/inlineXBRL}references": 1,
+          "{http://www.xbrl.org/2013/inlineXBRL}resources": 1,
+          "{http://www.xbrl.org/2013/inlineXBRL}nonNumeric": 7,
+          "{http://www.xbrl.org/2013/inlineXBRL}continuation": 4,
+          "{http://www.xbrl.org/2013/inlineXBRL}nonFraction": 316
+        },
+        "schema_refs": [
+          [
+            "{http://www.xbrl.org/2003/linkbase}schemaRef",
+            {
+              "{http://www.w3.org/1999/xlink}type": "simple",
+              "{http://www.w3.org/1999/xlink}href": "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630.xsd"
+            }
+          ]
+        ]
+      }
+    }
+  ]
+}

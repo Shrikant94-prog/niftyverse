@@ -17,6 +17,7 @@ jobs:
       - run: uv run --frozen ruff check src tests
       - run: uv run --frozen mypy src tests
       - run: uv run --frozen pytest -q
+      - run: uv run --frozen --extra filings pytest tests/test_filings.py tests/test_filing_xml.py tests/test_filing_inline.py tests/test_taxonomy_zip.py -q
       - run: uv run --frozen python tools/check_wheel.py --lane core
       - run: uv run --frozen python tools/check_docs.py --baseline --self-test
   extras:

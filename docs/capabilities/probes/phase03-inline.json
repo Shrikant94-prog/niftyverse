@@ -1,0 +1,59 @@
+{
+  "budget": {
+    "max_requests": 8,
+    "max_bytes": 8388608,
+    "max_total_bytes": 67108864,
+    "deadline_seconds": 120,
+    "spacing_seconds": 2
+  },
+  "probes": [
+    {
+      "name": "indas-2025",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_INDAS_98350_16062025144228_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "banking-2026",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_BANKING_201944_16102026192427_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "banking-april",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_BANKING_153201_27042026175216_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "nonindas",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_NONINDAS_127941_14112025170117_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "life-insurance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/LI_114560_08112024164604_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "nbfc",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_NBFC_INDAS_174202_13072026195308_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "general-insurance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_GI_174881_15072026211206_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    },
+    {
+      "name": "governance",
+      "url": "https://nsearchives.nseindia.com/corporate/ixbrl/INTEGRATED_FILING_GOVERNANCE_154669_30042026143605_iXBRL_WEB.html",
+      "scope": "Named official published specimen; inspect genuine inline namespace/fact elements only; no financial mapping or source support claim",
+      "format": "html"
+    }
+  ]
+}

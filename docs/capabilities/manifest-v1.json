@@ -168,7 +168,7 @@
         "03:filing-2026"
       ],
       "publication_precision": "collection instant known; prior public availability unknown",
-      "next_action": "Register only exact evidenced financial table signatures, unit captions and context columns before parsing; no universal date cutoff."
+      "next_action": "Bounded source-table assertions tested on two exact real specimens with explicit recovery diagnostics; economic mapping/coverage remains Phase 13."
     },
     {
       "id": "rendered_ownership_html",
@@ -182,24 +182,29 @@
     },
     {
       "id": "legacy_financial_html",
-      "status": "blocked",
-      "samples": [],
-      "reason": "older locator not available under closed catalogue circuit; no inherited sample adopted",
-      "next_action": "Obtain one official document and independently inspect exact table before registration."
+      "status": "experimental",
+      "samples": [
+        "phase03:legacy-reliance"
+      ],
+      "next_action": "Source-table assertions verified on exact owner-linked 2009 quarterly specimen; no continuous history or semantic mapper claim."
     },
     {
       "id": "older_financial_xbrl",
-      "status": "blocked",
-      "samples": [],
-      "taxonomy": "unverified; inherited 2020 namespace observation is only a lead",
-      "next_action": "Acquire real XML and closed taxonomy package in Phase 03."
+      "status": "experimental",
+      "samples": [
+        "phase03:older-indas"
+      ],
+      "taxonomy": "2020-03-31 namespace, closed 19-resource local package; individual hashes and version pinned in test manifest. No economic mapper.",
+      "next_action": "Expand real held-out/2018/taxonomy-generation samples; 2018 owner input has 2017-named schemaRef and remains unsupported. Decoder evidence: 03-20261019-xml-legacy.md."
     },
     {
       "id": "integrated_financial_xbrl",
       "status": "blocked",
-      "samples": [],
-      "taxonomy": "unverified",
-      "next_action": "Acquire real XML, units/context examples and closed taxonomy dependencies."
+      "samples": [
+        "phase03:integrated-indas"
+      ],
+      "taxonomy": "Sample uses 2026-01-31 namespace; official linked package is 2025-01-31 and must not substitute. Archive exceeds 8 MiB capture cap.",
+      "next_action": "Obtain matching 2026 taxonomy plus closed dependencies; no namespace/version alias."
     },
     {
       "id": "genuine_inline_xbrl",

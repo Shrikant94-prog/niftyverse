@@ -47,10 +47,11 @@ def test_minimum_manifest_keeps_concrete_targets_and_missing_families() -> None:
     assert all(c["period"] in {"instant", "duration"} and c["unit"] for c in concepts)
     assert {c["status"] for c in concepts} <= {"experimental", "blocked"}
     assert {f["id"] for f in manifest["filing_families"] if f["status"] == "blocked"} >= {
-        "older_financial_xbrl",
         "genuine_inline_xbrl",
         "bank_financial_xbrl",
     }
+    older = next(f for f in manifest["filing_families"] if f["id"] == "older_financial_xbrl")
+    assert older["status"] == "experimental" and older["samples"] == ["phase03:older-indas"]
     assert {s["symbol"] for s in manifest["global_targets"]["series"]} == {"^GSPC", "^IXIC"}
     assert manifest["global_targets"]["capture_kind"] == "sdk_result"
     assert manifest["etf_targets"]["reference_sessions"] == ["2016-09-01", "2026-10-16"]
