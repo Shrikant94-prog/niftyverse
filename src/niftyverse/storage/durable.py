@@ -21,7 +21,7 @@ def sync_directory(path: Path) -> None:
 
 
 def sync_file(path: Path) -> None:
-    with path.open("rb") as stream:
+    with path.open("rb+") as stream:
         os.fsync(stream.fileno())
 
 

@@ -5,16 +5,16 @@
 ## Active work
 
 - **Phase:** 04 - Durable store and publication protocol. All checkpoints, local commits, merge into local main and GitHub push authorized. Retain phase-04; do not start Phase 05.
-- **Status:** NV-04-01 and NV-04-02 checkpoint checks verified; NV-04-03 active; phase incomplete.
+- **Status:** All three checkpoints locally verified; PH-04-GATE awaiting committed-source hosted checks and final integration. Phase incomplete until those gates finish.
 - **Start:** inspected clean tracked main/origin main `1abbb1c`; only untracked owner `Sample_Files/`. No pre-existing phase-04. Created phase-04 from that local main, preserving all existing branches/files.
 - **Prerequisites:** Phase 01 and 03 completion evidence inspected and their software is in main ancestry. Current frozen full-extra baseline: 169 passed on Windows CPython 3.14.7, uv 0.12.9. Synthetic storage batches establish no provider support.
-- **Next action:** test immutable history/resolved bundles, temporal proof, consistent backup/restore, direct CSV/Parquet faults and no-store parity; measure local ingest/query baselines.
+- **Next action:** reconcile local main, commit source/evidence, push phase-04 for hosted checks; resolve demonstrated failures, record final evidence and merge verified result into local main, then push both refs.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 04 acceptance/gate](docs/phases/04.md), [workflow](docs/WORKFLOW.md#phase-loop).
 2. Current checkpoint: [logical keys](docs/specs/data-model.md#s7-1), [partition state](docs/specs/builder.md#s10-2), [storage](docs/specs/storage.md#s11), assigned R2/3/4/8/9 and AM-02/04/05/07/08/10/14/17 in [requirements](docs/specs/requirements.md#s18-2).
-3. Affected interfaces: `core.py`, `builder.py`, `storage/`, source assertion records in `filing_xml.py`. Prerequisites: [01 completion](docs/evidence/01-20261018-completion.md), [03 completion](docs/evidence/03-20261019-completion.md).
+3. [Current local gate/snapshots/benchmark evidence](docs/evidence/04-20261019-snapshots.md), [storage usage and limits](docs/storage.md). For concrete integration dependencies, inspect `batches.py`, `storage/`, their tests and `tools/wheel_smoke.py`. Do not reopen settled source research.
 
 ## Acceptance mapping
 
@@ -22,15 +22,15 @@
 |---|---|---|
 | NV-04-01 AC1/2/4/5 | Actual temporary DuckDB migration/rollback, old unknown metadata, distinct occurrences/checks; scope/field/basis, financial/ETF identities; cross-process lock; path diagnostics | [Schema evidence](docs/evidence/04-20261019-schema.md): 34 focused/compatibility tests pass; final shared-sink runtime parity follows in NV-04-03 |
 | NV-04-02 AC1/2 | Separate-process crash/restart at all three boundaries; exact facts/lineage/coverage; lifecycle, staging/retry/cancel/disk-full | [Publication evidence](docs/evidence/04-20261019-publication.md): 44 focused/compatibility tests pass; lint and strict types pass |
-| NV-04-03 AC1/2/4 | Hand-checked temporal fixture; pinned readers; history/resolved snapshots; backup restore/corruption; CSV/Parquet same-batch no-store faults; ingest/two query benchmarks | Pending |
-| All AC3 and PH-04-GATE | Commands, observed results, source/environment identity, focused review, integrated gate and affected regressions | Pending |
+| NV-04-03 AC1/2/4 | Exact temporal oracle; two pinned reader processes; snapshots; backup/restore/corruption; both formats' no-store parity and publication faults; 100,000-row ingest/two query-shape benchmarks | [Local gate evidence](docs/evidence/04-20261019-snapshots.md): pass |
+| All AC3 and PH-04-GATE | Commands, source/environment identity, scoped review, integrated gate and regressions | Local full-extra 221 pass before 3 additional timeout tests; current focused 80 pass; lint/types/docs and fresh installed core wheel pass. Hosted/final integration pending |
 
 ## Verification and limitations
 
 - Baseline `uv run --frozen --extra filings pytest -q`: 169 passed. Existing uv cache and Git metadata require sandbox escalation; approved prefixes are used.
 - Preserve Phase 01 fixture-v1 API and readable artifacts. No economic mapper, full builder/research engine or provider breadth in Phase 04.
 - Phase 03 remains verified: offline XII only; missing 2026 taxonomy and mismatched 2018 vendor specimen quarantine. No source readiness upgrade from synthetic storage checks.
-- Process-crash publication and power-loss/off-device recovery claims must remain separate. Platform evidence pending.
+- Windows process-crash matrix passes. File fsync/POSIX directory protocol is explicit; power-loss/hardware crash and disk-loss recovery are not certified. Broader platform evidence pending. Exact artifact, logical recomputation and byte-regeneration levels remain separate.
 
 ## Phase ledger
 
@@ -40,5 +40,5 @@
 | 01 | verified through PH-01-GATE | [Completion](docs/evidence/01-20261018-completion.md) |
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
-| 04 | authorized; NV-04-01 active | Current record above |
+| 04 | locally verified; hosted/integration gate pending | Current record above |
 | 05-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |

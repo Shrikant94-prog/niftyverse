@@ -72,3 +72,67 @@ directory-metadata/power-loss protocol is **not** certified. No platform has a
 simulated hardware power-loss guarantee here. DuckDB supplies its transactional
 WAL; filesystem/device caching may limit OS/power-loss durability. Disk loss
 requires a verified off-device backup; a same-disk backup is insufficient.
+
+`history_bundle(store, label, recipe=..., policy=...)` streams one consistent
+committed view to typed Zstandard Parquet and retains all candidate occurrences,
+coverage, checks and capture references, including quarantine diagnostics/raw.
+It records unknown never-obtained revisions. It never substitutes latest values
+for candidate history. Its snapshot identity includes selected occurrences,
+artifacts/checksums, schema/normalizer identities, policy/recipe, code digest and
+environment. Reusing a label fails; old snapshots are never overwritten.
+
+`resolve_prices` is a tiny synthetic proof: explicit members, one session,
+declared price basis and `retained-at-cutoff-v1`. It filters both known-at and
+local collection before revision selection, retains a withdrawal reason and
+left-joins missing members. It conservatively reports competing partitions as
+conflicts. It supplies no historical membership/calendar inference or full
+financial/availability engine. `resolved_result` verifies that exact selection
+and freezes the output, chosen IDs, cutoff, members and source history identity.
+Another decision/policy requires its history dependencies and a new output.
+
+`backup(store, new_path)` makes a checkpointed closed-handle catalog copy under
+the retained writer lock, then copies its referenced raw objects and verified
+published snapshots. `restore(backup_path, new_store_path)` verifies checksums,
+streams copies to a new directory, verifies the staged copies, checks schema
+version and sample queries, then publishes. It never overwrites an existing
+store. Unfinished jobs retain diagnostics/raw; resuming them requires the caller
+to resupply/revalidate the bounded batch, not replay an expired source cursor.
+No retention, vacuum or deletion of historical/user files is automatic.
+
+`write_direct(validated_batch, new_path, encoding="csv"|"parquet")` uses the same
+validation as persistent publication. It creates no store/catalog, snapshot ID
+or persistent revision catalogue. It writes a new bounded partition bundle;
+large work must use explicitly complete bounded partitions. The underlying
+snapshot writer streams Arrow batches (65,536 rows per group) into one file per
+table, rather than materializing a long history. Ingest partition identity is
+separate from this small-table export layout; ordering/layout are pinned in the
+manifest. Local benchmarks compare stable listing/date and date/listing orders;
+they do not prescribe a provider's physical partition contract.
+
+CSV is UTF-8 with deterministic schema column order: `N` is null and `V<JSON>`
+encodes a value (exact decimal strings, ISO dates/UTC instants, original text,
+nested typed dimensions). Empty strings, literal null text and leading-zero
+IDs survive. Parquet preserves typed lists, structs, dates, instants and exact
+decimals. `read_bundle` verifies metadata identity and streamed file checksums;
+`Bundle.table(name)` explicitly materializes and decodes the exact verified
+bytes. `scan_polars(bundle, name)` verifies pinned immutable Parquet files and
+returns a real lazy scan with its own read context. Readers never attach the
+active writable catalog; callers must not mutate immutable bundle files.
+
+Raw captures are retained by default. `retain_raw=False` keeps hashes/origin/
+locators and explicitly marks raw replay unavailable. Required failures prevent
+publication; `allow_partial=True` retains typed failure/coverage diagnostics
+with a **partial** status, never a complete label. Existing destinations always
+fail; no overwrite policy is implemented. Cancellation/disk-full at staged,
+manifest, rename and final-sync boundaries preserves prior output. A caught
+final-sync failure removes the new ready manifest and leaves inspectable files
+that readers reject. An abrupt crash after complete atomic rename can leave a
+valid complete bundle; callers reconcile it before retrying. Failure of the
+filesystem even to remove a marker is outside a software-only rollback claim.
+
+Reproducibility levels are explicit: artifact SHA-256 validates stored bytes;
+logical recomputation requires retained inputs and pinned selection/code/
+environment; byte-identical regeneration across library/platform versions is
+not certified. Raw SDK replay begins at its SDK capture, not unavailable wire
+responses. Decimal/integer comparisons remain exact. Checksums detect accidental
+corruption; they are not independent attestation or tamper-proof signatures.

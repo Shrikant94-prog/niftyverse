@@ -5,12 +5,15 @@ import shutil
 import threading
 import warnings
 from collections.abc import Callable
+from math import isfinite
 from pathlib import Path
+from uuid import uuid4
 
 import duckdb
 import pyarrow as pa
 from filelock import FileLock, Timeout
 
+from niftyverse.storage.durable import sync_directory, sync_file
 from niftyverse.storage.paths import diagnose_store
 from niftyverse.storage.schemas import SCHEMAS
 
@@ -105,6 +108,8 @@ class Store:
     """
 
     def __init__(self, root: Path | None = None, *, lock_timeout: float = 0.2) -> None:
+        if not isfinite(lock_timeout) or not 0 <= lock_timeout <= 30:
+            raise ValueError("writer lock timeout must be finite and within 0..30 seconds")
         self.location = diagnose_store(root)
         self.root = self.location.root
         self.lock_timeout = lock_timeout
@@ -159,9 +164,12 @@ class Store:
                     # OS writer lock, close the DB, then copy its checkpoint.
                     self._connection.close()
                     self._connection = None
-                    shutil.copyfile(
-                        db, self.location.paths["backups"] / f"pre-migration-v{row[0]}.duckdb"
+                    backup_path = self.location.paths["backups"] / (
+                        f"pre-migration-v{row[0]}-{uuid4().hex}.duckdb"
                     )
+                    shutil.copyfile(db, backup_path)
+                    sync_file(backup_path)
+                    sync_directory(backup_path.parent)
                     self._connection = duckdb.connect(
                         str(db),
                         config={
@@ -185,6 +193,26 @@ class Store:
         return table.cast(
             pa.schema([pa.field("occurrence_id", pa.string(), False), *SCHEMAS[name]])
         )
+
+    def checkpoint_copy(self, destination: Path) -> None:
+        """Consistent physical copy while retaining writer ownership (Windows too)."""
+        self.connection.execute("CHECKPOINT")
+        self.connection.close()
+        self._connection = None
+        try:
+            if destination.exists():
+                raise FileExistsError(destination)
+            shutil.copyfile(self.location.paths["catalog"], destination)
+        finally:
+            self._connection = duckdb.connect(
+                str(self.location.paths["catalog"]),
+                config={
+                    "temp_directory": str(self.location.paths["spill"]),
+                    "memory_limit": "256MB",
+                    "threads": "2",
+                },
+            )
+            self.connection.execute("SET enable_external_access = false")
 
     def close(self) -> None:
         if self._connection is not None:

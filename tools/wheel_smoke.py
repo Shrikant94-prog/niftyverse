@@ -179,10 +179,49 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
     assert stored.to_polars().to_dicts() == expected
     import duckdb
 
+    # Exercise the installed Phase 04 boundaries, including minimal-core mode.
+    import pyarrow as pa
+    from datetime import UTC, datetime
+
+    from niftyverse.batches import Capture, Partition, ValidatedBatch
+    from niftyverse.storage.bundles import read_bundle, write_direct
+    from niftyverse.storage.catalog import Store
+    from niftyverse.storage.publication import publish
+    from niftyverse.storage.schemas import SCHEMAS
+    from niftyverse.storage.snapshots import backup, history_bundle, resolve_prices, restore
+
+    row = {"listing_id": "001", "series": "EQ", "session_date": date(2026, 9, 1),
+           "open": None, "high": None, "low": None, "close": Decimal("123.4500"),
+           "quantity": 1, "quantity_unit": "shares", "turnover": None, "currency": "INR",
+           "locator": "owned:1", "missing_reason": None}
+    typed = pa.Table.from_pylist([row], schema=SCHEMAS["equity_daily"])
+    now = datetime(2026, 9, 2, tzinfo=UTC)
+    publication = ValidatedBatch(
+        Partition("equity_daily", date(2026, 9, 1), date(2026, 9, 2), ("001",), ("close",),
+                  "raw", "synthetic-v1", "identity-v1", "quality-v1", "owned row count 1"),
+        Capture(b"owned", "direct_raw", "owned", "local:owned"), "installed", now, now,
+        None, "active", None, (("equity_daily", typed),), "complete", "v1", "v1",
+    )
+    with Store(Path(folder) / "durable") as catalog:
+        receipt = publish(catalog, publication)
+        assert publish(catalog, publication).reused
+        history = history_bundle(catalog, "pinned", recipe="installed-v1", policy="retained-at-cutoff-v1")
+        resolved = resolve_prices(history, ("001", "missing"), date(2026, 9, 1), now)
+        assert resolved["close"].to_pylist() == [Decimal("123.45"), None]
+        assert resolved["occurrence_id"][0].as_py() == receipt.occurrence_id
+        backup(catalog, Path(folder) / "backup")
+    restore(Path(folder) / "backup", Path(folder) / "restored")
+    with Store(Path(folder) / "restored") as catalog:
+        assert catalog.read_table("equity_daily").num_rows == 1
+
     def denied(*args, **kwargs):
         raise AssertionError("direct/render path opened a DB or materialized data")
 
     duckdb.connect = denied
+    for encoding in ("csv", "parquet"):
+        target = Path(folder) / f"durable-direct-{encoding}"
+        write_direct(publication, target, encoding=encoding)
+        assert read_bundle(target).table("equity_daily").equals(typed)
     direct = niftyverse.extract_fixture(payload, Path(folder) / "bundle")
     assert direct.to_polars().to_dicts() == expected
     assert direct.to_polars().schema == stored.to_polars().schema

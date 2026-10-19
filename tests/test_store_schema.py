@@ -353,6 +353,40 @@ def test_explicit_open_backs_up_old_catalog_and_keeps_occurrences_distinct(tmp_p
         assert store.connection.execute("SELECT count(*) FROM occurrences").fetchone() == (2,)
         assert store.connection.execute("SELECT count(*) FROM captures").fetchone() == (1,)
         assert store.connection.execute("SELECT count(*) FROM source_checks").fetchone() == (1,)
-    with duckdb.connect(str(root / "backups" / "pre-migration-v1.duckdb"), read_only=True) as conn:
+    (backup_path,) = (root / "backups").glob("pre-migration-v1-*.duckdb")
+    with duckdb.connect(str(backup_path), read_only=True) as conn:
         assert conn.execute("SELECT max(version) FROM schema_migrations").fetchone() == (1,)
         assert conn.execute("SELECT origin FROM captures").fetchone() == ("local:x",)
+
+
+def test_dimension_order_does_not_create_a_new_analytical_fact() -> None:
+    batch = financial_example()
+    name, table = batch.tables[-1]
+    row = table.to_pylist()[0]
+    dimension = {
+        "axis": "{urn:test}Product",
+        "member": "{urn:test}Steel",
+        "typed_xml": None,
+        "container": "segment",
+    }
+    row["dimensions"].append(dimension)
+    duplicate = {**row, "dimensions": list(reversed(row["dimensions"])), "assertion_id": "another"}
+    source_name, source_table = batch.tables[1]
+    source = source_table.to_pylist()[0]
+    source2 = {**source, "assertion_id": "another"}
+    with pytest.raises(ValidationError, match="analytical key"):
+        replace(
+            batch,
+            tables=(
+                batch.tables[0],
+                (source_name, pa.Table.from_pylist([source, source2], schema=source_table.schema)),
+                (name, pa.Table.from_pylist([row, duplicate], schema=table.schema)),
+            ),
+        )
+
+
+@pytest.mark.parametrize("timeout", [-1.0, float("inf"), float("nan")])
+def test_unbounded_lock_timeout_rejects_without_files(tmp_path: Path, timeout: float) -> None:
+    with pytest.raises(ValueError, match="timeout"):
+        Store(tmp_path / "never-created", lock_timeout=timeout)
+    assert not list(tmp_path.iterdir())

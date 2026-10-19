@@ -8,7 +8,7 @@ import hashlib
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime
-from typing import Literal
+from typing import Any, Literal
 
 import pyarrow as pa
 
@@ -32,6 +32,17 @@ def utc(value: datetime) -> None:
         or value.utcoffset() != UTC.utcoffset(value)
     ):
         raise ValidationError("timestamps require aware UTC")
+
+
+def _fact_key(row: dict[str, Any], columns: tuple[str, ...]) -> str:
+    values = []
+    for name in columns:
+        value = row[name]
+        if name == "dimensions":
+            # Dimension order is source presentation, not analytical identity.
+            value = sorted(value, key=identity)
+        values.append(value)
+    return identity(values)
 
 
 @dataclass(frozen=True)
@@ -172,7 +183,7 @@ class ValidatedBatch:
                 raise ValidationError("null in required field")
             rows = table.to_pylist()
             rows_by_name[name] = rows
-            keys = [identity([r[k] for k in KEYS[name]]) for r in rows]
+            keys = [_fact_key(r, KEYS[name]) for r in rows]
             if len(set(keys)) != len(keys):
                 raise ValidationError("duplicate business key in atomic partition")
             for row in rows:
@@ -209,7 +220,7 @@ class ValidatedBatch:
                 if not dim["axis"] or (dim["member"] is None) == (dim["typed_xml"] is None):
                     raise ValidationError("invalid dimension identity")
         financial = rows_by_name.get("financial_facts", [])
-        keys = [identity([r[k] for k in ANALYTICAL_KEY]) for r in financial]
+        keys = [_fact_key(r, ANALYTICAL_KEY) for r in financial]
         if len(keys) != len(set(keys)):
             raise ValidationError("duplicate analytical key; unresolved conflict")
         for row in financial:
