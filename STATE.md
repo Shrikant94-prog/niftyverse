@@ -5,15 +5,15 @@
 ## Active work
 
 - **Phase:** 03 - Transport and safe archive ingestion. Resume includes the owner's binding pasted instructions (attachment 7b970635). Local commits, final merge commit into local main and GitHub push are authorized. Retain phase-03; do not start Phase 04.
-- **Status:** local phase gate verified; hosted verification and final integration pending. No external input is pending.
+- **Status:** PH-03-GATE verified from executed local/hosted checks; final integration pending. Seven hosted jobs and every notebook step pass. GitHub's overall notebook/workflow conclusion remains unset during its Actions incident; that metadata status is not claimed passed.
 - **Current checkpoint:** NV-03-04 implemented and locally verified. XII is offline decoder evidence only. Actual 2026 missing-taxonomy and 2018 vendor-mismatch specimens are deterministic negative/quarantine cases under the owner's dependency-exception instruction.
 - **Prerequisite/start:** Phase 02 integrated at 5bc94ba; phase branch started from clean local main a481636. Baseline 68 tests passed. Existing checkpoints 2a081ba, 9af7f46, a4cb3b2, 6666db4, f8bb373 and research db76f08 are retained.
-- **Next action:** commit/push verified inline checkpoint, observe hosted jobs, reconcile any local-main changes on phase-03 and verify affected code. Record evidence, then merge with a merge commit and push. Confirm main contains the verified result.
+- **Next action:** commit checked completion evidence, recheck/reconcile local main, merge verified phase-03 with a merge commit, push and inspect ancestry/remote refs. Keep observing run 39284993212 (observer 86646); report its overall status separately from successful executed checks.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 03 acceptance/gate](docs/phases/03.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. [Inline and integrated gate evidence](docs/evidence/03-20261019-inline-gate.md), [real fixture/profile provenance](tests/fixtures/filings/README.md), [acquisition observations](docs/capabilities/phase03-inline-decoder-observations.json).
+2. [Completion/hosted evidence](docs/evidence/03-20261019-completion.md), [inline gate](docs/evidence/03-20261019-inline-gate.md), [fixture/profile provenance](tests/fixtures/filings/README.md).
 3. For concrete dependencies: [filing safety](docs/specs/transport.md#s9-6), [XML/legacy evidence](docs/evidence/03-20261019-xml-legacy.md), [earlier inline research](docs/evidence/03-20261019-inline-research.md), AM-04/AM-14 in [requirements](docs/specs/requirements.md#s18-2).
 
 ## Acceptance mapping
@@ -24,7 +24,7 @@
 | NV-03-02 AC1-3 | Deterministic 429/403/5xx/timeout, waits/counts, refresh/cancel/redaction | [Retry evidence](docs/evidence/03-20261018-retries.md); current integrated regressions pass. |
 | NV-03-03 AC1-3 | Real report generations, hostile ZIP/CSV, atomic rejection | [Ingestion evidence](docs/evidence/03-20261018-ingestion.md); shared member defense retains CSV default, taxonomy defenses and affected regressions pass. |
 | NV-03-04 AC1-3 | Real XML/HTML/inline facts, exact transformations/lineage, closed dictionary, hostile/missing inputs and cancellation | [Current gate observations](docs/evidence/03-20261019-inline-gate.md): all 323 XII facts; explicit 2026/2018 typed quarantines; 41-resource closed package; bounded ZIP loading. |
-| PH-03-GATE | Full integrated safety/fault suite plus affected regressions | Local pass: 169 full-extra tests; 125 core tests with three optional modules skipped; fresh wheels/static checks pass. Hosted/current-main integration still pending. |
+| PH-03-GATE | Full integrated safety/fault suite plus affected regressions | Pass: 169 local full-extra tests; 125 core/3 skips; Windows/Linux each 51 filing cases; macOS and every extra's wheel test pass. Formal workflow summary remains pending; Git integration next. |
 
 ## Verification and limitations
 
@@ -33,7 +33,7 @@
 - XII fixture has a documented explicit finite profile for its 41-resource/33,862,241-byte closed dictionary. Unsupported inline constructs fail atomically. Source assertions do not certify full XBRL formula/calculation/dimensional validity, signatures or economic mapping.
 - Owner binds unavailable 2026 dictionary and 2018 vendor-mismatched reference as negative cases. No 2025 substitution, year/reference rewrite or historical completeness claim. Genuine public NSE inline availability remains unverified; untagged rendered HTML remains HTML, with no invented inline facts.
 - Existing transport/archive checkpoints and their recorded repairs remain applicable. Raw captures stay ignored under .local; suitable fixed fixtures/manifests are committed. Owner Sample_Files originals remain untouched/untracked.
-- Earlier source f85c447 passed all eight hosted jobs; new inline code awaits its own run. Phase 00-02 completion records remain authoritative for those phases.
+- [Hosted source 1803191](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39284993212): Windows/macOS 3.14.8 and Linux 3.14.7 checks pass. Seven jobs concluded success. All notebook steps, including cleanup/Complete job, concluded success and its log records PASS notebook; overall job/workflow conclusion is still null. Logs are local; [completion evidence](docs/evidence/03-20261019-completion.md) records patch/build, lock newline hashes, wheel identities and this Actions-incident limitation. No terminal workflow pass is claimed.
 
 ## Phase ledger
 
@@ -42,9 +42,9 @@
 | 00 | verified | [Resume](docs/evidence/00-20261018-resume.md) |
 | 01 | verified through PH-01-GATE | [Completion](docs/evidence/01-20261018-completion.md) |
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
-| 03 | local gate verified; integration pending | Current acceptance mapping above |
+| 03 | PH-03-GATE verified; integration pending | [Completion evidence](docs/evidence/03-20261019-completion.md) |
 | 04-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
 
 ## Checkpoint handoff
 
-Continue phase-03 through hosted verification, reconciliation and authorized integration. Do not re-open the settled fixture/quarantine decisions or repeat source research. Preserve Sample_Files and retain the branch. Do not start Phase 04 or claim successful integration before inspecting main.
+Continue phase-03 through authorized reconciliation/integration; actual required test/platform commands have successful execution evidence. Keep the overall GitHub conclusion limitation explicit. Do not re-open settled fixture/quarantine decisions or repeat source research. Preserve Sample_Files, retain the branch and do not start Phase 04.
