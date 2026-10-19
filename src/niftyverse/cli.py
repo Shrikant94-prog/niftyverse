@@ -18,6 +18,20 @@ def main() -> None:
     """niftyverse: explicit local research-data operations."""
 
 
+@main.command("doctor")
+@click.option("--store", type=click.Path(path_type=Path), default=None)
+def doctor(store: Path | None) -> None:
+    """Report resolved local store paths and best-effort location risks; no I/O."""
+    from niftyverse.storage.paths import diagnose_store
+
+    location = diagnose_store(store)
+    click.echo(f"Store: {location.root}")
+    for name, path in location.paths.items():
+        click.echo(f"{name}: {path}")
+    for risk in location.risks:
+        click.echo(f"WARNING: {risk}")
+
+
 @main.command("fixture")
 @click.option(
     "--input",
