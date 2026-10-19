@@ -261,10 +261,10 @@ print(bundle.table('equity_daily')['close'][0].as_py(), flush=True)
             )
             for _ in range(2)
         ]
+        pool = ThreadPoolExecutor(max_workers=2)
         try:
-            with ThreadPoolExecutor(max_workers=2) as pool:
-                ready = [pool.submit(p.stdout.readline) for p in readers if p.stdout]
-                assert [f.result(timeout=15).strip() for f in ready] == ["1.25000000"] * 2
+            ready = [pool.submit(p.stdout.readline) for p in readers if p.stdout]
+            assert [f.result(timeout=15).strip() for f in ready] == ["1.25000000"] * 2
             revised = replace(
                 example("2.5000", check="new"),
                 checked_at=NOW + timedelta(days=1),
@@ -273,15 +273,28 @@ print(bundle.table('equity_daily')['close'][0].as_py(), flush=True)
             publish(store, revised)
             fresh = history_bundle(store, "new", recipe="v1", policy="retained-at-cutoff-v1")
             assert fresh.manifest["snapshot_id"] != pinned.manifest["snapshot_id"]
+            # Keep one buffered read protocol; do not mix readline with
+            # communicate's platform-specific raw selector/reader machinery.
+            # Release both readers before waiting for either process to exit.
             for process in readers:
-                output, errors = process.communicate("continue\n", timeout=15)
-                assert process.returncode == 0, errors
-                assert output.strip() == "1.25000000"
+                assert process.stdin is not None
+                process.stdin.write("continue\n")
+                process.stdin.flush()
+                process.stdin.close()
+            refreshed = [pool.submit(p.stdout.readline) for p in readers if p.stdout]
+            assert [f.result(timeout=15).strip() for f in refreshed] == ["1.25000000"] * 2
+            for process in readers:
+                assert process.wait(timeout=15) == 0
+                assert process.stderr is not None and process.stderr.read() == ""
         finally:
             for process in readers:
                 if process.poll() is None:
                     process.kill()
-                    process.communicate()
+                process.wait(timeout=15)
+                for stream in (process.stdin, process.stdout, process.stderr):
+                    if stream is not None and not stream.closed:
+                        stream.close()
+            pool.shutdown(wait=True)
 
 
 def test_collected_later_cannot_backdate_and_resolved_cannot_relabel(tmp_path: Path) -> None:

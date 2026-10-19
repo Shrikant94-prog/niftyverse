@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase:** 04 - Durable store and publication protocol. All checkpoints, local commits, merge into local main and GitHub push authorized. Retain phase-04; do not start Phase 05.
-- **Status:** All three checkpoints locally verified; PH-04-GATE awaiting committed-source hosted checks and final integration. Phase incomplete until those gates finish.
+- **Status:** All checkpoints locally verified; PH-04-GATE incomplete. Hosted 65a4354 Linux reader-process test timed out after producing correct pinned values; Windows matrix job cancelled by fail-fast. Six other hosted lanes passed. Test handshake repair in progress; no failed gate is counted as passed.
 - **Start:** inspected clean tracked main/origin main `1abbb1c`; only untracked owner `Sample_Files/`. No pre-existing phase-04. Created phase-04 from that local main, preserving all existing branches/files.
 - **Prerequisites:** Phase 01 and 03 completion evidence inspected and their software is in main ancestry. Current frozen full-extra baseline: 169 passed on Windows CPython 3.14.7, uv 0.12.9. Synthetic storage batches establish no provider support.
-- **Next action:** reconcile local main, commit source/evidence, push phase-04 for hosted checks; resolve demonstrated failures, record final evidence and merge verified result into local main, then push both refs.
+- **Next action:** verify explicit buffered reader handshakes/clean exits, push repaired tests and await hosted gate; reconcile main again, record final evidence, merge locally with merge commit and push both refs.
 
 ## Read first
 
