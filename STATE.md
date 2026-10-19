@@ -1,20 +1,21 @@
 ﻿# niftyverse - execution state
 
-**Only execution-status authority.** Updated 19 October 2026.
+**Only execution-status authority.** Updated 20 October 2026.
 
 ## Active work
 
 - **Phase:** 04 - Durable store and publication protocol. All checkpoints, local commits, merge into local main and GitHub push authorized. Retain phase-04; do not start Phase 05.
-- **Status:** All checkpoints locally verified; PH-04-GATE incomplete. Hosted 65a4354 Linux reader-process test timed out after producing correct pinned values; Windows matrix job cancelled by fail-fast. Six other hosted lanes passed. Test handshake repair in progress; no failed gate is counted as passed.
+- **Status:** All checkpoints locally verified; PH-04-GATE incomplete. Hosted 65a4354 and 2fdce68 both timed out on Linux reader exit; handshake-only hypothesis disproved. Reproduced on managed Linux 3.14.7, repaired background Parquet read path; identical test now passes. No failed/cancelled hosted job counted as pass.
 - **Start:** inspected clean tracked main/origin main `1abbb1c`; only untracked owner `Sample_Files/`. No pre-existing phase-04. Created phase-04 from that local main, preserving all existing branches/files.
 - **Prerequisites:** Phase 01 and 03 completion evidence inspected and their software is in main ancestry. Current frozen full-extra baseline: 169 passed on Windows CPython 3.14.7, uv 0.12.9. Synthetic storage batches establish no provider support.
-- **Next action:** verify explicit buffered reader handshakes/clean exits, push repaired tests and await hosted gate; reconcile main again, record final evidence, merge locally with merge commit and push both refs.
+- **Next action:** finish Linux 3.14.7 full core/wheel gate, push production read repair for hosted verification; reconcile main again, record final evidence, merge with merge commit and push both refs.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 04 acceptance/gate](docs/phases/04.md), [workflow](docs/WORKFLOW.md#phase-loop).
 2. Current checkpoint: [logical keys](docs/specs/data-model.md#s7-1), [partition state](docs/specs/builder.md#s10-2), [storage](docs/specs/storage.md#s11), assigned R2/3/4/8/9 and AM-02/04/05/07/08/10/14/17 in [requirements](docs/specs/requirements.md#s18-2).
 3. [Current local gate/snapshots/benchmark evidence](docs/evidence/04-20261019-snapshots.md), [storage usage and limits](docs/storage.md). For concrete integration dependencies, inspect `batches.py`, `storage/`, their tests and `tools/wheel_smoke.py`. Do not reopen settled source research.
+4. [Reproduced Linux 3.14.7 shutdown repair](docs/evidence/04-20261020-parquet-exit.md); preserve both failed hosted runs as historical evidence. Verify the new source before integration.
 
 ## Acceptance mapping
 

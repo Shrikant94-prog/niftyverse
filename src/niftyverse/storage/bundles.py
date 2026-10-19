@@ -274,7 +274,11 @@ class Bundle:
             payload = verified_bytes(self.path, filename, entry)
             schema = pa.ipc.read_schema(pa.BufferReader(base64.b64decode(entry["schema"])))
             if entry["encoding"] == "parquet":
-                table = pq.read_table(pa.BufferReader(payload))
+                # This is one captured file, not a dataset scan. Avoid native
+                # background read pools surviving into interpreter teardown.
+                with pa.BufferReader(payload) as source:
+                    with pq.ParquetFile(source, pre_buffer=False) as parquet:
+                        table = parquet.read(use_threads=False)
                 if not table.schema.equals(schema, check_metadata=False):
                     raise ValidationError("Parquet schema mismatch")
             else:
