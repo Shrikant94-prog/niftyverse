@@ -4,42 +4,42 @@
 
 ## Active work
 
-- **Phase:** 04 - Durable store and publication protocol. All checkpoints, local commits, merge into local main and GitHub push authorized. Retain phase-04; do not start Phase 05.
-- **Status:** All checkpoints locally verified; PH-04-GATE incomplete. Hosted 65a4354 and 2fdce68 both timed out on Linux reader exit; handshake-only hypothesis disproved. Reproduced on managed Linux 3.14.7, repaired background Parquet read path; identical test now passes. No failed/cancelled hosted job counted as pass.
-- **Start:** inspected clean tracked main/origin main `1abbb1c`; only untracked owner `Sample_Files/`. No pre-existing phase-04. Created phase-04 from that local main, preserving all existing branches/files.
-- **Prerequisites:** Phase 01 and 03 completion evidence inspected and their software is in main ancestry. Current frozen full-extra baseline: 169 passed on Windows CPython 3.14.7, uv 0.12.9. Synthetic storage batches establish no provider support.
-- **Next action:** finish Linux 3.14.7 full core/wheel gate, push production read repair for hosted verification; reconcile main again, record final evidence, merge with merge commit and push both refs.
+- **Phase:** 04 - Durable store and publication protocol. All checkpoints and PH-04-GATE verified. Local final merge and GitHub push authorized; retain phase-04. Do not start Phase 05.
+- **Status:** Verified, ready for final local integration. All eight hosted jobs and overall workflow concluded success. Merge/publication remain the next action.
+- **Start:** phase-04 created from inspected clean local main/origin main `1abbb1c5d7cdf3790ec198d84533c0de25fa2478`. Owner untracked `Sample_Files/` preserved. No reset, alternate start or discarded work.
+- **Verified source:** `9b72748037476c310e22c614c138eb90dbb63997`. Final evidence/status commit is metadata only. Main reconciliation returned up to date; no conflict. Git records the final phase head and containing merge parents.
+- **Next action:** commit final evidence; recheck main identity, merge with a merge commit, confirm verified source/test/config trees, push main and retained phase-04, verify remote identities. Next eligible phase: 05, not started.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 04 acceptance/gate](docs/phases/04.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. Current checkpoint: [logical keys](docs/specs/data-model.md#s7-1), [partition state](docs/specs/builder.md#s10-2), [storage](docs/specs/storage.md#s11), assigned R2/3/4/8/9 and AM-02/04/05/07/08/10/14/17 in [requirements](docs/specs/requirements.md#s18-2).
-3. [Current local gate/snapshots/benchmark evidence](docs/evidence/04-20261019-snapshots.md), [storage usage and limits](docs/storage.md). For concrete integration dependencies, inspect `batches.py`, `storage/`, their tests and `tools/wheel_smoke.py`. Do not reopen settled source research.
-4. [Reproduced Linux 3.14.7 shutdown repair](docs/evidence/04-20261020-parquet-exit.md); preserve both failed hosted runs as historical evidence. Verify the new source before integration.
+2. [Final completion and hosted evidence](docs/evidence/04-20261020-completion.md), [storage protocol/usage/limits](docs/storage.md).
+3. Only for a concrete remaining dependency: [logical keys](docs/specs/data-model.md#s7-1), [partition contracts](docs/specs/builder.md#s10-2), [storage](docs/specs/storage.md#s11), `batches.py`, `storage/`, their tests. Do not reopen settled source research or rerun unchanged expensive checks.
 
 ## Acceptance mapping
 
-| Checkpoint | Independent expected cases / procedure | Result |
-|---|---|---|
-| NV-04-01 AC1/2/4/5 | Actual temporary DuckDB migration/rollback, old unknown metadata, distinct occurrences/checks; scope/field/basis, financial/ETF identities; cross-process lock; path diagnostics | [Schema evidence](docs/evidence/04-20261019-schema.md): 34 focused/compatibility tests pass; final shared-sink runtime parity follows in NV-04-03 |
-| NV-04-02 AC1/2 | Separate-process crash/restart at all three boundaries; exact facts/lineage/coverage; lifecycle, staging/retry/cancel/disk-full | [Publication evidence](docs/evidence/04-20261019-publication.md): 44 focused/compatibility tests pass; lint and strict types pass |
-| NV-04-03 AC1/2/4 | Exact temporal oracle; two pinned reader processes; snapshots; backup/restore/corruption; both formats' no-store parity and publication faults; 100,000-row ingest/two query-shape benchmarks | [Local gate evidence](docs/evidence/04-20261019-snapshots.md): pass |
-| All AC3 and PH-04-GATE | Commands, source/environment identity, scoped review, integrated gate and regressions | Local full-extra 221 pass before 3 additional timeout tests; current focused 80 pass; lint/types/docs and fresh installed core wheel pass. Hosted/final integration pending |
+| Checkpoint | Independent verification and observed result |
+|---|---|
+| NV-04-01 AC1-5 | [Schema evidence](docs/evidence/04-20261019-schema.md): real migrations/rollback and old nullable metadata, identity/partition separation, cross-process lock, OS-local defaults/risk warnings, typed financial/ETF schemas. Current regressions and common DB/file validation pass. |
+| NV-04-02 AC1-3 | [Publication evidence](docs/evidence/04-20261019-publication.md): separate-process abrupt exit at all commit/ack boundaries; exact facts/lineage/check/coverage/job state; duplicate-free retry, unchanged polling, A-B-A, withdrawal/reinstatement, cancel/ack/disk-full/raw recovery. Current gate passes. |
+| NV-04-03 AC1-4 | [Snapshots/direct/benchmark evidence](docs/evidence/04-20261019-snapshots.md): exact temporal oracle, two pinned readers, baseline snapshots, backup/restore/corruption, DB/CSV/Parquet parity with no-store spies, both formats' publication faults, replay limits, 100,000-row ingest/two query-shape benchmarks. |
+| PH-04-GATE | [Completion](docs/evidence/04-20261020-completion.md): Windows full-extra 224 pass; matched Linux 3.14.7 core 180 pass/3 optional skips; fresh installed core wheels; all eight hosted jobs and workflow success on verified source. Ruff format/lint, strict mypy (45 source files), docs baseline/self-tests pass. |
 
 ## Verification and limitations
 
-- Baseline `uv run --frozen --extra filings pytest -q`: 169 passed. Existing uv cache and Git metadata require sandbox escalation; approved prefixes are used.
-- Preserve Phase 01 fixture-v1 API and readable artifacts. No economic mapper, full builder/research engine or provider breadth in Phase 04.
-- Phase 03 remains verified: offline XII only; missing 2026 taxonomy and mismatched 2018 vendor specimen quarantine. No source readiness upgrade from synthetic storage checks.
-- Windows process-crash matrix passes. File fsync/POSIX directory protocol is explicit; power-loss/hardware crash and disk-loss recovery are not certified. Broader platform evidence pending. Exact artifact, logical recomputation and byte-regeneration levels remain separate.
+- Hosted [39303421939](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39303421939): Windows/macOS 3.14.8, Linux 3.14.7. Each behavior platform 180 core pass/3 optional skips plus 51 filing cases. All five extras and macOS installation pass.
+- Earlier two failed Linux runs remain historical evidence. [Matched 3.14.7 reproduction/repair](docs/evidence/04-20261020-parquet-exit.md) fixed native background Parquet read teardown; handshake-only repair did not. No relaxed deadline, skipped case or forced success.
+- Lock/dependencies/config/workflow unchanged. Exact environment, wheel/lock hashes, commands and benchmark metrics are in completion evidence. Core optional-stack isolation and fixture-v1 compatibility pass.
+- Process-crash publication is tested; hardware/OS power loss and Windows directory-metadata durability are not certified. Off-device backup is needed for disk loss. Artifact, logical and byte-regeneration levels remain distinct; raw omission limits replay. Synthetic contracts do not establish provider support or full financial/research semantics.
+- Phase 03 source limits remain: XII offline only; missing 2026 taxonomy and mismatched 2018 vendor specimen quarantined. No source-readiness upgrade, hidden acquisition or next-phase work.
 
 ## Phase ledger
 
 | Phase | State | Evidence |
 |---|---|---|
 | 00 | verified | [Resume](docs/evidence/00-20261018-resume.md) |
-| 01 | verified through PH-01-GATE | [Completion](docs/evidence/01-20261018-completion.md) |
+| 01 | verified | [Completion](docs/evidence/01-20261018-completion.md) |
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
-| 04 | locally verified; hosted/integration gate pending | Current record above |
+| 04 | PH-04-GATE verified; final integration next | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
