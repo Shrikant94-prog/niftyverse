@@ -14,7 +14,12 @@ from datetime import date
 from typing import TYPE_CHECKING, Literal
 from urllib.parse import unquote, urldefrag, urljoin, urlsplit
 
-from niftyverse.filings import FilingFailure, FilingLimits, require_filing_processor
+from niftyverse.filings import (
+    FilingFailure,
+    FilingLimits,
+    _check_quarantine,
+    require_filing_processor,
+)
 
 if TYPE_CHECKING:
     from lxml import etree
@@ -108,6 +113,8 @@ class XmlContext:
     end: str | None
     dimensions: tuple[Dimension, ...]
     source_xml: str
+    forever: bool = False
+    other_xml: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -329,9 +336,11 @@ async def decode_xml_filing(
     resource is explicitly supplied; no file/network resolver is invoked.
     """
     require_filing_processor()
-    from lxml import etree
 
     limits = limits or FilingLimits()
+    if len(body) > limits.max_bytes:
+        raise FilingFailure("document_limit")
+    _check_quarantine(hashlib.sha256(body).hexdigest())
     work = _Work(limits, clock, _expires)
     root = await work.parse(body)
     if root.tag != _XBRLI + "xbrl":
@@ -342,6 +351,26 @@ async def decode_xml_filing(
     concepts, digest = await _taxonomy(package, work)
     if not any(c.startswith("{" + _NSE_2020 + "}") for c in concepts):
         raise FilingFailure("unsupported_taxonomy")
+    contexts, units, facts = await _read_instance(root, concepts, work, _NSE_2020)
+    return XmlAssertions(
+        "older_financial_xbrl",
+        source,
+        hashlib.sha256(body).hexdigest(),
+        package.version,
+        digest,
+        contexts,
+        units,
+        facts,
+    )
+
+
+async def _read_instance(
+    root: etree._Element, concepts: set[str], work: _Work, namespace: str | None
+) -> tuple[tuple[XmlContext, ...], tuple[XmlUnit, ...], tuple[XmlFact, ...]]:
+    """Shared context/unit validation for XML and the bounded inline projection."""
+    from lxml import etree
+
+    limits = work.limits
     contexts: dict[str, XmlContext] = {}
     units: dict[str, XmlUnit] = {}
     for element in root:
@@ -367,16 +396,18 @@ async def decode_xml_filing(
                 or len(element.findall(_XBRLI + "entity/" + _XBRLI + "identifier")) != 1
             ):
                 raise FilingFailure("invalid_context")
-            period_tags = [child.tag for child in period]
+            period_tags = [child.tag for child in period if isinstance(child.tag, str)]
             if sorted(period_tags) not in [
                 sorted([_XBRLI + "startDate", _XBRLI + "endDate"]),
                 [_XBRLI + "instant"],
+                [_XBRLI + "forever"],
             ]:
                 raise FilingFailure("invalid_period")
             instant, start, end = (
                 _date_text(period, t) for t in ("instant", "startDate", "endDate")
             )
-            if (instant is None and (start is None or end is None)) or (
+            forever = period_tags == [_XBRLI + "forever"]
+            if (not forever and instant is None and (start is None or end is None)) or (
                 instant is not None and (start is not None or end is not None)
             ):
                 raise FilingFailure("invalid_period")
@@ -384,10 +415,13 @@ async def decode_xml_filing(
                 raise FilingFailure("invalid_period")
             context_xml = work.account(etree.tostring(element, encoding="unicode"))
             dimensions: list[Dimension] = []
+            other_xml: list[str] = []
             names: tuple[Literal["segment", "scenario"], ...] = ("segment", "scenario")
             for container_name in names:
                 for container in element.findall(".//" + _XBRLI + container_name):
                     for member in container:
+                        if not isinstance(member.tag, str):
+                            continue
                         if member.tag == _XBRLDI + "explicitMember":
                             dimensions.append(
                                 Dimension(
@@ -408,6 +442,11 @@ async def decode_xml_filing(
                                     container_name,
                                 )
                             )
+                        elif not member.tag.startswith((_XBRLI, _XBRLDI)):
+                            other_xml.append(
+                                work.account(etree.tostring(member, encoding="unicode"))
+                            )
+                            continue
                         else:
                             raise FilingFailure("unsupported_context")
                         dimension = dimensions[-1]
@@ -422,6 +461,8 @@ async def decode_xml_filing(
                 end,
                 tuple(dimensions),
                 context_xml,
+                forever,
+                tuple(other_xml),
             )
         elif element.tag == _XBRLI + "unit":
             identifier = element.get("id", "")
@@ -463,7 +504,9 @@ async def decode_xml_filing(
             continue
         if len(facts) >= limits.max_facts:
             raise FilingFailure("fact_limit")
-        if element.tag not in concepts or not element.tag.startswith("{" + _NSE_2020 + "}"):
+        if element.tag not in concepts or (
+            namespace is not None and not element.tag.startswith("{" + namespace + "}")
+        ):
             raise FilingFailure("unknown_concept")
         if len(element):
             raise FilingFailure("unsupported_fact")
@@ -501,13 +544,4 @@ async def decode_xml_filing(
         )
     if not facts:
         raise FilingFailure("empty_filing")
-    return XmlAssertions(
-        "older_financial_xbrl",
-        source,
-        hashlib.sha256(body).hexdigest(),
-        package.version,
-        digest,
-        tuple(contexts.values()),
-        tuple(units.values()),
-        tuple(facts),
-    )
+    return tuple(contexts.values()), tuple(units.values()), tuple(facts)

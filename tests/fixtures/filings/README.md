@@ -43,3 +43,43 @@ The full reference closure has 19 resources and 1,601,655 bytes. Unknown referen
 fail instead of using network, files, global caches or today's taxonomy. This
 verifies source assertion/reference syntax only; it is not full XBRL calculation,
 formula, dimensional or economic-statement validation.
+
+## Real inline verification and quarantined specimens
+
+`xii-2023.html` preserves XBRL International's actual
+[2023 financial statements](https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/reports/xii-financial-statements-2023.html),
+181,431 bytes, SHA-256 `5de9bdec00b9deaecab2f939c3fad8f1228641e36edc616d39fd08011f6d6f4d`.
+The owner authorizes this solely as offline shared-decoder evidence; it adds no
+provider or NSE inline-availability claim. There are 316 numeric and 7 text facts,
+four continuation elements, 16 negative signs and 81 zero-dash transforms.
+Independently inspected f8 is USD cash `942,024` at 2023-06-30; f2 is the period
+date `June 30, 2023`. The signature context has a forever period and opaque
+signature XML; the decoder preserves it without verifying signatures.
+
+The publisher's [catalog](https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/META-INF/catalog.xml)
+maps the logical XII schema URL to its packaged resource path. The logical URL
+returned 404; the catalog's package location returned the original schema.
+`taxonomy-xii/resources.zip` preserves the complete 41-resource dependency set,
+33,862,241 expanded bytes, as a bounded offline artifact. Its
+[manifest](taxonomy-xii/manifest.json) records member/source URIs, individual
+hashes and archive hash. Original schema notices remain intact. Standard cache
+resources come from the already pinned Arelle research wheel, whose
+[license](taxonomy2020/ARELLE-LICENSE.md) remains included. No Arelle runtime is used.
+Research acquisition is separate from production resolution; no parser fetches
+the URI keys. The explicit tested profile permits 64 resources, 40 MiB taxonomy,
+16 MiB per input/resource, 160,000 cumulative nodes and 64 MiB cumulative text;
+all other `FilingLimits` defaults apply, including a 30-second decoder deadline.
+The larger profile is needed for the real package's 13,886,233-byte label file.
+The default smaller profile remains a valid fail-closed limit.
+
+`missing-taxonomy-2026.xml` preserves the captured official integrated filing
+with SHA-256 `5928e8ca820f60f944a66367291a7dc76c8df4536dfaf5627f3d3ff077487bae`.
+No acquired 2025 package is substituted: rejection is `taxonomy_unavailable`.
+`mismatched-2018.xml` preserves the owner's supplied 37,496-byte file, SHA-256
+`0b4f87aee493fd0416e8ede3b8deb7f556ead6693b348425964daa3cf6c50648`.
+Its 2018 concept namespace and 2017-named schema reference remain unmodified.
+An exact-content quarantine returns `schema_namespace_mismatch`; this is an
+evidenced vendor-defect rule, not a generic year-based schema inference.
+The owner explicitly binds both as negative/quarantine acceptance cases under
+the phase dependency exception. Other unseen versions remain unsupported until
+their contracts and local packages are evidenced.

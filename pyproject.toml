@@ -16,7 +16,7 @@ dependencies = [
 yahoo = ["yfinance==1.7.0"]
 pandas = ["pandas", "pyarrow"]
 notebook = ["ipython", "ipywidgets", "plotly", "anywidget"]
-# Optional bounded syntax processor; structured-family taxonomy support remains gated.
+# Optional bounded syntax processor; decoding requires an explicit closed taxonomy.
 filings = ["lxml==6.1.3"]
 
 [project.scripts]

@@ -91,7 +91,7 @@ class SourceReport:
     complete: Literal[False] = False
 
 
-def _safe_member(info: zipfile.ZipInfo) -> None:
+def _safe_member(info: zipfile.ZipInfo, suffixes: tuple[str, ...] = (".csv",)) -> None:
     name = info.orig_filename
     components = name.split("/")
     if (
@@ -104,7 +104,7 @@ def _safe_member(info: zipfile.ZipInfo) -> None:
         or info.flag_bits & 1
     ):
         raise IngestionFailure("unsafe_member")
-    if not name.lower().endswith(".csv") or info.compress_type not in {
+    if not name.lower().endswith(suffixes) or info.compress_type not in {
         zipfile.ZIP_STORED,
         zipfile.ZIP_DEFLATED,
     }:

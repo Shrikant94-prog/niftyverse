@@ -1,0 +1,260 @@
+{
+  "version": "XII-2023-06-30+US-GAAP-2022",
+  "entrypoint": "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630.xsd",
+  "entry_refs": [
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630.xsd"
+  ],
+  "resources": {
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630.xsd": {
+      "sha256": "bdfec92d64ebb6fc6d2548a8fcc755bf382307deec18bf7421891d86facdba4e",
+      "bytes": 16716,
+      "source": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630.xsd",
+      "member": "bdfec92d64ebb6fc6d2548a8fcc755bf382307deec18bf7421891d86facdba4e.xml"
+    },
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_lab.xml": {
+      "sha256": "9f84eae81b622806300c41ebd8bfc04dc860e028e0513fb36973aa3e7363eab3",
+      "bytes": 35408,
+      "source": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_lab.xml",
+      "member": "9f84eae81b622806300c41ebd8bfc04dc860e028e0513fb36973aa3e7363eab3.xml"
+    },
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_pre.xml": {
+      "sha256": "86dd879f210dc8c9c8497d56d3ab093ce058c8a97555584d61d6252d479a4b18",
+      "bytes": 62733,
+      "source": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_pre.xml",
+      "member": "86dd879f210dc8c9c8497d56d3ab093ce058c8a97555584d61d6252d479a4b18.xml"
+    },
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_def.xml": {
+      "sha256": "78fa25f88033343d49075cf87d0016a95371de7112f54aed351d4fa0cce48ea5",
+      "bytes": 58422,
+      "source": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_def.xml",
+      "member": "78fa25f88033343d49075cf87d0016a95371de7112f54aed351d4fa0cce48ea5.xml"
+    },
+    "https://www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_cal.xml": {
+      "sha256": "35152bbfed1c6aef6c046f97cdb5b0139b99fa48b454f24b9c8e99c627bc779b",
+      "bytes": 27859,
+      "source": "https://www.xbrl.org/financialstatements/2023/xii-financial-statements-2023/www.xbrl.org/taxonomy/xii/2023-06-30/xii-20230630_cal.xml",
+      "member": "35152bbfed1c6aef6c046f97cdb5b0139b99fa48b454f24b9c8e99c627bc779b.xml"
+    },
+    "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-lab-2022.xml": {
+      "sha256": "b05abba64f933de9a2084e7aede54af77a7f67f048c636e6ae4f2a85c912a536",
+      "bytes": 13886233,
+      "source": "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-lab-2022.xml",
+      "member": "b05abba64f933de9a2084e7aede54af77a7f67f048c636e6ae4f2a85c912a536.xml"
+    },
+    "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-doc-2022.xml": {
+      "sha256": "a9d515b582ddab7961cfc5283c4d5799db03b6c4fbc6875bdb0fd31de482f0d2",
+      "bytes": 13510945,
+      "source": "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-doc-2022.xml",
+      "member": "a9d515b582ddab7961cfc5283c4d5799db03b6c4fbc6875bdb0fd31de482f0d2.xml"
+    },
+    "https://xbrl.fasb.org/srt/2022/elts/srt-lab-2022.xml": {
+      "sha256": "a8e585a0f43f1c49fcc5657d196d6415142dc94d63d702e16de7b4612ebc360a",
+      "bytes": 390628,
+      "source": "https://xbrl.fasb.org/srt/2022/elts/srt-lab-2022.xml",
+      "member": "a8e585a0f43f1c49fcc5657d196d6415142dc94d63d702e16de7b4612ebc360a.xml"
+    },
+    "https://xbrl.fasb.org/srt/2022/elts/srt-doc-2022.xml": {
+      "sha256": "d81b1ab4363af96f9e1284592bf221e28f2165880a87b9a129beaba6f5c376ba",
+      "bytes": 406857,
+      "source": "https://xbrl.fasb.org/srt/2022/elts/srt-doc-2022.xml",
+      "member": "d81b1ab4363af96f9e1284592bf221e28f2165880a87b9a129beaba6f5c376ba.xml"
+    },
+    "https://xbrl.fasb.org/srt/2022/elts/srt-2022.xsd": {
+      "sha256": "8bb73872e07466f089d682488163f911a0762edc9a8502ec0746345d22137fa8",
+      "bytes": 132668,
+      "source": "https://xbrl.fasb.org/srt/2022/elts/srt-2022.xsd",
+      "member": "8bb73872e07466f089d682488163f911a0762edc9a8502ec0746345d22137fa8.xml"
+    },
+    "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-2022.xsd": {
+      "sha256": "e8c6b324f1b6f463eddee9d21f9e3daf13103165e8cc3ee107b4cec4d38f9693",
+      "bytes": 4717120,
+      "source": "https://xbrl.fasb.org/us-gaap/2022/elts/us-gaap-2022.xsd",
+      "member": "e8c6b324f1b6f463eddee9d21f9e3daf13103165e8cc3ee107b4cec4d38f9693.xml"
+    },
+    "https://xbrl.fasb.org/us-gaap/2022/elts/us-types-2022.xsd": {
+      "sha256": "9a261d6eb766625e2daea474513e210ab3e31967b62928cefc33662d63274f68",
+      "bytes": 11607,
+      "source": "https://xbrl.fasb.org/us-gaap/2022/elts/us-types-2022.xsd",
+      "member": "9a261d6eb766625e2daea474513e210ab3e31967b62928cefc33662d63274f68.xml"
+    },
+    "http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd": {
+      "sha256": "5dbad94cecf42918b976449a8e1cb800d57e96442a9d0f5c00ca77e4da831827",
+      "bytes": 23637,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd",
+      "member": "5dbad94cecf42918b976449a8e1cb800d57e96442a9d0f5c00ca77e4da831827.xml"
+    },
+    "http://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd": {
+      "sha256": "8d932e134a34b692d917919b1bf38c3106cf54b3f085f02850a51eb8db8f347b",
+      "bytes": 4024,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd",
+      "member": "8d932e134a34b692d917919b1bf38c3106cf54b3f085f02850a51eb8db8f347b.xml"
+    },
+    "http://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd": {
+      "sha256": "5d5a951356396ca5cdedae38def3a7c243ac49394b77670e6b76e00a3a9b966e",
+      "bytes": 3462,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/dtr/type/numeric-2009-12-16.xsd",
+      "member": "5d5a951356396ca5cdedae38def3a7c243ac49394b77670e6b76e00a3a9b966e.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-required.xsd": {
+      "sha256": "4e8ecd82db78e87241c8f2d2a570063a9a0c164f4b2a55e2dfa200dd8b9dc22b",
+      "bytes": 893,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-required.xsd",
+      "member": "4e8ecd82db78e87241c8f2d2a570063a9a0c164f4b2a55e2dfa200dd8b9dc22b.xml"
+    },
+    "http://www.xbrl.org/2005/xbrldt-2005.xsd": {
+      "sha256": "caf850f08d74c087c7946e6ea6d9fb5c0e9f8edf63bf639ccb9143e77e3390c7",
+      "bytes": 3929,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2005/xbrldt-2005.xsd",
+      "member": "caf850f08d74c087c7946e6ea6d9fb5c0e9f8edf63bf639ccb9143e77e3390c7.xml"
+    },
+    "https://xbrl.sec.gov/dei/2022/dei-2022.xsd": {
+      "sha256": "ab7f4ef0960077d050fbd4e59ef2802827bbd317dfaf1296fdd8beb30aec3e66",
+      "bytes": 137569,
+      "source": "https://xbrl.sec.gov/dei/2022/dei-2022.xsd",
+      "member": "ab7f4ef0960077d050fbd4e59ef2802827bbd317dfaf1296fdd8beb30aec3e66.xml"
+    },
+    "http://www.xbrl.org/lrr/arcrole/esma-arcrole-2018-11-21.xsd": {
+      "sha256": "52640b1d3568f6fd497e9037abc1734612a30037e1c38fa89447a8878632aceb",
+      "bytes": 1023,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/lrr/arcrole/esma-arcrole-2018-11-21.xsd",
+      "member": "52640b1d3568f6fd497e9037abc1734612a30037e1c38fa89447a8878632aceb.xml"
+    },
+    "https://xbrl.fasb.org/us-gaap/2022/elts/us-roles-2022.xsd": {
+      "sha256": "31816a63cb72af5d5a433cf05e637ba3ce2e95ff751524ce9b4978eb5c4566eb",
+      "bytes": 235209,
+      "source": "https://xbrl.fasb.org/us-gaap/2022/elts/us-roles-2022.xsd",
+      "member": "31816a63cb72af5d5a433cf05e637ba3ce2e95ff751524ce9b4978eb5c4566eb.xml"
+    },
+    "https://www.xbrl.org/dtr/type/2020-01-21/types.xsd": {
+      "sha256": "a62f1f3635bc6b6cddd1422ab2c9ba00ebbe73cefc3500e207fa0e9c12ee0293",
+      "bytes": 43431,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/https/www.xbrl.org/dtr/type/2020-01-21/types.xsd",
+      "member": "a62f1f3635bc6b6cddd1422ab2c9ba00ebbe73cefc3500e207fa0e9c12ee0293.xml"
+    },
+    "https://www.xbrl.org/2020/extensible-enumerations-2.0.xsd": {
+      "sha256": "17a021e3e3fd5ca2ff0cde05988c78f12a6cadd71077347e0ae4376a78b586e8",
+      "bytes": 2198,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/https/www.xbrl.org/2020/extensible-enumerations-2.0.xsd",
+      "member": "17a021e3e3fd5ca2ff0cde05988c78f12a6cadd71077347e0ae4376a78b586e8.xml"
+    },
+    "http://www.xbrl.org/2006/ref-2006-02-27.xsd": {
+      "sha256": "fae0144a41edf741c3b74c866988f64d24714dba4ca822258dea8b490b7904b7",
+      "bytes": 6544,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2006/ref-2006-02-27.xsd",
+      "member": "fae0144a41edf741c3b74c866988f64d24714dba4ca822258dea8b490b7904b7.xml"
+    },
+    "https://xbrl.fasb.org/srt/2022/elts/srt-types-2022.xsd": {
+      "sha256": "b9b3aaf6010dc3e9c283c6b03bcd81c1884661e3e2dafd52abaea5c06d603167",
+      "bytes": 1436,
+      "source": "https://xbrl.fasb.org/srt/2022/elts/srt-types-2022.xsd",
+      "member": "b9b3aaf6010dc3e9c283c6b03bcd81c1884661e3e2dafd52abaea5c06d603167.xml"
+    },
+    "https://xbrl.sec.gov/country/2022/country-2022.xsd": {
+      "sha256": "706bf0d76808408c37c736b5202ffc55b35de00895d809596b908f0961f9a729",
+      "bytes": 42241,
+      "source": "https://xbrl.sec.gov/country/2022/country-2022.xsd",
+      "member": "706bf0d76808408c37c736b5202ffc55b35de00895d809596b908f0961f9a729.xml"
+    },
+    "https://xbrl.fasb.org/srt/2022/elts/srt-roles-2022.xsd": {
+      "sha256": "8adafb9d72002d5b13135d3d403c407402ec27be8d9cda834de9b5e4b63d3352",
+      "bytes": 22508,
+      "source": "https://xbrl.fasb.org/srt/2022/elts/srt-roles-2022.xsd",
+      "member": "8adafb9d72002d5b13135d3d403c407402ec27be8d9cda834de9b5e4b63d3352.xml"
+    },
+    "http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd": {
+      "sha256": "f906cd30bc47a81bd1c97e24447f4917b21eb3d8a8b4fc520129ce2534ac5bca",
+      "bytes": 16088,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd",
+      "member": "f906cd30bc47a81bd1c97e24447f4917b21eb3d8a8b4fc520129ce2534ac5bca.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-required-formula.xml": {
+      "sha256": "eb432b998febc12a8685fbefd298785f6de99a0455bb73e8b8af9b72dd063114",
+      "bytes": 3314,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-required-formula.xml",
+      "member": "eb432b998febc12a8685fbefd298785f6de99a0455bb73e8b8af9b72dd063114.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei.xsd": {
+      "sha256": "466efc70226ed92f5794f3513490514f395a513a47d3a92aca01e780d0833c23",
+      "bytes": 1729,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei.xsd",
+      "member": "466efc70226ed92f5794f3513490514f395a513a47d3a92aca01e780d0833c23.xml"
+    },
+    "http://www.xbrl.org/2003/xl-2003-12-31.xsd": {
+      "sha256": "e28b0965d34f4879833b433a62d0d1e86e8b1f22e6b7642bab861983f5bb5818",
+      "bytes": 8734,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2003/xl-2003-12-31.xsd",
+      "member": "e28b0965d34f4879833b433a62d0d1e86e8b1f22e6b7642bab861983f5bb5818.xml"
+    },
+    "http://www.xbrl.org/2003/xlink-2003-12-31.xsd": {
+      "sha256": "5ffa8cb747ccd11e0d6420cf5668b60e3b7a64e20915d0e1774e5559d3343971",
+      "bytes": 3350,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2003/xlink-2003-12-31.xsd",
+      "member": "5ffa8cb747ccd11e0d6420cf5668b60e3b7a64e20915d0e1774e5559d3343971.xml"
+    },
+    "http://www.xbrl.org/2008/generic-link.xsd": {
+      "sha256": "fe0d65342b89b760bb62b3cbea6a8c11f8e7381970e187a2d88984ea3320893d",
+      "bytes": 3039,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2008/generic-link.xsd",
+      "member": "fe0d65342b89b760bb62b3cbea6a8c11f8e7381970e187a2d88984ea3320893d.xml"
+    },
+    "http://www.xbrl.org/2008/generic-label.xsd": {
+      "sha256": "a3e306dfca68ef67e92bdea049b7d68f7cd43c63e7b6b1e0ed4e3c2216e9baca",
+      "bytes": 3242,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2008/generic-label.xsd",
+      "member": "a3e306dfca68ef67e92bdea049b7d68f7cd43c63e7b6b1e0ed4e3c2216e9baca.xml"
+    },
+    "http://www.xbrl.org/2008/variable.xsd": {
+      "sha256": "f6e20b7504de6ebf488ee4069cfbc830a0ebe40454b8e632d296a463c733e45e",
+      "bytes": 9123,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2008/variable.xsd",
+      "member": "f6e20b7504de6ebf488ee4069cfbc830a0ebe40454b8e632d296a463c733e45e.xml"
+    },
+    "http://www.xbrl.org/2010/generic-message.xsd": {
+      "sha256": "eff63c3833fa75db1e4fb722611ff8c6eff0ffca3d84d0e33248730a1c11eeb4",
+      "bytes": 2945,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2010/generic-message.xsd",
+      "member": "eff63c3833fa75db1e4fb722611ff8c6eff0ffca3d84d0e33248730a1c11eeb4.xml"
+    },
+    "http://www.xbrl.org/2010/validation-message.xsd": {
+      "sha256": "16895d54d058c4746140530f2b8c15e237f8dbb3aa20b71af982aa431968b160",
+      "bytes": 2521,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2010/validation-message.xsd",
+      "member": "16895d54d058c4746140530f2b8c15e237f8dbb3aa20b71af982aa431968b160.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula.xml": {
+      "sha256": "95e34bb99794c71c53db933e888c1d348664475ab27ab2b1128ede4c3a67db2a",
+      "bytes": 10846,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula.xml",
+      "member": "95e34bb99794c71c53db933e888c1d348664475ab27ab2b1128ede4c3a67db2a.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-label.xml": {
+      "sha256": "c3e1690634977b2e070c238436a968c5eeaef3ee9cfd8c9964a07bfac84653c1",
+      "bytes": 1427,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-label.xml",
+      "member": "c3e1690634977b2e070c238436a968c5eeaef3ee9cfd8c9964a07bfac84653c1.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula-functions.xsd": {
+      "sha256": "ae1a79c0ae453dc09ef7f686bcce15d83b1f718dee23e6a25541755efd1be0f3",
+      "bytes": 1191,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula-functions.xsd",
+      "member": "ae1a79c0ae453dc09ef7f686bcce15d83b1f718dee23e6a25541755efd1be0f3.xml"
+    },
+    "http://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula-functions.xml": {
+      "sha256": "4aaa2013dc0c8c8f68c6dfd1b44c200b340d5f62b05fedea59ebbfd137315611",
+      "bytes": 6234,
+      "source": "https://www.xbrl.org/taxonomy/int/lei/2020-07-02/lei-formula-functions.xml",
+      "member": "4aaa2013dc0c8c8f68c6dfd1b44c200b340d5f62b05fedea59ebbfd137315611.xml"
+    },
+    "http://www.xbrl.org/2010/custom-function-implementation.xsd": {
+      "sha256": "924d30a9c91a848b69cd4c0d1c54a774be0c3e413b1ec1d69d13951f010388cb",
+      "bytes": 3158,
+      "source": "arelle-release-2.46.1:arelle/resources/cache/http/www.xbrl.org/2010/custom-function-implementation.xsd",
+      "member": "924d30a9c91a848b69cd4c0d1c54a774be0c3e413b1ec1d69d13951f010388cb.xml"
+    }
+  },
+  "missing": [],
+  "network_bytes": 33705077,
+  "requests": 23,
+  "aliases": {},
+  "archive_sha256": "1b6a1edc201f0c98a02e3b6ef12aadd1cf9f076e07547d0fcf0333ab77407bc3"
+}

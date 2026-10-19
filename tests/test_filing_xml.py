@@ -138,6 +138,33 @@ def test_duplicate_period_and_unapproved_document_reference(package: TaxonomyPac
         _loop.run_until_complete(decode_xml_filing(etree.tostring(root), package))
 
 
+def test_comments_are_inert_within_periods(package: TaxonomyPackage) -> None:
+    body = (
+        (FIXTURES / "older-indas.xml")
+        .read_bytes()
+        .replace(b"<xbrli:period>", b"<xbrli:period><!-- inert -->", 1)
+    )
+    result = _loop.run_until_complete(decode_xml_filing(body, package))
+    assert result.facts
+
+
+def test_forever_period_is_preserved_without_invented_dates(package: TaxonomyPackage) -> None:
+    from lxml import etree
+
+    root = etree.fromstring((FIXTURES / "older-indas.xml").read_bytes())
+    period = root.find(".//{http://www.xbrl.org/2003/instance}period")
+    assert period is not None
+    for child in list(period):
+        period.remove(child)
+    etree.SubElement(period, "{http://www.xbrl.org/2003/instance}forever")
+    result = _loop.run_until_complete(decode_xml_filing(etree.tostring(root), package))
+    assert result.contexts[0].forever is True
+    assert result.contexts[0].start is result.contexts[0].end is result.contexts[0].instant is None
+    etree.SubElement(period, "{http://www.xbrl.org/2003/instance}instant").text = "2023-01-01"
+    with pytest.raises(FilingFailure, match="invalid_period"):
+        _loop.run_until_complete(decode_xml_filing(etree.tostring(root), package))
+
+
 def test_unapproved_document_reference(package: TaxonomyPackage) -> None:
     from lxml import etree
 
@@ -183,6 +210,35 @@ def test_shared_content_dispatch_with_explicit_taxonomy(package: TaxonomyPackage
         decode_filing((FIXTURES / "older-indas.xml").read_bytes(), taxonomy=package)
     )
     assert result.family == "older_financial_xbrl" and result.facts
+
+
+@pytest.mark.parametrize(
+    ("name", "code"),
+    [
+        ("missing-taxonomy-2026.xml", "taxonomy_unavailable"),
+        ("mismatched-2018.xml", "schema_namespace_mismatch"),
+    ],
+)
+def test_real_unavailable_and_vendor_mismatched_sources_are_quarantined(
+    package: TaxonomyPackage, name: str, code: str
+) -> None:
+    from niftyverse.filings import decode_filing
+
+    with pytest.raises(FilingFailure) as failure:
+        _loop.run_until_complete(decode_filing((FIXTURES / name).read_bytes(), taxonomy=package))
+    assert failure.value.code == code
+
+
+def test_quarantine_status_without_an_explicit_package() -> None:
+    from niftyverse.filings import decode_filing
+
+    for name, code in [
+        ("mismatched-2018.xml", "schema_namespace_mismatch"),
+        ("missing-taxonomy-2026.xml", "taxonomy_unavailable"),
+    ]:
+        with pytest.raises(FilingFailure) as failure:
+            _loop.run_until_complete(decode_filing((FIXTURES / name).read_bytes()))
+        assert failure.value.code == code
 
 
 def test_large_inherited_namespace_is_rejected_before_output_expansion(

@@ -1,8 +1,8 @@
 """Bounded dispatch and source assertions for evidenced financial filing families.
 
 This module performs no economic mapping, taxonomy downloads or publication.
-XML decoding requires an explicit closed local taxonomy. Unsupported versions
-and genuine inline inputs fail explicitly; no summary replaces missing facts.
+Structured decoding requires an explicit closed local taxonomy. Unsupported
+versions/inline constructs fail explicitly; no summary replaces missing facts.
 """
 
 import asyncio
@@ -28,6 +28,7 @@ _RECOVERED_SPECIMENS = frozenset(
 if TYPE_CHECKING:
     from lxml import etree
 
+    from niftyverse.filing_inline import InlineAssertions
     from niftyverse.filing_xml import TaxonomyPackage, XmlAssertions
 
 
@@ -44,6 +45,13 @@ class FilingProcessorUnavailable(FilingFailure):
 
     def __init__(self) -> None:
         super().__init__("missing_dependency", "Install niftyverse[filings] (lxml==6.1.3)")
+
+
+def _check_quarantine(digest: str) -> None:
+    # Exact owner-supplied specimen with an evidenced vendor schema/namespace
+    # mismatch. Never rewrite its reference or infer a dictionary from a year.
+    if digest == "0b4f87aee493fd0416e8ede3b8deb7f556ead6693b348425964daa3cf6c50648":
+        raise FilingFailure("schema_namespace_mismatch")
 
 
 def require_filing_processor() -> None:
@@ -155,7 +163,7 @@ async def decode_filing(
     source: str = "",
     limits: FilingLimits | None = None,
     clock: Callable[[], float] = time.monotonic,
-) -> HtmlAssertions | XmlAssertions: ...
+) -> HtmlAssertions | XmlAssertions | InlineAssertions: ...
 
 
 async def decode_filing(
@@ -165,7 +173,7 @@ async def decode_filing(
     limits: FilingLimits | None = None,
     clock: Callable[[], float] = time.monotonic,
     taxonomy: TaxonomyPackage | None = None,
-) -> HtmlAssertions | XmlAssertions:
+) -> HtmlAssertions | XmlAssertions | InlineAssertions:
     """Decode exact table/column contexts, captions, original values and locators.
 
     Native parser receives 4096-byte chunks with a cancellation/time checkpoint
@@ -191,6 +199,7 @@ async def decode_filing(
     except UnicodeDecodeError:
         raise FilingFailure("unsupported_encoding") from None
     digest = hashlib.sha256(body).hexdigest()
+    _check_quarantine(digest)
     known_recovery = digest in _RECOVERED_SPECIMENS
     lower = body.lower()
     if b"\x00" in body:
@@ -206,7 +215,11 @@ async def decode_filing(
         uri in lower
         for uri in (b"http://www.xbrl.org/2013/inlinexbrl", b"http://www.xbrl.org/2008/inlinexbrl")
     ):
-        raise FilingFailure("unsupported_inline")
+        from niftyverse.filing_inline import decode_inline_filing
+
+        return await decode_inline_filing(
+            body, taxonomy, source=source, limits=limits, clock=clock, _expires=expires
+        )
 
     class DenyResolver(etree.Resolver):
         def resolve(self, url: str | None, pubid: str | None, context: object) -> None:

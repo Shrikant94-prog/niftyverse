@@ -36,11 +36,13 @@ else:
     raise AssertionError("child process guard failed")
 
 import niftyverse  # noqa: E402
+import niftyverse.filing_inline  # noqa: E402
 import niftyverse.filing_xml  # noqa: E402
 import niftyverse.filings  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
 import niftyverse.recon  # noqa: E402
 import niftyverse.transport  # noqa: E402
+import niftyverse.taxonomy_zip  # noqa: E402
 
 assert "site-packages" in niftyverse.__file__, niftyverse.__file__
 assert Path(niftyverse.__file__).with_name("py.typed").exists()
@@ -115,6 +117,38 @@ elif lane == "filings":
         )
         assert xml.family == "older_financial_xbrl"
         assert any(fact.value == "1282600000000.00" for fact in xml.facts)
+        from niftyverse.filings import FilingLimits
+        from niftyverse.taxonomy_zip import TaxonomyMember, load_taxonomy_zip
+
+        folder = specimen.parent / "taxonomy-xii"
+        manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+        limits = FilingLimits(
+            max_bytes=16 * 1024 * 1024,
+            max_resources=64,
+            max_taxonomy_bytes=40 * 1024 * 1024,
+            max_nodes=160000,
+            max_total_text=64 * 1024 * 1024,
+        )
+        taxonomy = loop.run_until_complete(
+            load_taxonomy_zip(
+                (folder / "resources.zip").read_bytes(),
+                version=manifest["version"],
+                entrypoint=manifest["entrypoint"],
+                entry_refs=tuple(manifest["entry_refs"]),
+                members=tuple(
+                    TaxonomyMember(uri, record["member"], record["sha256"])
+                    for uri, record in manifest["resources"].items()
+                ),
+                limits=limits,
+            )
+        )
+        inline = loop.run_until_complete(
+            decode_filing(
+                (specimen.parent / "xii-2023.html").read_bytes(), taxonomy=taxonomy, limits=limits
+            )
+        )
+        assert inline.family == "inline_xbrl" and len(inline.facts) == 323
+        assert next(f for f in inline.facts if f.locator == "#f8").value == "942024"
     finally:
         loop.close()
 
