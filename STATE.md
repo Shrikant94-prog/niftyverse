@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase:** 04 - Durable store and publication protocol. All checkpoints, local commits, merge into local main and GitHub push authorized. Retain phase-04; do not start Phase 05.
-- **Status:** NV-04-01 schema checkpoint verified; NV-04-02 next; phase incomplete.
+- **Status:** NV-04-01 and NV-04-02 checkpoint checks verified; NV-04-03 active; phase incomplete.
 - **Start:** inspected clean tracked main/origin main `1abbb1c`; only untracked owner `Sample_Files/`. No pre-existing phase-04. Created phase-04 from that local main, preserving all existing branches/files.
 - **Prerequisites:** Phase 01 and 03 completion evidence inspected and their software is in main ancestry. Current frozen full-extra baseline: 169 passed on Windows CPython 3.14.7, uv 0.12.9. Synthetic storage batches establish no provider support.
-- **Next action:** test commit/ack process termination, exact recovery state and revision lifecycle, then implement atomic publication and staged recovery.
+- **Next action:** test immutable history/resolved bundles, temporal proof, consistent backup/restore, direct CSV/Parquet faults and no-store parity; measure local ingest/query baselines.
 
 ## Read first
 
@@ -21,7 +21,7 @@
 | Checkpoint | Independent expected cases / procedure | Result |
 |---|---|---|
 | NV-04-01 AC1/2/4/5 | Actual temporary DuckDB migration/rollback, old unknown metadata, distinct occurrences/checks; scope/field/basis, financial/ETF identities; cross-process lock; path diagnostics | [Schema evidence](docs/evidence/04-20261019-schema.md): 34 focused/compatibility tests pass; final shared-sink runtime parity follows in NV-04-03 |
-| NV-04-02 AC1/2 | Separate-process restart after precommit, committed ack-loss, postack/cancel; exact facts/lineage/coverage; unchanged poll, A-B-A, withdrawal/reinstatement; durable staging/retry | Pending |
+| NV-04-02 AC1/2 | Separate-process crash/restart at all three boundaries; exact facts/lineage/coverage; lifecycle, staging/retry/cancel/disk-full | [Publication evidence](docs/evidence/04-20261019-publication.md): 44 focused/compatibility tests pass; lint and strict types pass |
 | NV-04-03 AC1/2/4 | Hand-checked temporal fixture; pinned readers; history/resolved snapshots; backup restore/corruption; CSV/Parquet same-batch no-store faults; ingest/two query benchmarks | Pending |
 | All AC3 and PH-04-GATE | Commands, observed results, source/environment identity, focused review, integrated gate and affected regressions | Pending |
 

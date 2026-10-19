@@ -45,3 +45,30 @@ Only the owning process/thread uses a writable connection. All mutation APIs
 are synchronous and serialized by that owner; independent readers use immutable
 snapshots or wait until it closes. Lock contention fails within a bounded wait
 with a diagnostic. Importing the modules performs no I/O.
+
+`publish(store, validated_batch)` first fsyncs a verified immutable raw object,
+then a same-filesystem Arrow staging checkpoint. It commits typed facts,
+occurrence/capture lineage, source check, coverage and committed job status in
+one transaction. Progress callbacks run after commit. A stable check ID can be
+retried after acknowledgement loss without inserting duplicate versions.
+Changed input/config/schema under that ID fails and requires an explicit new
+check. Unchanged polling adds only a check/coverage observation; A-B-A and
+withdrawal/reinstatement retain separate occurrence IDs. Tied or backdated
+conflicting occurrence evidence is rejected for explicit reconciliation.
+
+`recover(store)` reports orphan/missing/corrupt raw objects, unfinished jobs and
+staging directories. It never deletes or silently repairs them. Publication
+stops on missing/corrupt committed references. Quarantined or partial partitions
+retain raw/staged evidence and job diagnostics without publishing facts or
+complete coverage. Corrected replay uses a new check/parser identity and the
+same validator; independent partitions may proceed. DAG dependency blocking
+belongs to the later full builder.
+
+The tested protocol covers abrupt **process termination** and Python
+cancellation/disk-full failures. Raw files are flushed/fsynced before references
+commit; POSIX additionally fsyncs publication directories. Windows file fsync
+and same-filesystem rename have process-crash tests; a complete Windows
+directory-metadata/power-loss protocol is **not** certified. No platform has a
+simulated hardware power-loss guarantee here. DuckDB supplies its transactional
+WAL; filesystem/device caching may limit OS/power-loss durability. Disk loss
+requires a verified off-device backup; a same-disk backup is insufficient.
