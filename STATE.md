@@ -4,11 +4,11 @@
 
 ## Active work
 
-- **Phase:** 07 - Historical equities and delivery. NV-07-01/02/03 verified; NV-07-04 next: dated ETF catalogue/metadata/EOD with independent unit/source evidence. Do not start Phase 08.
+- **Phase:** 07 - Historical equities and delivery. NV-07-01/02/03/04 verified; integrated gate and final verification next. Do not start Phase 08.
 - **Start:** `phase-07` created from inspected local main/origin main `0e030f98a8de55598a17eddf4c4a27ae46d841b3`. Tracked files clean; owner untracked `Sample_Files/` preserved. No reset, alternate revision or imported legacy implementation/environment. Local commits, merge and GitHub push authorized; retain branch.
 - **Prerequisites:** Phase 02/03/04/05 evidence inspected against containing Git ancestry, actual source/report interfaces and Phase 06 completion. Current full-extra pre-edit regression **300 passed**, 39.77 s. Actual old/recent equity JSON now verified on five rows through the officially linked route/type, separate from initial failed candidates and SLBMH lending data. Historical identity and optional surveillance source limitations remain explicit.
 - **Checkpoint assumptions:** normalize only evidenced raw traded prices/quantities; preserve close/settlement, source units/nulls and dated listing lineage. No current-list backfill, price filling, NAV/index substitution or optional-surveillance dependency in price-only work. Use shared publication validation and existing safe report decoder/transport; full DataPlan remains Phase 09.
-- **Next:** NV-07-04 source/catalogue contract inspection and tests before ETF mapping. Current metadata must remain observation-dated; never infer classification from names or link changed ISINs by symbol. Verify real ETF JSON/report samples independently, then integrated gate, scoped review, full verification, reconciliation, local merge and push.
+- **Next:** Run the integrated gate and scoped review, fresh installed-wheel and full regression verification; reconcile main, record completion, local merge and push. Retain phase-07. Current ETF metadata is observation-dated; historical identity/classification must be independently supplied.
 
 ## Read first
 
@@ -23,7 +23,7 @@
 | NV-07-01 AC1/2/3 | **16 focused tests pass**: exact decimal/source units, failed/truncated/overlapping pages/windows, source mutations and schema changes; EQ/BE/EQ plus BL yields three rows/30 units/3037.5000 turnover, EQ-only distinct exclusion. Actual old/recent JSON five rows and independent report value references match. [Evidence](docs/evidence/07-20261020-json.md); source/tests pinned by containing checkpoint commit. |
 | NV-07-02 AC1/2/3/4 | **10 report/delivery cases** pass; combined phase suite **26 passed**. Whole actual legacy/UDiFF sources decode 1690/3675 rows; actual old/current delivery 1636/3511 rows. Old count/delivered-total reconcile; exact RELIANCE derived fractions/published percentages agree. Unsupported/partial/poisoned partitions and incompatible/zero/unknown denominators explicit. [Evidence](docs/evidence/07-20261020-reports.md). |
 | NV-07-03 AC1/2/3/4 | Comparable tolerance/unit/basis checks retain both paths and block material conflicts; extreme moves remain warning-tagged facts with own known-at; dead/missing/closed/unavailable/policy states distinct. Optional states preserve volume and unknown execution. Shared negative rejection, v3-v4 migration/rollback/backup, DB/direct details parity and exact monetary conversion pass. **46 phase tests**, **346 full-extra tests**; [evidence](docs/evidence/07-20261020-quality.md). |
-| NV-07-04 AC1/2/3 | Verified ETF source samples plus dated rename/reuse/metadata absence/conflict fixtures; fund-unit/traded-price semantics and no historical current-classification projection. Pending checkpoint 03. |
+| NV-07-04 AC1/2/3 | Verified ETF source samples plus dated rename/reuse/metadata absence/conflict fixtures; fund-unit/traded-price semantics and no historical current-classification projection. **14 ETF cases pass**, combined phase suite **60 passed**, strict mypy **80 files**. Four actual old/recent JSON/report pairs match independent values; whole current catalogue 355 rows validated. Current 20 October EOD is unverified (empty JSON/report 404), not complete no-data. [Evidence](docs/evidence/07-20261020-etfs.md). |
 | PH-07-GATE | Integrated JSON/report reconciliation, explicit gap states, dated selection with no duplicate turnover, renamed/dead fixtures and ETF semantics. Not yet run. |
 
 ## Verification and limitations
@@ -43,5 +43,5 @@
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05 | verified, integrated and pushed | [Completion](docs/evidence/05-20261020-completion.md) |
 | 06 | verified, integrated and pushed | [Completion](docs/evidence/06-20261020-completion.md) |
-| 07 | active, NV-07-01/02/03 verified | [JSON](docs/evidence/07-20261020-json.md), [reports](docs/evidence/07-20261020-reports.md), [quality/shared output](docs/evidence/07-20261020-quality.md); ETF/final gate pending |
+| 07 | active, NV-07-01/02/03/04 verified | [JSON](docs/evidence/07-20261020-json.md), [reports](docs/evidence/07-20261020-reports.md), [quality/shared output](docs/evidence/07-20261020-quality.md); [ETF](docs/evidence/07-20261020-etfs.md); final gate pending |
 | 08-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |

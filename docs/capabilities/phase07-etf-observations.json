@@ -1,0 +1,79 @@
+{
+  "budget": {
+    "requests": 8,
+    "attempts_per_request": 1,
+    "deadline_seconds": 120,
+    "bytes_per_request": 8388608
+  },
+  "results": [
+    {
+      "name": "catalogue.csv",
+      "url": "https://nsearchives.nseindia.com/content/equities/eq_etfseclist.csv",
+      "observed_at": "2026-10-20T16:25:46.470109+00:00",
+      "status": 200,
+      "bytes": 37957,
+      "sha256": "9d90ef6e4b7aa1f23a1b493677191f5a17615d088c377ac7b1999f653e9bbac2"
+    },
+    {
+      "name": "NIFTYBEES-old.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=01-09-2016&to=01-09-2016&symbol=NIFTYBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:47.659719+00:00",
+      "status": 200,
+      "bytes": 430,
+      "sha256": "c91418a40458b402435c59fc029c4eb80078dcb93253dd6c27d9d46ef258d19f"
+    },
+    {
+      "name": "NIFTYBEES-recent.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=16-10-2026&to=16-10-2026&symbol=NIFTYBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:48.873681+00:00",
+      "status": 200,
+      "bytes": 437,
+      "sha256": "fa8f7b585a6c7945b3cbe8ceea58e97879bc64f3690796e31c323414e4ff0b64"
+    },
+    {
+      "name": "NIFTYBEES-today.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=20-10-2026&to=20-10-2026&symbol=NIFTYBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:50.038765+00:00",
+      "status": 200,
+      "bytes": 11,
+      "sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0"
+    },
+    {
+      "name": "GOLDBEES-old.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=01-09-2016&to=01-09-2016&symbol=GOLDBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:51.261046+00:00",
+      "status": 200,
+      "bytes": 427,
+      "sha256": "9aa0e93e3970bf96929bcbe22a4fc01f86f1860f1999ea2d4411efca76324e28"
+    },
+    {
+      "name": "GOLDBEES-recent.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=16-10-2026&to=16-10-2026&symbol=GOLDBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:52.389639+00:00",
+      "status": 200,
+      "bytes": 436,
+      "sha256": "f7b63d9310319ff101c795e708646cb2c941a460239c0f2ff9c153b096a3e9d0"
+    },
+    {
+      "name": "GOLDBEES-today.json",
+      "url": "https://www.nseindia.com/api/historicalOR/generateSecurityWiseHistoricalData?from=20-10-2026&to=20-10-2026&symbol=GOLDBEES&type=priceVolumeDeliverable&series=ALL",
+      "observed_at": "2026-10-20T16:25:53.548717+00:00",
+      "status": 200,
+      "bytes": 11,
+      "sha256": "8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0"
+    },
+    {
+      "name": "today.zip",
+      "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20261020_F_0000.csv.zip",
+      "observed_at": "2026-10-20T16:25:54.723103+00:00",
+      "status": 404
+    }
+  ],
+  "capability": "experimental ETF source samples; not continuous historical catalogue or session completeness",
+  "historical_sessions": [
+    "2016-09-01",
+    "2026-10-16"
+  ],
+  "metadata_validity": "observation-day-only; no series in catalogue; no historical backprojection",
+  "current_session": "2026-10-20: empty JSON and report 404, availability unverified"
+}

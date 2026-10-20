@@ -98,3 +98,40 @@ to one matching raw capture. Competing source hashes/locators stay explicit in
 metadata; retain or publish each counterpart capture separately for raw replay.
 Partial/quarantined output cannot become complete merely because writing succeeds.
 This is a bounded dataset foundation, not the Phase 09 full DataPlan builder.
+
+## ETFs
+
+`adapters.etf_catalogue.decode_etf_catalogue` validates the entire official ETF
+CSV and returns exact metadata with raw fields/hash/row evidence. Classification
+comes from `ETF Underlying`, never the name. Unknown fields stay null; `value`
+returns explicit source_null, unsupported_field, not_known or
+outside_observed_interval reasons. Current attributes are valid only on the UTC
+observation day. The asserted original listing date does not date today's ISIN,
+classification, lot or face value to the past.
+
+`etfs.build_etf_catalogue(snapshot, listings, version_id=..., listing_known_at=...)`
+joins supplied same-day report rows by symbol **and ISIN**, preserving separately
+evidenced series. There is no default EQ attachment. EQ/BE ordinary and BL block
+roles are explicit; other series retain other role. IDs derive from the evidenced
+ISIN and series, not the name. Availability is the later of snapshot and listing
+evidence. Members without same-day listing evidence remain metadata without a
+fabricated listing. Historical/dead/renamed/reused securities require an explicitly
+dated `identity.Catalogue`; symbol equality does not establish changed-ISIN continuity.
+
+Use `normalize_equities(..., asset_type="etf")` with that catalogue and an explicit
+dated listing policy. It emits raw traded prices, INR turnover and **fund_units**;
+reported ISIN conflicts quarantine the scope. NAV/index-basis inputs reject.
+JSON/report mappings, reconciliation, gaps and delivery compatibility are shared;
+no NAV, index values or equity-share quantity substitute for ETF observations.
+
+Publish selected prices with `make_price_batch` and dataset `etf_daily`.
+`storage.etf.make_metadata_batch` publishes observation-day `etf_metadata` through
+the same DB/direct validator, retaining source attributes in partition evidence.
+It currently supports scheme_name/classification fact columns; other observed
+attributes remain in the exact snapshot/raw evidence. Missing requested metadata
+is partial: direct export requires allow_partial, DB publication retains staged
+evidence without complete facts. Unsupported NAV/iNAV/holdings/expense/tracking
+history is not implicitly acquired or represented as zero.
+
+Actual source support and unverified current-session limits are recorded in
+[ETF observations](evidence/07-20261020-etfs.md).

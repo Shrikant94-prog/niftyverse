@@ -311,6 +311,8 @@ def normalize_equities(
         row.__post_init__()
         if not start <= row.session_date < end:
             raise MarketDataFailure("row_outside_window")
+        if row.price_basis != "raw_traded":
+            raise MarketDataFailure("incompatible_basis")
         matches = tuple(
             m
             for m in catalogue.search(
@@ -328,6 +330,17 @@ def normalize_equities(
         key = (match.instrument.instrument_id, row.session_date)
         if key[0] not in instrument_ids:
             continue
+        if row.isin is not None and asset_type == "etf":
+            dated_isins = {
+                a.identifier
+                for a in catalogue.aliases
+                if a.namespace == "isin"
+                and a.listing_id == match.listing.listing_id
+                and a.evidence.admits(row.session_date, known_at)
+            }
+            if dated_isins != {row.isin}:
+                unresolved.add(key)
+                continue
         if row.turnover_unit != "INR" or row.quantity_definition != "traded_security_units":
             raise MarketDataFailure("incompatible_units")
         grouped.setdefault(key, {}).setdefault(match.listing.listing_id, []).append(row)
