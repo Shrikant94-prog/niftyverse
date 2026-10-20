@@ -4,13 +4,13 @@
 
 ## Active work
 
-- **Phase:** 06 - NIFTY 500 verification and corrections. NV-06-01/02 verified; NV-06-03 software checks pass, real-evidence window scope pending. Do not start Phase 07.
+- **Phase:** 06 - NIFTY 500 verification and corrections. All checkpoint behaviors observed; final reconciled gate/evidence/integration underway. Do not start Phase 07.
 - **Branch/start:** `phase-06` from inspected local main/origin main `f4c9712`. No reset, discarded work or alternative start. Owner untracked `Sample_Files/` preserved. Local commits, final merge and GitHub push authorized; retain phase branch.
 - **Prerequisites:** Phase 04/05 evidence inspected against Git ancestry and current code. Before edits, full-extra suite passed **264 tests**. Existing provider/source/durability limits remain.
 - **Original:** owner explicitly supplied `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; only exact named membership CSV read there. Required SHA-256 `f3b4ce4dc430b6e88a302096551e576621fb6bdd45c3a1344a5204bd1957a091` matches. Original remains untouched outside project; no old code/environment imported.
 - **Current result:** parser `6822801`, replay `d627e4c`, publication **`2d87638`**, pushed to retained `phase-06`. [Publication observations](docs/evidence/06-20261020-publication.md) and [hosted handoff](docs/evidence/06-20261020-handoff.md) pin verification. All eight GitHub jobs passed on `2d87638`. Dependencies/lock/provider capabilities unchanged.
-- **Open scope question:** official notices directly establish KWIL component membership on 23 February 2026 and exclusion on 24 February. Owner was asked whether this explicit component-scoped real-evidence window is acceptable, while full-index history stays blocked. A fetched current official CSV has 501 rows and no effective date; it cannot supply a dated historical baseline. No scope answer inferred or historical date invented.
-- **Blocker/next:** independent software/platform work is finished; await the owner window-scope decision. Component-scoped example is concrete and reviewable in publication evidence and retained under OS-local `niftyverse/phase06-verification/kwil-component-20261020`. If accepted, record scope, reconcile main again, verify the remaining gate, commit completion, merge with a merge commit and push main/phase branch. Main remains `f4c9712`; no final integration while acceptance is pending.
+- **Scope decision:** owner explicitly delegated judgment after reviewing the pending question. Use the actual KWIL component window **[2026-02-23, 2026-02-24)** for the small evidenced subset; retain full-index historical coverage as blocked. This preserves strict source truth and avoids unbounded curation in Phase 06. Added a full 500-security/temporary-501st-component software case and retained real recipes so future full-scope inputs use the same verified path. [Data requirements](docs/membership.md#evidence-needed-for-a-full-index-research-window) state exactly what later full-index research needs. No full-history certification or dated baseline invented.
+- **Next:** complete the new scope/reproducibility tests, final regression/static/docs gate and hosted checks, reconcile local main, commit completion, merge with a merge commit and push main/phase-06. Actual component bundles retained in OS-local `niftyverse/phase06-verification/kwil-component-20261020`; main still `f4c9712`. No scope blocker remains; full-index dataset readiness is an explicit limitation.
 
 ## Read first
 
@@ -24,8 +24,8 @@
 |---|---|
 | NV-06-01 AC1/2/3 | Exact original: 72 rows/756 literal strings/50 failed transitions/11 duplicate-event rows/5 weekend flags; 500 unique-string snapshots, unique ascending 2010-06-04 through 2026-03-31 dates. Seven targeted official-notice conflicts; original unchanged. [Audit observations](docs/evidence/06-20261020-audit.md), nine current owned parser tests. |
 | NV-06-02 AC1/2/3 | Owned A to B timeline with Jan 1/2 boundaries; accepted correction moves switch to Jan 3 only at review cutoff. Pending/rejected records unchanged. Explicit ordering, missing/overlapping events, external contradictions, temporary/unresolved identities, dated literal aliases and raw-event evidence checks pass. Source pinned by `d627e4c` plus current focused repair diff. |
-| NV-06-03 AC1/2/3 | CSV/Parquet retain blocked reasons, old recipes and new corrected lineage/invalidation. Forged results/parents and injected faults reject. [Actual KWIL example](docs/evidence/06-20261020-publication.md#actual-evidence-example-and-its-exact-scope) produces explicit component-only output; whether that meets the intended small-window scope is awaiting owner decision. |
-| PH-06-GATE | Exact-original audit observed; owned integrated offline scenario passes. Real-data interval publication pending; no full-history certification or synthetic substitution. |
+| NV-06-03 AC1/2/3 | CSV/Parquet retain blocked reasons, old recipes and corrected lineage/invalidation. Forged results/parents and injected faults reject. [Actual KWIL example](docs/evidence/06-20261020-publication.md#actual-evidence-example-and-its-exact-scope) produces a component-only evidenced interval under the chosen scope; both actual recipes are retained as small reviewable fixtures. |
+| PH-06-GATE | Exact-original audit observed; owned offline scenario and actual notice-backed correction publication pass. New full-cardinality/retained-recipe cases pass; final reconciled verification still required. No full-history certification or synthetic substitution. |
 
 ## Verification and limitations
 
@@ -45,5 +45,5 @@
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05 | verified, integrated and pushed | [Completion](docs/evidence/05-20261020-completion.md) |
-| 06 | active; actual window scope pending | [Original audit](docs/evidence/06-20261020-audit.md); software gate checks above |
+| 06 | active; final integration verification | [Original audit](docs/evidence/06-20261020-audit.md); chosen real subset and software gate checks above |
 | 07-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |

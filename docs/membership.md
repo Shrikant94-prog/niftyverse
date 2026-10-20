@@ -96,3 +96,32 @@ reopening or modifying the original CSV. Original/source evidence availability
 and authenticity remain separate. Byte-identical regeneration across code,
 dependency versions or platforms is not promised. Bundles are small interval
 artifacts; this phase adds no production historical provider or research engine.
+
+## Evidence needed for a full-index research window
+
+The same recipe/publication interfaces accept a complete index. The owned
+full-index test exercises 500 securities, an ad-hoc temporary 501st component,
+and a return to 500; no separate full-universe implementation is required.
+The retained real KWIL recipe demonstrates source-backed correction handling
+within its own scope. It supplies no evidence for the other constituents.
+
+Before a full-index historical window can enter strict research, supply:
+
+- A complete independently dated starting snapshot, with literal identifiers
+  resolved using dated catalogue evidence and temporary components retained.
+- A reviewed inventory of every membership event in the bounded window,
+  including ad-hoc changes, with exact effective dates and separately retained
+  announcement/observation/knowledge times. A semiannual-only inventory fails.
+- Independent boundary snapshots and any intermediate checks needed to locate
+  discrepancies. Check identities and sets, allowing evidenced temporary
+  components rather than forcing a constant 500 count.
+- Evidence-backed correction records for disagreements, including explicit
+  unresolved regions. Rerun strict selection, publication, lineage and dependent
+  invalidation; keep older snapshots reproducible.
+
+Start with one bounded window and widen only as source evidence supports it.
+The owner's original file and an undated current official list cannot supply a
+historical baseline merely by passing parsing. These data requirements belong
+to membership-dependent research/readiness; explicit-universe acquisition can
+proceed independently under the [roadmap boundary](../PLAN.md#roadmap).
+The eventual ten-year readiness assessment must report any remaining gaps.
