@@ -2,11 +2,13 @@
 
 Use one active acquisition owner per provider/account/IP context. Limits are
 process-local; launching more processes is not a supported way to multiply them.
-Only read-only GET is exposed. Redirects are deliberately rejected: callers must
+Read-only GET and three verified Nifty historical query POST routes are exposed.
+Redirects are deliberately rejected: callers must
 submit an independently approved target through the same budgets.
 """
 
 import asyncio
+import json
 import math
 import random
 import time
@@ -247,6 +249,35 @@ class DirectTransport:
         raise TransportFailure("unapproved_url")
 
     async def get(self, url: str) -> Download:
+        return await self._request(url)
+
+    async def post_index_json(self, url: str, body: bytes) -> Download:
+        """Explicit read-only Nifty history POST; all ordinary budgets still apply.
+
+        Only verified query routes may use retries. This is not a general
+        mutation-capable POST facility. The request body has a separate ceiling.
+        """
+        routes = {
+            "getHistoricaldatatabletoString",
+            "getpepbHistoricaldataDBtoString",
+            "getTotalReturnIndexString",
+        }
+        allowed = {f"https://www.niftyindices.com/BackPage/{route}" for route in routes}
+        if url not in allowed or not isinstance(body, bytes) or len(body) > 4096:
+            raise TransportFailure("unapproved_readonly_post")
+        try:
+            data = json.loads(body)
+        except ValueError, UnicodeError, RecursionError:
+            raise TransportFailure("unapproved_readonly_post") from None
+        if (
+            not isinstance(data, dict)
+            or set(data) != {"cinfo"}
+            or not isinstance(data["cinfo"], str)
+        ):
+            raise TransportFailure("unapproved_readonly_post")
+        return await self._request(url, body)
+
+    async def _request(self, url: str, body: bytes | None = None) -> Download:
         if not self._open:
             raise RuntimeError("transport owner is closed")
         family = self._family(url)
@@ -260,7 +291,7 @@ class DirectTransport:
         self._tasks.add(task)
         try:
             async with asyncio.timeout(policy.deadline):
-                return await self._retry(family, url, self._clock() + policy.deadline)
+                return await self._retry(family, url, self._clock() + policy.deadline, body)
         except TimeoutError:
             raise TransportFailure("deadline") from None
         except httpx.TimeoutException:
@@ -289,7 +320,9 @@ class DirectTransport:
         if self._clock() >= expires:
             raise TransportFailure("deadline")
 
-    async def _retry(self, family: _Family, url: str, expires: float) -> Download:
+    async def _retry(
+        self, family: _Family, url: str, expires: float, body: bytes | None = None
+    ) -> Download:
         refreshed = False
         for attempt in range(family.policy.attempts):
             self._check_source(family)
@@ -297,7 +330,7 @@ class DirectTransport:
             generation = family.generation
             delay = min(8.0, 2.0**attempt) * min(1.0, max(0.0, self._jitter()))
             try:
-                return await self._attempt(family, url, expires)
+                return await self._attempt(family, url, expires, body)
             except httpx.RemoteProtocolError:
                 if family.http1:
                     raise TransportFailure("protocol_error") from None
@@ -338,7 +371,9 @@ class DirectTransport:
             await self._wait(delay, expires)
         raise AssertionError("finite retry loop")
 
-    async def _attempt(self, family: _Family, url: str, expires: float) -> Download:
+    async def _attempt(
+        self, family: _Family, url: str, expires: float, body: bytes | None = None
+    ) -> Download:
         stats, policy = family.stats, family.policy
         async with family.slots, self._global:
             async with family.rate_lock:
@@ -353,16 +388,24 @@ class DirectTransport:
                     raise TransportFailure("byte_budget")
                 stats.requests += 1
                 family.next_start = self._clock() + family.spacing
-            return await self._send(family, url)
+            return await self._send(family, url, body)
 
-    async def _send(self, family: _Family, url: str) -> Download:
+    async def _send(
+        self, family: _Family, url: str, request_body: bytes | None = None
+    ) -> Download:
         stats, policy = family.stats, family.policy
         stats.active += 1
         stats.peak_active = max(stats.peak_active, stats.active)
         try:
             client = family.http1_client() if family.http1 else family.client
+            headers = {"accept-encoding": "identity"}
+            if request_body is not None:
+                headers["content-type"] = "application/json; charset=utf-8"
             async with client.stream(
-                "GET", url, headers={"accept-encoding": "identity"}
+                "GET" if request_body is None else "POST",
+                url,
+                headers=headers,
+                content=request_body,
             ) as response:
                 if 300 <= response.status_code < 400:
                     raise TransportFailure("redirect_blocked")

@@ -22,6 +22,84 @@ def transport_loop() -> Iterator[None]:
 URL = "https://www.nseindia.com/api/test"
 
 
+def test_readonly_index_post_shares_budget_and_rejects_other_routes() -> None:
+    url = "https://www.niftyindices.com/BackPage/getHistoricaldatatabletoString"
+    body = b'{"cinfo":"owned read-only request"}'
+
+    async def check() -> None:
+        calls: list[httpx.Request] = []
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            calls.append(request)
+            return httpx.Response(200, content=b"[]")
+
+        async with DirectTransport(
+            policy(max_requests=1), transport=httpx.MockTransport(handle)
+        ) as client:
+            for bad_url, bad_body in [(URL, body), (url, b"x" * 4097), (url, b"[]")]:
+                with pytest.raises(TransportFailure, match="unapproved_readonly_post"):
+                    await client.post_index_json(bad_url, bad_body)
+            assert not calls and client.stats.requests == 0
+            assert (await client.post_index_json(url, body)).body == b"[]"
+            assert calls[0].method == "POST" and calls[0].content == body
+            assert calls[0].headers["content-type"] == "application/json; charset=utf-8"
+            with pytest.raises(TransportFailure, match="request_budget"):
+                await client.get(URL)
+
+        async with DirectTransport(
+            policy(),
+            transport=httpx.MockTransport(
+                lambda r: httpx.Response(302, headers={"location": "https://evil.test"})
+            ),
+        ) as client:
+            with pytest.raises(TransportFailure, match="redirect_blocked"):
+                await client.post_index_json(url, body)
+            assert client.stats.requests == 1
+
+    _loop.run_until_complete(check())
+
+
+def test_index_fetch_has_exact_inclusive_wire_dates_and_no_implicit_decode() -> None:
+    import json
+    from datetime import date
+
+    from niftyverse.adapters.index_history import fetch_nifty_history
+
+    async def check() -> None:
+        requests: list[httpx.Request] = []
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            requests.append(request)
+            return httpx.Response(200, content=b"[]")
+
+        async with DirectTransport(policy(), transport=httpx.MockTransport(handle)) as client:
+            with pytest.raises(ValueError, match="window"):
+                await fetch_nifty_history(
+                    client,
+                    dataset="price",
+                    alias="NIFTY 50",
+                    start=date(2026, 10, 15),
+                    end=date(2026, 10, 14),
+                )
+            assert not requests
+            result = await fetch_nifty_history(
+                client,
+                dataset="price",
+                alias="NIFTY 50",
+                start=date(2016, 9, 1),
+                end=date(2016, 9, 3),
+            )
+            assert result.body == b"[]"
+            payload = json.loads(requests[0].content)["cinfo"]
+            assert payload == (
+                "{'name':'NIFTY 50','startDate':'01-Sep-2016',"
+                "'endDate':'02-Sep-2016','indexName':'NIFTY 50'}"
+            )
+            assert requests[0].url.path == "/BackPage/getHistoricaldatatabletoString"
+
+    _loop.run_until_complete(check())
+
+
 def policy(**changes: object) -> FamilyPolicy:
     return FamilyPolicy(spacing=0, **changes)  # type: ignore[arg-type]
 

@@ -1,0 +1,90 @@
+{
+  "observed_on": "2026-10-20 UTC / 21 October India",
+  "price": [
+    {
+      "name": "price-old",
+      "url": "https://www.niftyindices.com/BackPage/getHistoricaldatatabletoString",
+      "scope": "exact sampled dates only; no historical publication vintage",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:44:58.207060+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "INDEX_NAME": "str",
+          "HistoricalDate": "str",
+          "OPEN": "str",
+          "HIGH": "str",
+          "LOW": "str",
+          "CLOSE": "str"
+        }
+      ],
+      "bytes": 367,
+      "sha256": "cfff326a5e24cc2ee3a75f9bbfdc90d18e90d3211bc85a8bfb2e2b61b2059e36",
+      "verified_dates": [
+        "2016-09-02",
+        "2016-09-01"
+      ],
+      "expected_close": [
+        "8809.65",
+        "8774.65"
+      ],
+      "row_count": 2,
+      "identity": "Nifty 50 price",
+      "units": "index_points"
+    },
+    {
+      "name": "price-recent",
+      "url": "https://www.niftyindices.com/BackPage/getHistoricaldatatabletoString",
+      "scope": "exact sampled dates only; no historical publication vintage",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:04.293047+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "INDEX_NAME": "str",
+          "HistoricalDate": "str",
+          "OPEN": "str",
+          "HIGH": "str",
+          "LOW": "str",
+          "CLOSE": "str"
+        }
+      ],
+      "bytes": 557,
+      "sha256": "b688f4f29eeb0542aa3f47b5eb745fe7e9ccb910c407c761b62272b146906b77",
+      "verified_dates": [
+        "2026-10-16",
+        "2026-10-15",
+        "2026-10-14"
+      ],
+      "expected_close": [
+        "23146.15",
+        "22997.35",
+        "22622.70"
+      ],
+      "row_count": 3,
+      "identity": "Nifty 50 price",
+      "units": "index_points"
+    }
+  ],
+  "limitations": [
+    "TRI/valuations pending separate decoder verification",
+    "VIX Nifty historical POST returned 302 in both windows; no history support",
+    "No continuous ten-year coverage or publication-time certification"
+  ]
+}
