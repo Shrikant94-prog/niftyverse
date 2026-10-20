@@ -7,7 +7,14 @@ from decimal import Decimal
 from typing import Any, Literal
 
 from niftyverse.core import ValidationError
-from niftyverse.indices import IndexCatalogue, IndexPrice, IndexVariant, SourceLineage
+from niftyverse.indices import (
+    IndexCatalogue,
+    IndexPrice,
+    IndexTRI,
+    IndexValuation,
+    IndexVariant,
+    SourceLineage,
+)
 from niftyverse.market_prices import number
 from niftyverse.temporal import day, text, utc
 from niftyverse.transport import DirectTransport, Download
@@ -168,3 +175,125 @@ def decode_index_prices(
             )
         )
     return tuple(rows)
+
+
+def _measure_rows(
+    body: bytes,
+    *,
+    catalogue: IndexCatalogue,
+    variant: IndexVariant,
+    source_id: str,
+    locator: str,
+    start: date,
+    end: date,
+    known_at: datetime,
+    date_field: str,
+    required: set[str],
+    representation: str,
+    max_bytes: int,
+    max_rows: int,
+) -> list[tuple[dict[str, Any], date, SourceLineage]]:
+    _window(start, end, known_at)
+    text(source_id, locator)
+    rows = []
+    seen = set()
+    for i, raw in enumerate(_rows(body, max_bytes, max_rows)):
+        if not required | {date_field, "Index Name"} <= raw.keys():
+            raise ValidationError("historical measure schema mismatch")
+        on = _date(raw[date_field])
+        if not start <= on < end:
+            raise ValidationError("source date outside requested window")
+        if on in seen:
+            raise ValidationError("duplicate historical measure date")
+        seen.add(on)
+        resolved = catalogue.resolve(source_id, raw["Index Name"], variant.kind, on, known_at)
+        if resolved != variant:
+            raise ValidationError("source/request variant mismatch")
+        rows.append((raw, on, _lineage(body, raw, source_id, locator, i, representation)))
+    return rows
+
+
+def _ratio(value: object) -> Decimal | None:
+    if value is None or value in ("", "-", "--"):
+        return None
+    if isinstance(value, (bool, float)) or not isinstance(value, (str, int, Decimal)):
+        raise ValidationError("invalid valuation number")
+    try:
+        result = Decimal(value)
+    except ValueError, ArithmeticError:
+        raise ValidationError("invalid valuation number") from None
+    # Signed PE/PB can be meaningful. Check precision without rounding the sign.
+    number(result.copy_abs())
+    return result
+
+
+def decode_index_valuations(
+    body: bytes,
+    *,
+    catalogue: IndexCatalogue,
+    variant: IndexVariant,
+    source_id: str,
+    locator: str,
+    start: date,
+    end: date,
+    known_at: datetime,
+    max_bytes: int = 8 * 1024 * 1024,
+    max_rows: int = 100_000,
+) -> tuple[IndexValuation, ...]:
+    if variant.kind != "price":
+        raise ValidationError("valuation endpoint requires price variant")
+    rows = _measure_rows(
+        body,
+        catalogue=catalogue,
+        variant=variant,
+        source_id=source_id,
+        locator=locator,
+        start=start,
+        end=end,
+        known_at=known_at,
+        date_field="DATE",
+        required={"pe", "pb", "divYield"},
+        representation="nifty_valuations_v1",
+        max_bytes=max_bytes,
+        max_rows=max_rows,
+    )
+    return tuple(
+        IndexValuation(
+            variant, on, _ratio(raw["pe"]), _ratio(raw["pb"]), _ratio(raw["divYield"]), lineage
+        )
+        for raw, on, lineage in rows
+    )
+
+
+def decode_index_tri(
+    body: bytes,
+    *,
+    catalogue: IndexCatalogue,
+    variant: IndexVariant,
+    source_id: str,
+    locator: str,
+    start: date,
+    end: date,
+    known_at: datetime,
+    max_bytes: int = 8 * 1024 * 1024,
+    max_rows: int = 100_000,
+) -> tuple[IndexTRI, ...]:
+    if variant.kind not in {"gross_tri", "net_tri"}:
+        raise ValidationError("TRI endpoint requires explicit gross/net variant")
+    field = "TotalReturnsIndex" if variant.kind == "gross_tri" else "NTR_Value"
+    rows = _measure_rows(
+        body,
+        catalogue=catalogue,
+        variant=variant,
+        source_id=source_id,
+        locator=locator,
+        start=start,
+        end=end,
+        known_at=known_at,
+        date_field="Date",
+        required={field},
+        representation="nifty_tri_v1",
+        max_bytes=max_bytes,
+        max_rows=max_rows,
+    )
+    return tuple(IndexTRI(variant, on, number(raw[field]), lineage) for raw, on, lineage in rows)

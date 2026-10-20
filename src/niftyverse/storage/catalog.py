@@ -17,7 +17,7 @@ from niftyverse.storage.durable import sync_directory, sync_file
 from niftyverse.storage.paths import diagnose_store
 from niftyverse.storage.schemas import SCHEMAS
 
-CATALOG_VERSION = 4
+CATALOG_VERSION = 5
 
 
 class WriterBusy(RuntimeError):
@@ -84,12 +84,19 @@ def migrate(
                     "status VARCHAR NOT NULL, raw_sha256 VARCHAR NOT NULL, reason VARCHAR)"
                 )
                 for name, definition in SCHEMAS.items():
-                    if name in {"market_state_observations", "security_daily_details"}:
+                    if name in {
+                        "market_state_observations",
+                        "security_daily_details",
+                        "index_daily",
+                        "index_tri",
+                        "index_valuations",
+                    }:
                         continue  # Added by their own migration, including on fresh databases.
                     empty = pa.Table.from_batches([], schema=definition)
                     connection.register("schema_input", empty)
                     connection.execute(
-                        f"CREATE TABLE {name} AS SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
+                        f"CREATE TABLE {name} AS "
+                        "SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
                         "* FROM schema_input WHERE false"
                     )
                     connection.unregister("schema_input")
@@ -121,6 +128,19 @@ def migrate(
                     )
                 finally:
                     connection.unregister("schema_input")
+            elif version == 5:
+                for name in ("index_daily", "index_tri", "index_valuations"):
+                    connection.register(
+                        "schema_input", pa.Table.from_batches([], schema=SCHEMAS[name])
+                    )
+                    try:
+                        connection.execute(
+                            f"CREATE TABLE {name} AS "
+                            "SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
+                            "* FROM schema_input WHERE false"
+                        )
+                    finally:
+                        connection.unregister("schema_input")
             if fault:
                 fault()
             connection.execute("INSERT INTO schema_migrations VALUES (?)", [version])

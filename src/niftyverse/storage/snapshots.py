@@ -257,11 +257,15 @@ def backup(
                     for p in snapshot.rglob("*")
                     if p.is_file()
                 )
+        schema_version = store.connection.execute(
+            "SELECT max(version) FROM schema_migrations"
+        ).fetchone()
+        assert schema_version is not None
         metadata = {
             "kind": "backup",
             "status": "complete",
             "raw_replay_available": True,
-            "catalog_version": 3,
+            "catalog_version": schema_version[0],
             "unfinished_jobs": report.unfinished_jobs,
             "staging_replay": "caller must resupply/revalidate unfinished batch; "
             "committed state retained",
@@ -299,6 +303,7 @@ def restore(source: Path, destination: Path) -> None:
                 (2,),
                 (3,),
                 (4,),
+                (5,),
             }:
                 raise ValidationError("unsupported restored catalog schema")
             conn.execute("SELECT count(*) FROM occurrences").fetchone()

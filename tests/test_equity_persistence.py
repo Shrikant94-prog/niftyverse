@@ -117,7 +117,7 @@ def test_v3_to_v4_rollback_backup_and_new_details(tmp_path: Path) -> None:
     with Store(path) as store:
         assert store.connection.execute(
             "SELECT max(version) FROM schema_migrations"
-        ).fetchone() == (4,)
+        ).fetchone() == (5,)
     # Independently construct the actual pre-upgrade schema, not a renamed v4 DB.
     old = tmp_path / "old.duckdb"
     with duckdb.connect(str(old)) as conn:

@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Any, Literal
 
 from niftyverse.calendars import Calendar
 from niftyverse.core import ValidationError
@@ -130,16 +130,75 @@ class IndexPrice:
 
 
 @dataclass(frozen=True)
-class IndexHistory:
+class IndexTRI:
     variant: IndexVariant
-    rows: tuple[IndexPrice, ...]
+    session_date: date
+    value: Decimal | None
+    lineage: SourceLineage
+
+    def __post_init__(self) -> None:
+        self.variant.__post_init__()
+        self.lineage.__post_init__()
+        day(self.session_date)
+        if self.variant.kind not in {"gross_tri", "net_tri"}:
+            raise ValidationError("TRI requires gross/net variant")
+        decimal(self.value)
+        if self.value is not None and self.value < 0:
+            raise ValidationError("negative TRI level")
+
+
+@dataclass(frozen=True)
+class IndexValuation:
+    variant: IndexVariant
+    session_date: date
+    pe: Decimal | None
+    pb: Decimal | None
+    dividend_yield: Decimal | None
+    lineage: SourceLineage
+    ratio_unit: Literal["ratio"] = "ratio"
+    yield_unit: Literal["percent"] = "percent"
+
+    def __post_init__(self) -> None:
+        self.variant.__post_init__()
+        self.lineage.__post_init__()
+        day(self.session_date)
+        if self.variant.kind != "price":
+            raise ValidationError("valuation requires underlying price variant")
+        for value in (self.pe, self.pb, self.dividend_yield):
+            decimal(value)
+        if self.dividend_yield is not None and self.dividend_yield < 0:
+            raise ValidationError("negative dividend yield")
+        if self.ratio_unit != "ratio" or self.yield_unit != "percent":
+            raise ValidationError("incompatible valuation units")
+
+    @property
+    def missing_fields(self) -> tuple[str, ...]:
+        return tuple(k for k in ("pe", "pb", "dividend_yield") if getattr(self, k) is None)
+
+    @property
+    def assumptions(self) -> tuple[str, ...]:
+        """Nonpositive ratios cannot silently enter positive-ratio assumptions."""
+        return tuple(
+            f"{k}_unavailable" if getattr(self, k) is None else f"{k}_nonpositive"
+            for k in ("pe", "pb")
+            if getattr(self, k) is None or getattr(self, k) <= 0
+        )
+
+
+type IndexObservation = IndexPrice | IndexTRI | IndexValuation
+
+
+@dataclass(frozen=True)
+class IndexHistory[T: IndexObservation]:
+    variant: IndexVariant
+    rows: tuple[T, ...]
     gaps: tuple[tuple[date, str], ...]
     coverage: Literal["complete", "partial", "no_observations"]
     calendar_version: str
 
 
-def index_history(
-    rows: tuple[IndexPrice, ...],
+def index_history[T: IndexObservation](
+    rows: tuple[T, ...],
     *,
     variant: IndexVariant,
     start: date,
@@ -147,7 +206,7 @@ def index_history(
     calendar: Calendar,
     known_at: datetime,
     source_complete: bool,
-) -> IndexHistory:
+) -> IndexHistory[T]:
     """Project no dates; validate actual rows and compare to an evidenced grid.
 
     Empty source data never establishes absence on a trading date. The caller's
@@ -160,6 +219,8 @@ def index_history(
     sessions = calendar.sessions_between(start, end, require_complete=False)
     if not isinstance(rows, tuple):
         raise ValidationError("index history requires immutable rows")
+    if len({type(r) for r in rows}) > 1:
+        raise ValidationError("mixed index dataset history")
     seen = set()
     for row in rows:
         row.__post_init__()
@@ -183,6 +244,14 @@ def index_history(
                 gaps.append((session.session_date, "source_unverified"))
             elif observation is None:
                 gaps.append((session.session_date, "missing_observation"))
+            elif isinstance(observation, IndexValuation):
+                gaps.extend(
+                    (session.session_date, f"source_null:{field}")
+                    for field in observation.missing_fields
+                )
+            elif isinstance(observation, IndexTRI):
+                if observation.value is None:
+                    gaps.append((session.session_date, "source_null"))
             elif any(
                 v is None
                 for v in (observation.open, observation.high, observation.low, observation.close)
@@ -198,3 +267,127 @@ def index_history(
         coverage,
         calendar.version_id,
     )
+
+
+@dataclass(frozen=True)
+class IndexJoin:
+    session_date: date
+    price: IndexPrice | None
+    valuation: IndexValuation | None
+    gross_tri: IndexTRI | None
+    net_tri: IndexTRI | None
+
+
+def join_index_datasets(
+    *,
+    variant: IndexVariant,
+    prices: tuple[IndexPrice, ...],
+    valuations: tuple[IndexValuation, ...],
+    tri: tuple[IndexTRI, ...],
+) -> tuple[IndexJoin, ...]:
+    """Full outer date join retaining typed input records; never fills values."""
+    variant.__post_init__()
+    if variant.kind != "price":
+        raise ValidationError("join requires price index variant")
+    groups: dict[str, dict[date, IndexObservation]] = {
+        "price": {},
+        "valuation": {},
+        "gross_tri": {},
+        "net_tri": {},
+    }
+    for rows, expected in ((prices, IndexPrice), (valuations, IndexValuation), (tri, IndexTRI)):
+        if not isinstance(rows, tuple):
+            raise ValidationError("immutable index join inputs required")
+        for row in rows:
+            if not isinstance(row, expected):
+                raise ValidationError("incompatible index join dataset")
+            row.__post_init__()
+            if row.variant.index_id != variant.index_id or (
+                not isinstance(row, IndexTRI) and row.variant != variant
+            ):
+                raise ValidationError("incompatible index variant in join")
+            group = "valuation" if isinstance(row, IndexValuation) else row.variant.kind
+            if row.session_date in groups[group]:
+                raise ValidationError("duplicate index join date/variant")
+            groups[group][row.session_date] = row
+    dates = sorted({on for rows in groups.values() for on in rows})
+    p = {r.session_date: r for r in prices}
+    v = {r.session_date: r for r in valuations}
+    gross = {r.session_date: r for r in tri if r.variant.kind == "gross_tri"}
+    net = {r.session_date: r for r in tri if r.variant.kind == "net_tri"}
+    return tuple(
+        IndexJoin(
+            on,
+            p.get(on),
+            v.get(on),
+            gross.get(on),
+            net.get(on),
+        )
+        for on in dates
+    )
+
+
+def validate_index_record(
+    dataset: str,
+    row: dict[str, Any],
+    *,
+    source_id: str,
+    raw_sha256: str,
+    universe: tuple[str, ...],
+    scope: str,
+    basis: str,
+    fields: tuple[str, ...],
+    complete: bool,
+) -> None:
+    """Shared DB/direct boundary for typed index records, identity, basis and nulls."""
+    variant = IndexVariant(row["variant_id"], row["index_id"], row["variant_kind"])
+    lineage = SourceLineage(source_id, row["raw_sha256"], row["locator"], "index-v1", ())
+    if row["raw_sha256"] != raw_sha256:
+        raise ValidationError("index capture mismatch")
+    if scope != "selected" or variant.variant_id not in universe:
+        raise ValidationError("index row outside explicit variant scope")
+    expected_basis = "valuation_ratios_percent" if dataset == "index_valuations" else variant.kind
+    if basis != expected_basis:
+        raise ValidationError("index partition variant/basis mismatch")
+    available: tuple[str, ...]
+    nullable: tuple[str, ...]
+    if dataset == "index_daily":
+        IndexPrice(
+            variant,
+            row["session_date"],
+            row["open"],
+            row["high"],
+            row["low"],
+            row["close"],
+            lineage,
+        )
+        available = ("open", "high", "low", "close")
+        nullable = ("close",)
+    elif dataset == "index_tri":
+        IndexTRI(variant, row["session_date"], row["value"], lineage)
+        available = nullable = ("value",)
+    elif dataset == "index_valuations":
+        IndexValuation(
+            variant,
+            row["session_date"],
+            row["pe"],
+            row["pb"],
+            row["dividend_yield"],
+            lineage,
+            row["ratio_unit"],
+            row["yield_unit"],
+        )
+        available = nullable = ("pe", "pb", "dividend_yield")
+    else:
+        raise ValidationError("incompatible index dataset")
+    if dataset != "index_valuations" and row["unit"] != "index_points":
+        raise ValidationError("incompatible index unit")
+    if set(fields) - set(available):
+        raise ValidationError("unsupported index requested field")
+    # Validate reasons before completeness so malformed nulls have a stable diagnostic.
+    for field in nullable:
+        reason = row[field + "_reason"] if dataset == "index_valuations" else row["missing_reason"]
+        if reason != ("source_null" if row[field] is None else None):
+            raise ValidationError("index null/reason mismatch")
+    if complete and any(row[f] is None for f in fields):
+        raise ValidationError("null index requested field cannot be complete")

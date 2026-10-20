@@ -12,6 +12,7 @@ from niftyverse.core import ValidationError
 from niftyverse.indices import (
     IndexAlias,
     IndexCatalogue,
+    IndexHistory,
     IndexPrice,
     IndexVariant,
     SourceLineage,
@@ -100,7 +101,7 @@ def test_history_retains_true_dates_exact_values_and_missing_grid() -> None:
     assert result.rows[0].close == Decimal("100.1250")
     assert result.rows[0].lineage == LINEAGE
     assert result.gaps == ((D2, "missing_observation"),) and result.coverage == "partial"
-    empty = index_history(
+    empty: IndexHistory[IndexPrice] = index_history(
         (),
         variant=PRICE,
         start=D1,
@@ -125,7 +126,7 @@ def test_wrong_variant_date_duplicates_and_unknown_calendar_never_fill() -> None
         with pytest.raises(ValidationError, match=message):
             index_history(rows, **options)
     unknown = replace(calendar(), sessions=())
-    result = index_history((), **{**options, "calendar": unknown})
+    result: IndexHistory[IndexPrice] = index_history((), **{**options, "calendar": unknown})
     assert result.gaps == ((D1, "unknown_session"),)
     with pytest.raises(ValidationError, match="known"):
         index_history((price(),), **{**options, "known_at": datetime(2026, 1, 1, tzinfo=UTC)})

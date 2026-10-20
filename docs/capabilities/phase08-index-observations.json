@@ -83,8 +83,269 @@
     }
   ],
   "limitations": [
-    "TRI/valuations pending separate decoder verification",
-    "VIX Nifty historical POST returned 302 in both windows; no history support",
-    "No continuous ten-year coverage or publication-time certification"
-  ]
+    "VIX historical Nifty POST returned 302 in both windows; no support certified",
+    "No continuous ten-year coverage or historical publication vintage",
+    "Sampled window completeness only; source field nulls and unobserved dates remain independent"
+  ],
+  "valuation_tri": [
+    {
+      "name": "valuations-old",
+      "url": "https://www.niftyindices.com/BackPage/getpepbHistoricaldataDBtoString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:44:58.322638+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "pe": "str",
+          "pb": "str",
+          "divYield": "str",
+          "DATE": "str"
+        }
+      ],
+      "bytes": 265,
+      "sha256": "f700e34a1abfb52b6f699b86f3f8201bedcc14eaf5e4023ab2885500fdef4afd",
+      "variant": "price",
+      "verified_dates": [
+        "2016-09-02",
+        "2016-09-01"
+      ],
+      "row_count": 2,
+      "units": "ratio / percent"
+    },
+    {
+      "name": "tri-old",
+      "url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:00.274554+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "Date": "str",
+          "TotalReturnsIndex": "str",
+          "NTR_Value": "str"
+        }
+      ],
+      "bytes": 287,
+      "sha256": "b2a21b57ea2809f632fecd49b3ea92192f99bd147c4c444717d789b2cd88ca07",
+      "variant": "gross_tri",
+      "verified_dates": [
+        "2016-09-02",
+        "2016-09-01"
+      ],
+      "row_count": 2,
+      "units": "index_points"
+    },
+    {
+      "name": "tri-old",
+      "url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:00.274554+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "Date": "str",
+          "TotalReturnsIndex": "str",
+          "NTR_Value": "str"
+        }
+      ],
+      "bytes": 287,
+      "sha256": "b2a21b57ea2809f632fecd49b3ea92192f99bd147c4c444717d789b2cd88ca07",
+      "variant": "net_tri",
+      "verified_dates": [
+        "2016-09-02",
+        "2016-09-01"
+      ],
+      "row_count": 2,
+      "units": "index_points"
+    },
+    {
+      "name": "valuations-recent",
+      "url": "https://www.niftyindices.com/BackPage/getpepbHistoricaldataDBtoString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:06.350105+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "pe": "str",
+          "pb": "str",
+          "divYield": "str",
+          "DATE": "str"
+        }
+      ],
+      "bytes": 397,
+      "sha256": "ec41f7105b5b321c3b4f0f054102df90da60cd01596150214efbd40d9561723b",
+      "variant": "price",
+      "verified_dates": [
+        "2026-10-16",
+        "2026-10-15",
+        "2026-10-14"
+      ],
+      "row_count": 3,
+      "units": "ratio / percent"
+    },
+    {
+      "name": "tri-recent",
+      "url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:08.309835+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "Date": "str",
+          "TotalReturnsIndex": "str",
+          "NTR_Value": "str"
+        }
+      ],
+      "bytes": 430,
+      "sha256": "491c84dcc27bc5339e3d71512f632ddbcf2771da1deb167f87e90586d4b497fe",
+      "variant": "gross_tri",
+      "verified_dates": [
+        "2026-10-16",
+        "2026-10-15",
+        "2026-10-14"
+      ],
+      "row_count": 3,
+      "units": "index_points"
+    },
+    {
+      "name": "tri-recent",
+      "url": "https://www.niftyindices.com/BackPage/getTotalReturnIndexString",
+      "scope": "exact sampled dates; latest observed vintage only",
+      "format": "json",
+      "window_days": 3,
+      "method": "POST",
+      "observed_at": "2026-10-20T18:45:08.309835+00:00",
+      "complete": false,
+      "attempts": 1,
+      "status": "experimental",
+      "content_type": "text/html; charset=utf-8",
+      "outcome": "observed_unverified",
+      "schema": [
+        {
+          "RequestNumber": "str",
+          "Index Name": "str",
+          "Date": "str",
+          "TotalReturnsIndex": "str",
+          "NTR_Value": "str"
+        }
+      ],
+      "bytes": 430,
+      "sha256": "491c84dcc27bc5339e3d71512f632ddbcf2771da1deb167f87e90586d4b497fe",
+      "variant": "net_tri",
+      "verified_dates": [
+        "2026-10-16",
+        "2026-10-15",
+        "2026-10-14"
+      ],
+      "row_count": 3,
+      "units": "index_points"
+    }
+  ],
+  "independent_expected_source_tuples": {
+    "columns": [
+      "close",
+      "pe",
+      "pb",
+      "yield_percent",
+      "gross_tri",
+      "net_tri"
+    ],
+    "descending_source_rows": {
+      "old": [
+        [
+          "8809.65",
+          "24.15",
+          "3.36",
+          "1.22",
+          "11857.76",
+          "11203.54"
+        ],
+        [
+          "8774.65",
+          "24.06",
+          "3.35",
+          "1.22",
+          "11810.69",
+          "11159.07"
+        ]
+      ],
+      "recent": [
+        [
+          "23146.15",
+          "19.77",
+          "2.84",
+          "1.49",
+          "35178.68",
+          "30545.51"
+        ],
+        [
+          "22997.35",
+          "19.65",
+          "2.82",
+          "1.49",
+          "34948.42",
+          "30346.43"
+        ],
+        [
+          "22622.70",
+          "19.33",
+          "2.78",
+          "1.52",
+          "34379.06",
+          "29852.04"
+        ]
+      ]
+    }
+  },
+  "definitions": {
+    "historical_page": "https://www.niftyindices.com/reports/historical-data",
+    "factsheet": "https://www.niftyindices.com/Factsheet/ind_nifty50.pdf",
+    "methodology": "https://www.niftyindices.com/Methodology/Method_NIFTY_Equity_Indices.pdf",
+    "meaning": "Official page/script maps TotalReturnsIndex separately from NTR_Value; factsheet names Gross and Net variants. Net methodology deducts specified taxes; no reconstruction performed."
+  }
 }

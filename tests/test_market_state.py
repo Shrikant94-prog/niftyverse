@@ -144,7 +144,7 @@ def test_retained_v2_backup_restores_then_migrates_on_explicit_open(tmp_path: Pa
         )
         assert store.connection.execute(
             "SELECT max(version) FROM schema_migrations"
-        ).fetchone() == (4,)
+        ).fetchone() == (5,)
         assert store.read_table("market_state_observations").num_rows == 0
         backups = list(store.location.paths["backups"].glob("pre-migration-v2-*.duckdb"))
         assert len(backups) == 1
