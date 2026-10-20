@@ -53,6 +53,8 @@ def make_price_batch(
         raise MarketDataFailure("quality_evidence_not_known")
     price_rows = []
     details = []
+    coverage = result.coverage
+    field_gaps = []
     for row in result.rows:
         source = row.source
         source.__post_init__()
@@ -131,6 +133,17 @@ def make_price_batch(
                 locator=source.locator,
             )
         )
+        values = {**price_rows[-1], **details[-1]}
+        if set(partition.fields) - values.keys():
+            raise MarketDataFailure("unsupported_requested_field")
+        missing = [field for field in partition.fields if values[field] is None]
+        if missing:
+            field_gaps.append(
+                dict(listing_id=row.listing_id, on=str(source.session_date), fields=missing)
+            )
+            if coverage == "complete":
+                coverage = "partial"
+    metadata["field_gaps"] = field_gaps
     tables = []
     if partition.dataset != "security_daily_details":
         tables.append(
@@ -157,7 +170,7 @@ def make_price_batch(
         "active",
         None,
         tuple(tables),
-        result.coverage,
+        coverage,
         "security-eod-v1",
         "security-eod-normalizer-v1",
     )

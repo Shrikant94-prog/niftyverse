@@ -87,7 +87,11 @@ def delivery_fraction(
 ) -> DeliveryFraction:
     delivery.__post_init__()
     total = delivery.traded_quantity
-    reason = None
+    reason = (
+        "incompatible_quantity_definition"
+        if delivery.quantity_definition != "traded_security_units"
+        else None
+    )
     if price is not None:
         price.__post_init__()
         if price.key != delivery.key:

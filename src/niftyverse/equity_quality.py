@@ -89,6 +89,15 @@ def assess_move(
         return MoveAssessment(
             "baseline_unavailable", None, policy.version_id, known_at, prior_known_at, current.key
         )
+    if known_at > decision_at:
+        return MoveAssessment(
+            "observation_unavailable",
+            None,
+            policy.version_id,
+            known_at,
+            prior_known_at,
+            current.key,
+        )
     move = current.close / prior.close - 1
     return MoveAssessment(
         "anomaly_unresolved" if abs(move) > policy.move_warning else "no_move_warning",

@@ -74,6 +74,15 @@ def test_crash_and_split_sized_moves_remain_facts_with_known_time() -> None:
         decision_at=NOW - timedelta(days=1),
     )
     assert future.status == "baseline_unavailable" and future.value is None
+    future_current = assess_move(
+        current,
+        prior,
+        policy=QualityPolicy("quality-v1"),
+        known_at=NOW + timedelta(days=1),
+        prior_known_at=NOW,
+        decision_at=NOW,
+    )
+    assert future_current.value is None and future_current.status == "observation_unavailable"
     split = replace(
         current, open=Decimal("50"), high=Decimal("51"), low=Decimal("49"), close=Decimal("50")
     )

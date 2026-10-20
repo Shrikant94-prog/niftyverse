@@ -90,6 +90,28 @@ def test_capture_mismatch_and_forged_fraction_reject_without_effect(tmp_path: Pa
     assert not (tmp_path / "bad").exists()
 
 
+def test_details_cannot_disagree_with_selected_price_quantity(tmp_path: Path) -> None:
+    import pyarrow as pa
+
+    source = batch()
+    name, table = source.tables[1]
+    rows = table.to_pylist()
+    rows[0].update(
+        comparable_quantity=20, published_delivery_percent=20, delivery_fraction="0.200000000000"
+    )
+    from decimal import Decimal
+
+    rows[0]["delivery_fraction"] = Decimal("0.200000000000")
+    rows[0]["published_delivery_percent"] = Decimal(20)
+    with pytest.raises(MarketDataFailure, match="price_details"):
+        bad = replace(
+            source,
+            tables=(source.tables[0], (name, pa.Table.from_pylist(rows, schema=table.schema))),
+        )
+        write_direct(bad, tmp_path / "bad-quantity")
+    assert not (tmp_path / "bad-quantity").exists()
+
+
 def test_v3_to_v4_rollback_backup_and_new_details(tmp_path: Path) -> None:
     path = tmp_path / "store"
     with Store(path) as store:
@@ -210,3 +232,28 @@ def test_complete_factory_requires_explicit_source_evidence() -> None:
             checked_at=KNOWN,
             known_at=KNOWN,
         )
+
+
+def test_requested_unknown_quantity_and_fraction_cannot_appear_complete() -> None:
+    body = wire(CH_TOT_TRADED_QTY=None)
+    result = normalize_equities(
+        decode_equity_json(body, source_id="owned", locator="p"),
+        catalogue=catalogue(),
+        calendar=calendar(),
+        instrument_ids=("a",),
+        start=D1,
+        end=D2,
+        known_at=KNOWN,
+        policy=ListingSelectionPolicy("ordinary"),
+        source_complete=True,
+    )
+    candidate = make_price_batch(
+        result,
+        partition=batch().partition,
+        capture=Capture(body, "direct_raw", "owned", "owned:p"),
+        check_id="null-quantity",
+        checked_at=KNOWN,
+        known_at=KNOWN,
+    )
+    assert candidate.coverage == "partial"
+    assert "field_gaps" in candidate.partition.completeness_evidence

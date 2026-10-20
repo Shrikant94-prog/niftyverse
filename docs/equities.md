@@ -99,6 +99,12 @@ metadata; retain or publish each counterpart capture separately for raw replay.
 Partial/quarantined output cannot become complete merely because writing succeeds.
 This is a bounded dataset foundation, not the Phase 09 full DataPlan builder.
 
+Requested null price/detail fields add field_gaps and keep publication partial,
+even when the source session grid is complete. Details must agree with the
+selected price's quantity and quantity unit. Unknown quantity definitions cannot
+produce delivery fractions. Move assessment also checks the current observation's
+known-at against the decision cutoff; unavailable future evidence yields no move.
+
 ## ETFs
 
 `adapters.etf_catalogue.decode_etf_catalogue` validates the entire official ETF

@@ -67,6 +67,9 @@ def test_delivery_generations_totals_dates_and_fraction() -> None:
     fraction = delivery_fraction(current.rows[0])
     assert fraction.value == Decimal("0.400000000000") and fraction.reason is None
     assert fraction.published_percent == Decimal("40.00")
+    unknown = replace(current.rows[0], quantity_definition="unknown")
+    assert delivery_fraction(unknown).value is None
+    assert delivery_fraction(unknown).reason == "incompatible_quantity_definition"
 
 
 @pytest.mark.parametrize(

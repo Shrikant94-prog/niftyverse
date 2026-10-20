@@ -257,6 +257,18 @@ class ValidatedBatch:
                     raise ValidationError("incompatible quantity unit")
                 if name.endswith("daily") and row["close"] is None and not row["missing_reason"]:
                     raise ValidationError("missing price needs a reason")
+        price_rows = rows_by_name.get("equity_daily", []) + rows_by_name.get("etf_daily", [])
+        prices = {(r["listing_id"], r["series"], r["session_date"]): r for r in price_rows}
+        if prices:
+            for detail in rows_by_name.get("security_daily_details", []):
+                price = prices.get(
+                    (detail["listing_id"], detail["series"], detail["session_date"])
+                )
+                if price is None or (price["quantity"], price["quantity_unit"]) != (
+                    detail["comparable_quantity"],
+                    detail["quantity_unit"],
+                ):
+                    raise MarketDataFailure("price_details_quantity_conflict")
         documents = {r["document_id"]: r for r in rows_by_name.get("filing_documents", [])}
         assertions = {
             r["assertion_id"]: r for r in rows_by_name.get("filing_source_assertions", [])
