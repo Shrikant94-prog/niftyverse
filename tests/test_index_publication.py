@@ -219,7 +219,7 @@ def test_v4_upgrade_is_additive_transactional_and_keeps_backup(tmp_path: Path) -
     with Store(root) as store:
         assert store.connection.execute(
             "SELECT max(version) FROM schema_migrations"
-        ).fetchone() == (5,)
+        ).fetchone() == (6,)
         assert store.connection.execute("SELECT value FROM owner_marker").fetchone() == (23,)
         publish(store, batch("index_tri", "net_tri"))
         assert store.read_table("index_tri").num_rows == 1
@@ -235,7 +235,7 @@ def test_index_backup_has_actual_schema_and_restores_exact_rows(tmp_path: Path) 
         publish(store, batch("index_valuations"))
         expected = store.read_table("index_valuations")
         saved = backup(store, tmp_path / "backup")
-        assert saved.manifest["catalog_version"] == 5
+        assert saved.manifest["catalog_version"] == 6
     restore(saved.path, tmp_path / "restored")
     with Store(tmp_path / "restored") as store:
         assert store.read_table("index_valuations").equals(expected)

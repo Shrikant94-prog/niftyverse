@@ -40,6 +40,8 @@ CATALOG_TABLES = (
     "source_checks",
     "coverage",
     "jobs",
+    "build_runs",
+    "build_work",
     *SCHEMAS,
 )
 PRICE_RESULT = pa.schema(
@@ -90,7 +92,8 @@ def history_bundle(
         }
         raw = []
         for (sha,) in conn.execute(
-            "SELECT sha256 FROM raw_objects UNION SELECT raw_sha256 FROM jobs ORDER BY 1"
+            "SELECT sha256 FROM raw_objects UNION SELECT raw_sha256 FROM jobs "
+            "UNION SELECT raw_sha256 FROM build_work WHERE raw_sha256 IS NOT NULL ORDER BY 1"
         ).fetchall():
             if not (store.location.paths["raw"] / sha[:2] / sha).is_file():
                 raise ValidationError("missing staged raw prevents complete history bundle")
@@ -242,7 +245,8 @@ def backup(
         store.checkpoint_copy(catalog)
         raw = [("catalog.duckdb", catalog)]
         for (sha,) in store.connection.execute(
-            "SELECT sha256 FROM raw_objects UNION SELECT raw_sha256 FROM jobs ORDER BY 1"
+            "SELECT sha256 FROM raw_objects UNION SELECT raw_sha256 FROM jobs "
+            "UNION SELECT raw_sha256 FROM build_work WHERE raw_sha256 IS NOT NULL ORDER BY 1"
         ).fetchall():
             if not (store.location.paths["raw"] / sha[:2] / sha).is_file():
                 raise ValidationError("missing staged raw prevents backup")
@@ -304,6 +308,7 @@ def restore(source: Path, destination: Path) -> None:
                 (3,),
                 (4,),
                 (5,),
+                (6,),
             }:
                 raise ValidationError("unsupported restored catalog schema")
             conn.execute("SELECT count(*) FROM occurrences").fetchone()
