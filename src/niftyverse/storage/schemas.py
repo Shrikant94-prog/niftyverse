@@ -36,6 +36,27 @@ PRICE = schema(
     ("missing_reason", TEXT, True),
 )
 SCHEMAS = {
+    "market_state_observations": schema(
+        ("observation_id", TEXT, False),
+        ("listing_id", TEXT, False),
+        ("segment", TEXT, False),
+        ("state_kind", TEXT, False),
+        ("state", TEXT, False),
+        ("value", TEXT, True),
+        ("observed_on", DAY, False),
+        ("effective_from", DAY, True),
+        ("effective_to", DAY, True),
+        ("known_at", INSTANT, False),
+        ("publication_time", INSTANT, True),
+        ("publication_precision", TEXT, False),
+        ("source_timezone", TEXT, False),
+        ("lower", MONEY, True),
+        ("upper", MONEY, True),
+        ("basis", TEXT, False),
+        ("source_id", TEXT, False),
+        ("locator", TEXT, False),
+        ("publication_date", DAY, True),
+    ),
     "equity_daily": PRICE,
     "etf_daily": PRICE,
     "etf_metadata": schema(
@@ -97,6 +118,7 @@ SCHEMAS = {
 }
 
 KEYS = {
+    "market_state_observations": ("listing_id", "segment", "state_kind", "observation_id"),
     "equity_daily": ("listing_id", "series", "session_date"),
     "etf_daily": ("listing_id", "series", "session_date"),
     "etf_metadata": ("listing_id", "valid_from"),
