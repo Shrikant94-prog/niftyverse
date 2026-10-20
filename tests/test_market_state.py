@@ -82,6 +82,24 @@ def test_invalid_state_rejected(changes: dict[str, object]) -> None:
         replace(observation(), **changes)  # type: ignore[arg-type]
 
 
+def test_effective_interval_known_at_and_date_only_publication() -> None:
+    from datetime import timedelta
+
+    row = replace(
+        observation(),
+        effective_from=date(2026, 1, 1),
+        effective_to=date(2026, 1, 3),
+        publication_precision="date",
+        publication_date=date(2026, 1, 1),
+    )
+    assert row.publication_time is None
+    assert state_on((row,), "0001", "CM", "ASM", date(2026, 1, 2), NOW) == (row,)
+    assert state_on((row,), "0001", "CM", "ASM", date(2026, 1, 3), NOW) == ()
+    assert (
+        state_on((row,), "0001", "CM", "ASM", date(2026, 1, 1), NOW - timedelta(seconds=1)) == ()
+    )
+
+
 def test_market_schema_migration_is_additive_and_rolls_back(tmp_path: Path) -> None:
     with duckdb.connect(str(tmp_path / "old.duckdb")) as conn:
         migrate(conn, target=2)
@@ -100,6 +118,38 @@ def test_market_schema_migration_is_additive_and_rolls_back(tmp_path: Path) -> N
         migrate(conn)
         assert conn.execute("SELECT source_id FROM captures").fetchone() == ("owned",)
         assert conn.execute("SELECT count(*) FROM market_state_observations").fetchone() == (0,)
+
+
+def test_retained_v2_backup_restores_then_migrates_on_explicit_open(tmp_path: Path) -> None:
+    from niftyverse.storage.bundles import publish_bundle
+    from niftyverse.storage.snapshots import restore
+
+    catalog = tmp_path / "v2.duckdb"
+    with duckdb.connect(str(catalog)) as conn:
+        migrate(conn, target=2)
+        conn.execute(
+            "INSERT INTO captures VALUES ('old', 'direct_raw', 'retained', 'local', 1, NULL)"
+        )
+    publish_bundle(
+        tmp_path / "backup",
+        [],
+        {"kind": "backup", "status": "complete", "catalog_version": 2},
+        raw=[("catalog.duckdb", catalog)],
+    )
+    restored = tmp_path / "restored"
+    restore(tmp_path / "backup", restored)
+    with Store(restored) as store:
+        assert store.connection.execute("SELECT source_id FROM captures").fetchone() == (
+            "retained",
+        )
+        assert store.connection.execute(
+            "SELECT max(version) FROM schema_migrations"
+        ).fetchone() == (3,)
+        assert store.read_table("market_state_observations").num_rows == 0
+        backups = list(store.location.paths["backups"].glob("pre-migration-v2-*.duckdb"))
+        assert len(backups) == 1
+    with duckdb.connect(str(backups[0]), read_only=True) as conn:
+        assert conn.execute("SELECT max(version) FROM schema_migrations").fetchone() == (2,)
 
 
 @pytest.mark.parametrize("encoding", ["csv", "parquet"])

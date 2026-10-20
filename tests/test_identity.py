@@ -192,6 +192,30 @@ def test_unknown_competing_alias_and_overlapping_listing_states_are_unresolved()
     assert "stale" in cat.resolve("NEW", "symbol", date(2026, 1, 1), CUTOFF).limitations
 
 
+def test_conflicting_listing_status_cannot_select_listed_candidate() -> None:
+    cat = catalogue()
+    cat = replace(cat, listings=cat.listings + (replace(cat.listings[0], status="suspended"),))
+    result = select_listing(
+        cat, "a", date(2023, 1, 1), CUTOFF, ("a-eq",), ListingSelectionPolicy("policy-1")
+    )
+    assert result.status == "collision" and result.listing is None
+
+
+def test_unknown_start_does_not_erase_known_exclusive_end() -> None:
+    cat = catalogue()
+    cat = replace(
+        cat, aliases=cat.aliases + (Alias("NEW", "symbol", "b-eq", ev(None, "2022-01-01")),)
+    )
+    assert cat.resolve("NEW", "symbol", date(2023, 1, 1), CUTOFF).status == "resolved"
+    unknown = replace(
+        cat,
+        listings=(replace(cat.listings[0], evidence=ev(None, "2022-01-01")),),
+        instruments=(cat.instruments[0],),
+        aliases=(Alias("X", "symbol", "a-eq", ev(None)),),
+    )
+    assert unknown.search("X", on=date(2022, 1, 1), known_at=CUTOFF).matches == ()
+
+
 def test_derivative_stable_identity_and_full_terms_history() -> None:
     contract = Contract(
         "contract-1", "underlying-a", "option", "CE", "evidenced", None, "notice:1"

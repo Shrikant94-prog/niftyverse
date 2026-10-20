@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase:** 05 - Identities, contracts foundation and calendars. Authorized through sequential checkpoints, verification, local merge commit and GitHub push; retain phase-05. Do not start Phase 06.
-- **Status:** NV-05-01/02/03 verified locally; integration gate in progress. Phase incomplete.
+- **Status:** All checkpoints and PH-05-GATE pass locally; final core/hosted verification and integration pending. Phase incomplete until final gates and delivery.
 - **Start:** phase-05 created from inspected local main/origin main `16b6cc52e904a372d330be2d24ba3ffec0460c6b`. No existing phase-05. Tracked tree clean; owner untracked `Sample_Files/` preserved. No reset or alternative start.
 - **Prerequisites:** Phase 02/04 evidence and source ancestry inspected; current main full-extra offline baseline **224 passed** (`uv run --frozen --all-extras pytest -q`). Source/data limitations remain separate from software readiness.
-- **Next action:** Integrated gate, affected storage review, full offline/static/installed-wheel checks, evidence, main reconciliation and delivery.
+- **Next action:** Finish minimal-core checks, push phase-05 for actual hosted verification, record evidence, recheck main, merge and push both retained branches.
 
 ## Read first
 
@@ -24,12 +24,13 @@
 | NV-05-01 AC3-4 | `tests/test_market_state.py`: ASM/GSM/band overlap, nullable bounds, explicit removal/unknown/not-applicable and snapshot-only dates; DB/CSV/Parquet parity, additive v2-v3 rollback pass. Focused identity/state/storage regressions **73 passed**; Ruff format/lint and strict mypy pass. Checkpoint commit identifies tested code. |
 | NV-05-02 AC1-3 | `tests/test_delisted.py`: 10 CSV/Parquet, malformed and ambiguous manifest cases pass; network-blocked renamed dead identity, unknown dates, stable-ID membership eligibility/source-unavailable prices remain distinct. Combined checkpoint suite **28 passed**, Ruff format/lint and strict mypy pass. |
 | NV-05-03 AC1-3 | `tests/test_calendars.py`: explicit closed/trading/special/unknown, half-open boundaries, UTC/source-date rollover, DST gap/fold rejection and old/corrected immutable snapshots pass. Combined Phase 05 suite **34 passed**; Ruff format/lint and strict mypy pass. |
-| PH-05-GATE | Integrated cases plus regressions, package/static/docs checks and reconciliation. Pending. |
+| PH-05-GATE | `tests/test_phase05_gate.py` and focused cases pass: reused/renamed/dead/unknown/special/ETF/stale matches under socket denial. Full Windows offline suite **264 passed**, strict mypy (55 files), Ruff format/lint pass. Fresh installed core wheel passes Python socket/process audit guards; docs baseline/self-tests pass (87 Markdown files). Reconciliation reports up to date. Hosted/final merge pending. |
 
 ## Verification and limitations
 
 - Phase 03 source quarantines and Phase 04 durability/replay limits remain; synthetic identity/calendar fixtures do not establish provider coverage. No new acquisition or later-phase analytics.
-- Frozen lock/dependencies unchanged. No blockers observed at entry.
+- Frozen lock/dependencies/workflow unchanged. Wheel SHA-256 `f25caebf7d432cc2c4917196c83072ce298d1be245fb46854d7c656a228cd1c9`; lock SHA-256 `71224e6730b34a20a25b34de7d32148d2710eab1d43c7495193d1f14950287b0`. No blockers.
+- Scoped implementation-agent review reproduced/fixed unknown competing aliases, conflicting listing states and unknown-start/known-end handling; Parquet decoded-size rejection added. No independent review claimed. See [usage and limits](docs/identities.md).
 
 ## Phase ledger
 

@@ -159,3 +159,16 @@ def test_ambiguous_manifest_and_conflicting_stable_ids_reject_atomically(tmp_pat
     with pytest.raises(ValidationError, match="conflict"):
         import_delisted(path, version_id="bad", collected_at=CUTOFF)
     assert set(tmp_path.iterdir()) == {path}
+
+
+def test_parquet_decoded_size_limit_precedes_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import niftyverse.delisted as module
+
+    path = tmp_path / "large.parquet"
+    write_manifest(path, records())
+    monkeypatch.setattr(module, "MAX_DECODED_BYTES", 1, raising=False)
+    with pytest.raises(ValidationError, match="decoded"):
+        import_delisted(path, version_id="too-large", collected_at=CUTOFF)
+    assert set(tmp_path.iterdir()) == {path}

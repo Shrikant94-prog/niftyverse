@@ -149,9 +149,7 @@ class Catalogue:
         instruments = {r.instrument_id: r for r in self.instruments}
         for listing in self.listings:
             evidence = listing.evidence
-            if evidence.known_at > known_at or (
-                evidence.valid_from is not None and not evidence.admits(on, known_at)
-            ):
+            if not evidence.possible(on, known_at):
                 continue
             instrument = instruments[listing.instrument_id]
             if asset_type is not None and instrument.asset_type != asset_type:
@@ -161,8 +159,7 @@ class Catalogue:
                 for a in self.aliases
                 if a.listing_id == listing.listing_id
                 and (namespace is None or a.namespace == namespace)
-                and a.evidence.known_at <= known_at
-                and (a.evidence.valid_from is None or a.evidence.admits(on, known_at))
+                and a.evidence.possible(on, known_at)
                 and needle in a.identifier.casefold()
             ]
             for alias in aliases:
@@ -258,6 +255,8 @@ def select_listing(
     available_listing_ids: tuple[str, ...],
     policy: ListingSelectionPolicy,
 ) -> ListingSelection:
+    day(on)
+    utc(known_at)
     candidates = tuple(
         r
         for r in catalogue.listings
@@ -265,6 +264,8 @@ def select_listing(
         and r.listing_id in available_listing_ids
         and r.evidence.admits(on, known_at)
     )
+    if len({r.listing_id for r in candidates}) != len(candidates):
+        return ListingSelection("collision", None, policy.version_id, candidates)
     eligible = tuple(
         r
         for r in candidates
@@ -342,6 +343,8 @@ class ContractTerms:
 def select_terms(
     contract: Contract, terms: tuple[ContractTerms, ...], on: date, known_at: datetime
 ) -> ContractTerms | None:
+    day(on)
+    utc(known_at)
     candidates = [
         r
         for r in terms

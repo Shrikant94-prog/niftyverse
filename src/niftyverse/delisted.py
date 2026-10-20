@@ -43,6 +43,7 @@ COLUMNS = (
     "valid_to",
 )
 MAX_BYTES = 8 * 1024 * 1024
+MAX_DECODED_BYTES = 32 * 1024 * 1024
 MAX_ROWS = 10_000
 
 
@@ -182,6 +183,14 @@ def import_delisted(path: Path, *, version_id: str, collected_at: datetime) -> D
             rows = list(reader)
         elif path.suffix.lower() == ".parquet":
             with pq.ParquetFile(pa.BufferReader(body)) as parquet:
+                if (
+                    sum(
+                        parquet.metadata.row_group(i).total_byte_size
+                        for i in range(parquet.num_row_groups)
+                    )
+                    > MAX_DECODED_BYTES
+                ):
+                    raise ValidationError("manifest decoded byte limit")
                 if (
                     parquet.metadata.num_rows > MAX_ROWS
                     or parquet.metadata.serialized_size > MAX_BYTES
@@ -323,7 +332,9 @@ def _validate(
             )
         )
         aliases.append(alias)
-        if row["isin"] is not None:
+        if row["isin"] is not None and not (
+            alias.namespace == "isin" and alias.identifier.casefold() == row["isin"].casefold()
+        ):
             aliases.append(Alias(row["isin"], "isin", listing.listing_id, evidence))
     for i, left in enumerate(aliases):
         for right in aliases[i + 1 :]:

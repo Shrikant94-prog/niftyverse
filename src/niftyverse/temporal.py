@@ -59,11 +59,14 @@ class Evidence:
             raise ValidationError("invalid half-open evidence interval")
 
     def admits(self, on: date, known_at: datetime) -> bool:
+        return self.possible(on, known_at) and self.valid_from is not None
+
+    def possible(self, on: date, known_at: datetime) -> bool:
+        """Unknown starts may be search candidates; known ends still exclude."""
         day(on)
         utc(known_at)
         return (
             self.known_at <= known_at
-            and self.valid_from is not None
-            and self.valid_from <= on
+            and (self.valid_from is None or self.valid_from <= on)
             and (self.valid_to is None or on < self.valid_to)
         )
