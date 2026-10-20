@@ -5,10 +5,10 @@
 ## Active work
 
 - **Phase 06 active:** `phase-06` created from clean tracked local main/origin main `f4c9712`; owner untracked `Sample_Files/` preserved. Local commits, merge and GitHub push authorized; retain branch, do not start Phase 07.
-- **Checkpoint:** NV-06-01 verified; NV-06-02 next. Owner supplied exact original under `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; hash matches. [Audit observations](docs/evidence/06-20261020-audit.md) record all inherited counts and seven notice conflicts, unchanged original, eight passing parser tests and static checks. PH-06-GATE still awaits integrated replay/publication.
+- **Checkpoint:** NV-06-01 and NV-06-02 software verified; NV-06-03 next. Owner supplied exact original under `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; hash matches. [Audit observations](docs/evidence/06-20261020-audit.md) record all inherited counts and seven notice conflicts, unchanged original. PH-06-GATE still awaits integrated replay/publication.
 - **Prerequisites observed:** Phase 04/05 completion evidence inspected against containing Git history; current pre-edit full-extra suite `uv run --frozen --all-extras pytest -q`: **264 passed** on main's code, 23.43 s.
-- **Acceptance binding:** NV-06-01 exact original → 72 rows/756 literal strings/50 failed transitions/11 duplicate-event rows/5 weekend flags, all observed. NV-06-02 owned timelines → accepted/rejected/pending/knowledge-time corrections, same-date and conflicting events, explicit component identities and external contradiction; independent expected intervals before implementation.
-- **Next:** implement/test correction replay, then evidenced publication and a small independently verified interval. Broad historical regions remain blocked; independent consistency does not certify them.
+- **Acceptance binding:** NV-06-01 exact original → inherited figures all observed. NV-06-02 `tests/test_membership.py`/`test_membership_identity.py` → A on Jan 1, B from Jan 2; accepted date correction moves switch to Jan 3 only at review cutoff; pending/rejected unchanged. Missing/order/overlap/external contradictions quarantine; temporary identities never become instruments; dated aliases remain literal/local. Focused **21 tests pass**, formatter/lint/strict mypy on affected modules/tests pass. Source pinned by containing checkpoint commit; pre-module collection failures establish test-first ordering only.
+- **Next:** NV-06-03 immutable publication, correction lineage/invalidation and retained recipe replay. Scope clarification pending: official notices establish KWIL component history; current official CSV has 501 rows and no effective date, so cannot certify a full historical snapshot. Full-index history stays blocked; no synthetic fixture substitutes for real evidence.
 
 ## Previous completion (retained prerequisite)
 
@@ -49,5 +49,5 @@
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05 | PH-05-GATE verified; integrated into local main | [Completion](docs/evidence/05-20261020-completion.md) |
-| 06 | active; NV-06-01 verified | [Original audit](docs/evidence/06-20261020-audit.md); integrated gate pending |
+| 06 | active; NV-06-01/02 software verified | [Original audit](docs/evidence/06-20261020-audit.md); independent publication/gate pending |
 | 07-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
