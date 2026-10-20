@@ -155,3 +155,9 @@ def test_representation_selection_is_explicit_and_retains_competitors() -> None:
         (original, replace(other, turnover_unit="INR_lakh")), preferred=("cm_legacy",)
     )
     assert units.selected is None and units.reason == "incompatible_units"
+
+
+def test_turnover_unit_conversion_preserves_full_supported_precision() -> None:
+    row = decode_delivery(DELIVERY_HEADER + DELIVERY_ROW, session=NEW, source_id="owned").rows[0]
+    precise = replace(row, source_turnover=Decimal("1234567890123456789012345.12345678"))
+    assert precise.turnover_inr == Decimal("123456789012345678901234512345.678")

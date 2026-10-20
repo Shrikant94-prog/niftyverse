@@ -31,7 +31,12 @@ def number(value: object, *, integer: bool = False) -> Decimal | None:
     if integer and (result != result.to_integral_value() or result > 2**63 - 1):
         raise MarketDataFailure("invalid_quantity")
     exponent = result.as_tuple().exponent
-    if len(result.as_tuple().digits) > 38 or not isinstance(exponent, int) or exponent < -8:
+    if (
+        len(result.as_tuple().digits) > 38
+        or not isinstance(exponent, int)
+        or exponent < -8
+        or result.adjusted() >= 30
+    ):
         raise MarketDataFailure("numeric_precision")
     return result
 
@@ -95,6 +100,7 @@ class SourcePrice:
     turnover_unit: str = "INR"
     quantity_definition: str = "traded_security_units"
     isin: str | None = None
+    price_basis: str = "raw_traded"
 
     def __post_init__(self) -> None:
         text(
@@ -108,6 +114,7 @@ class SourcePrice:
             self.quantity_definition,
         )
         day(self.session_date)
+        text(self.price_basis)
         if not isinstance(self.raw_fields, tuple) or len(dict(self.raw_fields)) != len(
             self.raw_fields
         ):
@@ -175,6 +182,7 @@ def choose_representation(
     candidates: tuple[SourcePrice, ...],
     *,
     preferred: tuple[str, ...],
+    tolerances: tuple[tuple[str, Decimal], ...] = (),
 ) -> RepresentationChoice:
     """Exact conservative selection; competing material evidence never disappears."""
     if not preferred or len(set(preferred)) != len(preferred) or not candidates:
@@ -182,6 +190,8 @@ def choose_representation(
     for row in candidates:
         row.__post_init__()
     first = candidates[0]
+    if any(r.price_basis != first.price_basis for r in candidates):
+        return RepresentationChoice(None, candidates, "incompatible_basis")
     if any(r.key != first.key for r in candidates):
         raise MarketDataFailure("incompatible_business_key")
     if any(
@@ -203,11 +213,35 @@ def choose_representation(
         "last",
         "delivered_quantity",
         "delivered_percent",
+        "isin",
     )
+    price_fields = {
+        "open",
+        "high",
+        "low",
+        "close",
+        "turnover",
+        "settlement",
+        "previous_close",
+        "last",
+        "delivered_percent",
+    }
+    tolerance_map = dict(tolerances)
+    if len(tolerance_map) != len(tolerances) or any(
+        f not in price_fields or not isinstance(t, Decimal) or not t.is_finite() or t < 0
+        for f, t in tolerances
+    ):
+        raise MarketDataFailure("invalid_tolerance_policy")
     differing = tuple(
         f
         for f in fields
         if len({getattr(r, f) for r in candidates if getattr(r, f) is not None}) > 1
+        and not (
+            f in tolerance_map
+            and max(getattr(r, f) for r in candidates if getattr(r, f) is not None)
+            - min(getattr(r, f) for r in candidates if getattr(r, f) is not None)
+            <= tolerance_map[f]
+        )
     )
     if differing:
         return RepresentationChoice(None, candidates, "representation_conflict", differing)
@@ -222,6 +256,7 @@ class PriceGap:
     instrument_id: str
     on: date
     reason: str
+    evidence: tuple[SourcePrice, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -232,6 +267,7 @@ class EquityResult:
     catalogue_version: str
     calendar_version: str
     policy_version: str
+    source_evidence: tuple[SourcePrice, ...] = ()
 
 
 def normalize_equities(
@@ -247,6 +283,9 @@ def normalize_equities(
     source_complete: bool,
     source_failed: bool = False,
     asset_type: Literal["equity", "etf"] = "equity",
+    preferred_representations: tuple[str, ...] = (),
+    tolerances: tuple[tuple[str, Decimal], ...] = (),
+    required_fields: tuple[str, ...] = ("close",),
 ) -> EquityResult:
     day(start)
     day(end)
@@ -321,26 +360,69 @@ def normalize_equities(
                 )
                 if selection.status != "selected":
                     reason = selection.status
+                    dated_states = {
+                        r.status
+                        for r in catalogue.listings
+                        if r.instrument_id == instrument_id
+                        and r.evidence.admits(on, known_at)
+                        and r.role == "ordinary"
+                    }
+                    if not available and dated_states == {"delisted"}:
+                        reason = "not_listed"
+                    elif not available and dated_states == {"suspended"}:
+                        reason = "suspended"
                 elif selection.listing is not None:
                     candidates = available.get(selection.listing.listing_id, [])
                     if candidates:
-                        if any(c.values != candidates[0].values for c in candidates):
-                            reason = "conflicting_duplicate"
+                        profiles = tuple(dict.fromkeys(c.representation for c in candidates))
+                        preferred = preferred_representations or (
+                            profiles if len(profiles) == 1 else ()
+                        )
+                        if not preferred:
+                            reason = "representation_policy_required"
+                            continue_selection = None
                         else:
+                            choice = choose_representation(
+                                tuple(candidates), preferred=preferred, tolerances=tolerances
+                            )
+                            continue_selection = choice.selected
+                            if choice.reason:
+                                reason = choice.reason
+                        if continue_selection is not None:
                             output.append(
                                 NormalizedPrice(
                                     instrument_id,
                                     selection.listing.listing_id,
                                     "fund_units" if asset_type == "etf" else "shares",
-                                    candidates[0],
+                                    continue_selection,
                                     tuple(candidates),
                                 )
                             )
+                            if any(
+                                getattr(continue_selection, field) is None
+                                for field in required_fields
+                            ):
+                                reason = "source_null"
                     else:
                         reason = "source_unavailable" if source_failed else "missing_observation"
             if reason is not None:
-                gaps.append(PriceGap(instrument_id, on, reason))
-    blocked = {"identity_unresolved", "collision", "conflicting_duplicate"}
+                gaps.append(
+                    PriceGap(
+                        instrument_id,
+                        on,
+                        reason,
+                        tuple(r for values in available.values() for r in values),
+                    )
+                )
+    blocked = {
+        "identity_unresolved",
+        "collision",
+        "conflicting_duplicate",
+        "representation_conflict",
+        "representation_policy_required",
+        "incompatible_units",
+        "incompatible_basis",
+    }
     partial = any(g.reason not in {"closed_session", "policy_exclusion"} for g in gaps)
     coverage: Literal["complete", "partial", "quarantined"] = (
         "quarantined"
@@ -356,4 +438,5 @@ def normalize_equities(
         catalogue.version_id,
         calendar.version_id,
         policy.version_id,
+        source,
     )

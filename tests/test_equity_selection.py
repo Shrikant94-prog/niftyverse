@@ -167,3 +167,43 @@ def test_changed_or_ambiguous_identity_does_not_choose_a_row() -> None:
         source_complete=True,
     )
     assert not result.rows and result.gaps[0].reason == "identity_unresolved"
+
+
+def test_delisted_missing_and_material_conflict_keep_scope_and_evidence() -> None:
+    cat = catalogue()
+    dead = replace(cat, listings=tuple(replace(r, status="delisted") for r in cat.listings))
+    result = normalize_equities(
+        (),
+        catalogue=dead,
+        calendar=calendar(),
+        instrument_ids=("a",),
+        start=D1,
+        end=D2,
+        known_at=KNOWN,
+        policy=ListingSelectionPolicy("ordinary"),
+        source_complete=True,
+    )
+    assert (
+        len(result.gaps) == 1
+        and result.gaps[0].instrument_id == "a"
+        and result.gaps[0].reason == "not_listed"
+    )
+    source = decode_equity_json(wire(), source_id="owned", locator="p")[0]
+    competitor = replace(source, representation="cm_udiff", raw_sha256="b" * 64, quantity=11)
+    conflict = normalize_equities(
+        (source, competitor),
+        catalogue=cat,
+        calendar=calendar(),
+        instrument_ids=("a",),
+        start=D1,
+        end=D2,
+        known_at=KNOWN,
+        policy=ListingSelectionPolicy("ordinary"),
+        source_complete=True,
+        preferred_representations=("cm_udiff",),
+    )
+    assert conflict.coverage == "quarantined" and not conflict.rows
+    assert conflict.gaps[0].evidence == (source, competitor) and conflict.source_evidence == (
+        source,
+        competitor,
+    )

@@ -71,6 +71,7 @@ def test_exact_decimals_and_independent_schema() -> None:
         (wire(CH_TOT_TRADED_QTY=True), "invalid_quantity"),
         (wire(CH_TRADE_LOW_PRICE="105"), "invalid_ohlc"),
         (wire(CH_TOT_TRADED_VAL="-1"), "invalid_number"),
+        (wire(CH_TOT_TRADED_VAL="1e31"), "numeric_precision"),
     ],
 )
 def test_invalid_json_is_atomic(body: bytes, code: str) -> None:

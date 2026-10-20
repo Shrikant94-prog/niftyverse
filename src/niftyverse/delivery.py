@@ -1,10 +1,19 @@
 """Pure delivery quantities and explicitly comparable, rounded derived fractions."""
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from decimal import ROUND_HALF_EVEN, Decimal, localcontext
+from typing import Literal
 
-from niftyverse.market_prices import MarketDataFailure, SourcePrice, number
+from niftyverse.calendars import Calendar
+from niftyverse.identity import Catalogue, ListingSelectionPolicy
+from niftyverse.market_prices import (
+    EquityResult,
+    MarketDataFailure,
+    SourcePrice,
+    normalize_equities,
+    number,
+)
 from niftyverse.temporal import day, text
 
 
@@ -46,6 +55,8 @@ class SourceDelivery:
             raise MarketDataFailure("invalid_delivery_percent")
         if self.source_turnover_unit not in {None, "INR_lakh", "INR"}:
             raise MarketDataFailure("incompatible_turnover_unit")
+        if self.source_turnover is not None and self.source_turnover_unit is None:
+            raise MarketDataFailure("unknown_turnover_unit")
 
     @property
     def key(self) -> tuple[str, str, date]:
@@ -55,7 +66,12 @@ class SourceDelivery:
     def turnover_inr(self) -> Decimal | None:
         if self.source_turnover is None:
             return None
-        return self.source_turnover * (100000 if self.source_turnover_unit == "INR_lakh" else 1)
+        with localcontext() as context:
+            context.prec = 50
+            converted = self.source_turnover * (
+                100000 if self.source_turnover_unit == "INR_lakh" else 1
+            )
+        return number(converted)
 
 
 @dataclass(frozen=True)
@@ -103,3 +119,60 @@ def delivery_fraction(
             )
         rounded = exact.quantize(Decimal("0.000000000001"), rounding=ROUND_HALF_EVEN)
     return DeliveryFraction(rounded, None, delivery.published_percent)
+
+
+def normalize_deliveries(
+    rows: tuple[SourceDelivery, ...],
+    *,
+    catalogue: Catalogue,
+    calendar: Calendar,
+    instrument_ids: tuple[str, ...],
+    start: date,
+    end: date,
+    known_at: datetime,
+    policy: ListingSelectionPolicy,
+    source_complete: bool,
+    asset_type: Literal["equity", "etf"] = "equity",
+) -> EquityResult:
+    """Reuse dated identity/session selection for quantity-only source records.
+
+    OHLC remains null and is never published as a price observation. Feed this
+    result only to a security_daily_details partition, retaining delivery gaps.
+    """
+    source = []
+    for row in rows:
+        row.__post_init__()
+        source.append(
+            SourcePrice(
+                row.symbol,
+                row.series,
+                row.session_date,
+                None,
+                None,
+                None,
+                None,
+                row.traded_quantity,
+                row.turnover_inr,
+                row.source_id,
+                row.representation,
+                row.raw_sha256,
+                row.locator,
+                row.raw_fields,
+                delivered_quantity=row.delivered_quantity,
+                delivered_percent=row.published_percent,
+                quantity_definition=row.quantity_definition,
+            )
+        )
+    return normalize_equities(
+        tuple(source),
+        catalogue=catalogue,
+        calendar=calendar,
+        instrument_ids=instrument_ids,
+        start=start,
+        end=end,
+        known_at=known_at,
+        policy=policy,
+        source_complete=source_complete,
+        asset_type=asset_type,
+        required_fields=(),
+    )
