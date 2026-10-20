@@ -4,6 +4,14 @@
 
 ## Active work
 
+- **Phase 06 active:** `phase-06` created from clean tracked local main/origin main `f4c9712`; owner untracked `Sample_Files/` preserved. Local commits, merge and GitHub push authorized; retain branch, do not start Phase 07.
+- **Checkpoint:** NV-06-01 verified; NV-06-02 next. Owner supplied exact original under `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; hash matches. [Audit observations](docs/evidence/06-20261020-audit.md) record all inherited counts and seven notice conflicts, unchanged original, eight passing parser tests and static checks. PH-06-GATE still awaits integrated replay/publication.
+- **Prerequisites observed:** Phase 04/05 completion evidence inspected against containing Git history; current pre-edit full-extra suite `uv run --frozen --all-extras pytest -q`: **264 passed** on main's code, 23.43 s.
+- **Acceptance binding:** NV-06-01 exact original → 72 rows/756 literal strings/50 failed transitions/11 duplicate-event rows/5 weekend flags, all observed. NV-06-02 owned timelines → accepted/rejected/pending/knowledge-time corrections, same-date and conflicting events, explicit component identities and external contradiction; independent expected intervals before implementation.
+- **Next:** implement/test correction replay, then evidenced publication and a small independently verified interval. Broad historical regions remain blocked; independent consistency does not certify them.
+
+## Previous completion (retained prerequisite)
+
 - **Phase:** 05 - Identities, contracts foundation and calendars. All checkpoints and PH-05-GATE verified. Local merge commit and GitHub push authorized; retain phase-05. Do not start Phase 06.
 - **Status:** Phase 05 verified locally and in all eight hosted jobs; integrated into local main by the containing merge commit. Git remote refs establish publication.
 - **Start:** phase-05 created from inspected clean local main/origin main `16b6cc52e904a372d330be2d24ba3ffec0460c6b`. Owner untracked `Sample_Files/` preserved. No reset, alternative start or discarded work.
@@ -12,9 +20,9 @@
 
 ## Read first
 
-1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 05 acceptance/gate](docs/phases/05.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. [Final acceptance/platform evidence](docs/evidence/05-20261020-completion.md), [identity, manifest, market-state and calendar usage/limits](docs/identities.md).
-3. Only for a concrete dependency: [identity/time/listing policies](docs/specs/data-model.md#s7-1), [temporal selection](docs/specs/data-model.md#s7-3), [delisted inputs](docs/specs/data-model.md#s7-4); `identity.py`, `temporal.py`, `delisted.py`, `market_state.py`, `calendars.py` and their tests. Do not reopen settled source research or unchanged expensive checks.
+1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 06 acceptance/gate](docs/phases/06.md), [workflow](docs/WORKFLOW.md#phase-loop).
+2. [Membership contract](docs/specs/membership.md#s8), [original input identity](docs/INPUTS.md), [Phase 05 prerequisite](docs/evidence/05-20261020-completion.md), [Phase 04 prerequisite](docs/evidence/04-20261020-completion.md).
+3. Current checkpoint only: membership parser/replay/publication code and tests as introduced; dated identity `Catalogue.resolve`, `Evidence`, `SourceTime` and immutable bundle interfaces when required. Do not reopen unrelated source research.
 
 ## Acceptance mapping
 
@@ -41,4 +49,5 @@
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05 | PH-05-GATE verified; integrated into local main | [Completion](docs/evidence/05-20261020-completion.md) |
-| 06-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
+| 06 | active; NV-06-01 verified | [Original audit](docs/evidence/06-20261020-audit.md); integrated gate pending |
+| 07-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
