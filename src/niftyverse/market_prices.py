@@ -164,6 +164,60 @@ class NormalizedPrice:
 
 
 @dataclass(frozen=True)
+class RepresentationChoice:
+    selected: SourcePrice | None
+    evidence: tuple[SourcePrice, ...]
+    reason: str | None
+    differing_fields: tuple[str, ...] = ()
+
+
+def choose_representation(
+    candidates: tuple[SourcePrice, ...],
+    *,
+    preferred: tuple[str, ...],
+) -> RepresentationChoice:
+    """Exact conservative selection; competing material evidence never disappears."""
+    if not preferred or len(set(preferred)) != len(preferred) or not candidates:
+        raise MarketDataFailure("invalid_representation_policy")
+    for row in candidates:
+        row.__post_init__()
+    first = candidates[0]
+    if any(r.key != first.key for r in candidates):
+        raise MarketDataFailure("incompatible_business_key")
+    if any(
+        (r.turnover_unit, r.quantity_definition)
+        != (first.turnover_unit, first.quantity_definition)
+        for r in candidates
+    ):
+        return RepresentationChoice(None, candidates, "incompatible_units")
+    fields = (
+        "open",
+        "high",
+        "low",
+        "close",
+        "quantity",
+        "turnover",
+        "trades",
+        "settlement",
+        "previous_close",
+        "last",
+        "delivered_quantity",
+        "delivered_percent",
+    )
+    differing = tuple(
+        f
+        for f in fields
+        if len({getattr(r, f) for r in candidates if getattr(r, f) is not None}) > 1
+    )
+    if differing:
+        return RepresentationChoice(None, candidates, "representation_conflict", differing)
+    ordered = [r for profile in preferred for r in candidates if r.representation == profile]
+    if not ordered:
+        return RepresentationChoice(None, candidates, "unsupported_representation")
+    return RepresentationChoice(ordered[0], candidates, None)
+
+
+@dataclass(frozen=True)
 class PriceGap:
     instrument_id: str
     on: date

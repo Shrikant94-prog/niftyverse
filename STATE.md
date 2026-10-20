@@ -4,16 +4,16 @@
 
 ## Active work
 
-- **Phase:** 07 - Historical equities and delivery. NV-07-01 verified; NV-07-02 next: bhavcopy/delivery mappings and source-representation selection. Do not start Phase 08.
+- **Phase:** 07 - Historical equities and delivery. NV-07-01/02 verified; NV-07-03 next: shared validation, reconciliation, gaps/anomalies and optional states. Do not start Phase 08.
 - **Start:** `phase-07` created from inspected local main/origin main `0e030f98a8de55598a17eddf4c4a27ae46d841b3`. Tracked files clean; owner untracked `Sample_Files/` preserved. No reset, alternate revision or imported legacy implementation/environment. Local commits, merge and GitHub push authorized; retain branch.
 - **Prerequisites:** Phase 02/03/04/05 evidence inspected against containing Git ancestry, actual source/report interfaces and Phase 06 completion. Current full-extra pre-edit regression **300 passed**, 39.77 s. Actual old/recent equity JSON now verified on five rows through the officially linked route/type, separate from initial failed candidates and SLBMH lending data. Historical identity and optional surveillance source limitations remain explicit.
 - **Checkpoint assumptions:** normalize only evidenced raw traded prices/quantities; preserve close/settlement, source units/nulls and dated listing lineage. No current-list backfill, price filling, NAV/index substitution or optional-surveillance dependency in price-only work. Use shared publication validation and existing safe report decoder/transport; full DataPlan remains Phase 09.
-- **Next:** NV-07-02 tests before report/delivery adapter implementation; validate source-wide report rows before selected projection, preserve source generations/units and delivery null reasons. Use retained actual legacy/UDiFF/current delivery specimens plus explicitly bounded old delivery schema investigation. Execute remaining checkpoints sequentially, then final gate, reconciliation, local merge and push.
+- **Next:** NV-07-03 tests before shared sink integration and field/unit tolerance reconciliation. Preserve both conflicting evidence paths and scope conflicts; keep plausible extreme moves as warnings. Add exact supplemental daily fields/delivery persistence via an additive migration if needed; test migration/rollback and direct/DB parity. Optional market states must reuse Phase 05 schema without price-only acquisition. Then ETF checkpoint and final gate/integration.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 07 acceptance/gate](docs/phases/07.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. Current checkpoint: [equity/delivery semantics](docs/specs/analytics.md#s12-1), [report partition scope](docs/capabilities/partitions.md), [JSON/selection observations](docs/evidence/07-20261020-json.md), [source evidence](docs/capabilities/phase07-equity-observations.json). ETF [source scope](docs/specs/sources.md#s5-8) when checkpoint 04 begins.
+2. Current checkpoint: [equity/delivery semantics](docs/specs/analytics.md#s12-1), [shared validation/anomaly rules](docs/specs/verification.md#s16-4-1), [report observations](docs/evidence/07-20261020-reports.md), [source evidence](docs/capabilities/phase07-equity-observations.json). ETF [source scope](docs/specs/sources.md#s5-8) when checkpoint 04 begins.
 3. [Capability report](docs/capabilities/README.md), [partition contracts](docs/capabilities/partitions.md), [report samples](docs/evidence/02-20261018-reports.md), [ETF samples](docs/evidence/02-20261018-etf-discovery.md). Inspect only affected `ingestion.py`, `batches.py`, `identity.py`, `calendars.py`, `market_state.py`, transport/publication schemas and their tests. Prerequisites: [02](docs/evidence/02-20261018-completion.md), [03](docs/evidence/03-20261019-completion.md), [04](docs/evidence/04-20261020-completion.md), [05](docs/evidence/05-20261020-completion.md).
 
 ## Acceptance mapping
@@ -21,14 +21,14 @@
 | Checkpoint | Input and independent expected outcome / current result |
 |---|---|
 | NV-07-01 AC1/2/3 | **16 focused tests pass**: exact decimal/source units, failed/truncated/overlapping pages/windows, source mutations and schema changes; EQ/BE/EQ plus BL yields three rows/30 units/3037.5000 turnover, EQ-only distinct exclusion. Actual old/recent JSON five rows and independent report value references match. [Evidence](docs/evidence/07-20261020-json.md); source/tests pinned by containing checkpoint commit. |
-| NV-07-02 AC1/2/3/4 | Real retained legacy/UDiFF report bytes and owned old/new/delivery fixtures; source-wide validation before projection, absent/zero delivery, compatible denominators and reason-coded nulls. Pending checkpoint 01. |
+| NV-07-02 AC1/2/3/4 | **10 report/delivery cases** pass; combined phase suite **26 passed**. Whole actual legacy/UDiFF sources decode 1690/3675 rows; actual old/current delivery 1636/3511 rows. Old count/delivered-total reconcile; exact RELIANCE derived fractions/published percentages agree. Unsupported/partial/poisoned partitions and incompatible/zero/unknown denominators explicit. [Evidence](docs/evidence/07-20261020-reports.md). |
 | NV-07-03 AC1/2/3/4 | Equal/unit-mismatch/material-conflict pairs, valid crash/split, delisted gap, optional overlapping states/band touch with unchanged volume. Pending checkpoint 02. |
 | NV-07-04 AC1/2/3 | Verified ETF source samples plus dated rename/reuse/metadata absence/conflict fixtures; fund-unit/traded-price semantics and no historical current-classification projection. Pending checkpoint 03. |
 | PH-07-GATE | Integrated JSON/report reconciliation, explicit gap states, dated selection with no duplicate turnover, renamed/dead fixtures and ETF semantics. Not yet run. |
 
 ## Verification and limitations
 
-- NV-07-01 formatter/lint/strict mypy and 16 focused tests pass. Independent source investigation made 12 direct requests with one attempt each under recorded finite sets; actual linked cash-equity JSON is now experimental for the exact tested windows. Data-only envelope has no verified provider cursor/count contract; software page metadata is explicit caller evidence. No full-history support claim.
+- NV-07-01/02 formatter/lint/strict mypy and **26 focused tests** pass. JSON source investigation made 12 direct requests in recorded finite sets; one additional specifically bounded old-delivery request established its actual record contract. Actual cash-equity JSON remains experimental for exact windows. Data-only envelope has no verified provider cursor/count contract; software page metadata is explicit caller evidence. No full-history support claim.
 - Phase 06 completed at verified source `60203d5`, merged/pushed as `0e030f9`; 300 full-extra tests, 256 core/3 optional skips and all eight hosted jobs passed. Actual membership verification covers only the declared KWIL component window. Full-index history remains unverified; explicit-universe equity work proceeds independently.
 - Original owner membership CSV and `Sample_Files/` remain preserved. No next-phase work, dependency upgrades or unrelated refactors authorized.
 
@@ -43,5 +43,5 @@
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
 | 05 | verified, integrated and pushed | [Completion](docs/evidence/05-20261020-completion.md) |
 | 06 | verified, integrated and pushed | [Completion](docs/evidence/06-20261020-completion.md) |
-| 07 | active, NV-07-01 verified | [JSON/selection](docs/evidence/07-20261020-json.md); other checkpoints/gate pending |
+| 07 | active, NV-07-01/02 verified | [JSON/selection](docs/evidence/07-20261020-json.md), [reports/delivery](docs/evidence/07-20261020-reports.md); remaining checkpoints/gate pending |
 | 08-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
