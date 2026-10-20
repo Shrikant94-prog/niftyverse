@@ -37,13 +37,20 @@ else:
 
 import niftyverse  # noqa: E402
 import niftyverse.calendars  # noqa: E402
+import niftyverse.adapters.equity_json  # noqa: E402
+import niftyverse.adapters.equity_reports  # noqa: E402
+import niftyverse.adapters.etf_catalogue  # noqa: E402
+import niftyverse.delivery  # noqa: E402
 import niftyverse.delisted  # noqa: E402
+import niftyverse.equity_quality  # noqa: E402
+import niftyverse.etfs  # noqa: E402
 import niftyverse.filing_inline  # noqa: E402
 import niftyverse.filing_xml  # noqa: E402
 import niftyverse.filings  # noqa: E402
 import niftyverse.identity  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
 import niftyverse.market_state  # noqa: E402
+import niftyverse.market_prices  # noqa: E402
 import niftyverse.membership  # noqa: E402
 import niftyverse.membership_audit  # noqa: E402
 import niftyverse.membership_identity  # noqa: E402
@@ -274,6 +281,54 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
     restore(Path(folder) / "backup", Path(folder) / "restored")
     with Store(Path(folder) / "restored") as catalog:
         assert catalog.read_table("equity_daily").num_rows == 1
+
+    # Installed Phase 07 price/details and ETF contracts under the audit guard.
+    from niftyverse.adapters.equity_json import decode_equity_json
+    from niftyverse.adapters.etf_catalogue import decode_etf_catalogue
+    from niftyverse.identity import ListingSelectionPolicy
+    from niftyverse.etfs import build_etf_catalogue
+    from niftyverse.market_prices import normalize_equities
+    from niftyverse.storage.equity import make_price_batch
+    from niftyverse.calendars import Calendar, Session
+
+    day = date(2026, 10, 20)
+    known = datetime(2026, 10, 20, 18, tzinfo=UTC)
+    raw_price = json.dumps({"data":[{
+        "CH_SYMBOL":"OWNED", "CH_SERIES":"BE", "mTIMESTAMP":"20-Oct-2026",
+        "CH_OPENING_PRICE":"100", "CH_TRADE_HIGH_PRICE":"102", "CH_TRADE_LOW_PRICE":"99",
+        "CH_CLOSING_PRICE":"101.25", "CH_TOT_TRADED_QTY":10, "CH_TOT_TRADED_VAL":"1012.50",
+        "COP_DELIV_QTY":4, "COP_DELIV_PERC":"40.00",
+    }]}).encode()
+    parsed = decode_equity_json(raw_price,source_id="owned",locator="owned:1")
+    from dataclasses import replace
+    raw_metadata = (
+        b"Symbol,Underlying Asset,SecurityName,DateofListing,MarketLot,ISINNumber,FaceValue,"
+        b"ETF Underlying,Underlying Key\nOWNED,Gold,Fund,08-Jan-02,1,INF000000001,1,COMMODITY,GOLD\n"
+    )
+    metadata_snapshot = decode_etf_catalogue(raw_metadata,observed_at=known,source_id="owned")
+    etf_cat = build_etf_catalogue(metadata_snapshot,(replace(parsed[0],isin="INF000000001"),),
+                                  version_id="installed-etf",listing_known_at=known)
+    etf_cal = Calendar("installed-eod","NSE","CM",known,(
+        Session(day,"trading",datetime(2026,10,20,3,45,tzinfo=UTC),
+                datetime(2026,10,20,10,tzinfo=UTC),"Asia/Kolkata","owned","session:1"),))
+    result = normalize_equities(parsed,catalogue=etf_cat,calendar=etf_cal,
+                                instrument_ids=(etf_cat.instruments[0].instrument_id,),
+                                start=day,end=date(2026,10,21),known_at=known,
+                                policy=ListingSelectionPolicy("ordinary"),source_complete=True,asset_type="etf")
+    etf_batch = make_price_batch(result,
+        partition=Partition("etf_daily",day,date(2026,10,21),(etf_cat.listings[0].listing_id,),
+                            ("close","quantity"),"raw_traded","json-v1","installed-etf","v1","owned grid"),
+        capture=Capture(raw_price,"direct_raw","owned","owned:1"),check_id="installed-etf",
+        checked_at=known,known_at=known)
+    assert result.coverage=="complete" and result.rows[0].quantity_unit=="fund_units"
+    assert dict(etf_batch.tables)["security_daily_details"]["delivery_fraction"].to_pylist()==[Decimal("0.400000000000")]
+    with Store(Path(folder)/"etf") as catalog:
+        publish(catalog,etf_batch)
+        expected_etf = catalog.read_table("etf_daily").drop(["occurrence_id"])
+        assert expected_etf["close"].to_pylist()==[Decimal("101.25000000")]
+    write_direct(etf_batch,Path(folder)/"etf-direct",encoding="csv")
+    assert read_bundle(Path(folder)/"etf-direct").table("etf_daily").equals(expected_etf)
+    assert metadata_snapshot.rows[0].value("classification",on=date(2016,9,1),known_at=known).value is None
 
     def denied(*args, **kwargs):
         raise AssertionError("direct/render path opened a DB or materialized data")

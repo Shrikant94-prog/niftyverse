@@ -13,6 +13,8 @@ from typing import Any, Literal
 import pyarrow as pa
 
 from niftyverse.core import ValidationError
+from niftyverse.delivery import SourceDelivery, delivery_fraction
+from niftyverse.market_prices import MarketDataFailure, number, validate_price_fields
 from niftyverse.market_state import MarketStateObservation
 from niftyverse.storage.schemas import ANALYTICAL_KEY, KEYS, SCHEMAS
 
@@ -176,6 +178,8 @@ class ValidatedBatch:
                 allowed |= {"filing_documents", "filing_source_assertions"}
             elif self.partition.dataset == "filing_source_assertions":
                 allowed.add("filing_documents")
+            elif self.partition.dataset in {"equity_daily", "etf_daily"}:
+                allowed.add("security_daily_details")
             if name not in allowed:
                 raise ValidationError("table incompatible with partition dataset")
             if name not in SCHEMAS or not table.schema.equals(SCHEMAS[name], check_metadata=False):
@@ -188,6 +192,45 @@ class ValidatedBatch:
             if len(set(keys)) != len(keys):
                 raise ValidationError("duplicate business key in atomic partition")
             for row in rows:
+                if name == "security_daily_details":
+                    if row["raw_sha256"] != self.capture.sha256:
+                        raise MarketDataFailure("details_capture_mismatch")
+                    if row["quantity_unit"] not in {"shares", "fund_units"}:
+                        raise MarketDataFailure("invalid_quantity_unit")
+                    for field in ("settlement_price", "last_price", "previous_close"):
+                        number(row[field])
+                    number(row["trades"], integer=True)
+                    delivery = SourceDelivery(
+                        row["listing_id"],
+                        row["series"],
+                        row["session_date"],
+                        row["comparable_quantity"],
+                        row["delivered_quantity"],
+                        row["published_delivery_percent"],
+                        self.capture.source_id,
+                        row["representation"],
+                        row["raw_sha256"],
+                        row["locator"],
+                        (),
+                        row["source_turnover"],
+                        row["source_turnover_unit"],
+                        row["quantity_definition"],
+                    )
+                    fraction = delivery_fraction(delivery)
+                    if (row["delivery_fraction"], row["delivery_reason"]) != (
+                        fraction.value,
+                        fraction.reason,
+                    ):
+                        raise MarketDataFailure("invalid_delivery_derivation")
+                if name in {"equity_daily", "etf_daily"}:
+                    validate_price_fields(
+                        open=row["open"],
+                        high=row["high"],
+                        low=row["low"],
+                        close=row["close"],
+                        quantity=row["quantity"],
+                        turnover=row["turnover"],
+                    )
                 if name == "market_state_observations":
                     MarketStateObservation(**row)
                     if not self.partition.start <= row["observed_on"] < self.partition.end:
@@ -214,6 +257,18 @@ class ValidatedBatch:
                     raise ValidationError("incompatible quantity unit")
                 if name.endswith("daily") and row["close"] is None and not row["missing_reason"]:
                     raise ValidationError("missing price needs a reason")
+        price_rows = rows_by_name.get("equity_daily", []) + rows_by_name.get("etf_daily", [])
+        prices = {(r["listing_id"], r["series"], r["session_date"]): r for r in price_rows}
+        if prices:
+            for detail in rows_by_name.get("security_daily_details", []):
+                price = prices.get(
+                    (detail["listing_id"], detail["series"], detail["session_date"])
+                )
+                if price is None or (price["quantity"], price["quantity_unit"]) != (
+                    detail["comparable_quantity"],
+                    detail["quantity_unit"],
+                ):
+                    raise MarketDataFailure("price_details_quantity_conflict")
         documents = {r["document_id"]: r for r in rows_by_name.get("filing_documents", [])}
         assertions = {
             r["assertion_id"]: r for r in rows_by_name.get("filing_source_assertions", [])

@@ -298,6 +298,7 @@ def restore(source: Path, destination: Path) -> None:
             if conn.execute("SELECT max(version) FROM schema_migrations").fetchone() not in {
                 (2,),
                 (3,),
+                (4,),
             }:
                 raise ValidationError("unsupported restored catalog schema")
             conn.execute("SELECT count(*) FROM occurrences").fetchone()

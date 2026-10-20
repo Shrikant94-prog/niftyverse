@@ -1,0 +1,62 @@
+{
+  "observed_on": "2026-10-20",
+  "status": "experimental",
+  "provider": "NSE",
+  "dataset": "cash-equity raw traded EOD JSON",
+  "wire_profile": "nse_equity_json_v1",
+  "source_page": "https://www.nseindia.com/report-detail/eq_security",
+  "linked_script": {
+    "url": "https://www.nseindia.com/dist/js/sections/reports/security-wise-archives.js?v=16102026",
+    "sha256": "442c8fed73286d7856e9dbb684655c3f4c8c597057a38316e7eeb687f5e41960"
+  },
+  "column_contract": {
+    "url": "https://www.nseindia.com/json/reports/security-archives-priceVolumeDeliverable.json",
+    "sha256": "68269a91b5498e74ec7d8525a2b937587f1c9eb723ef154b65ff5085e1f8ec91",
+    "turnover_caption": "Turnover INR",
+    "quantity_caption": "Total Traded Quantity",
+    "delivery_caption": "% Dly Qt to Traded Qty"
+  },
+  "observations": [
+    {
+      "symbol": "RELIANCE",
+      "from_inclusive": "2016-09-01",
+      "to_inclusive": "2016-09-02",
+      "type": "priceVolumeDeliverable",
+      "series": "ALL",
+      "rows": 2,
+      "bytes": 868,
+      "sha256": "1eac23ad20fcf4818ec7995f4bee21a6f7120ee15636a9c8e38ae8ac85b19d2b",
+      "observed_at": "2026-10-20T15:50:42.720118+00:00"
+    },
+    {
+      "symbol": "RELIANCE",
+      "from_inclusive": "2026-10-14",
+      "to_inclusive": "2026-10-16",
+      "type": "priceVolumeDeliverable",
+      "series": "ALL",
+      "rows": 3,
+      "bytes": 1289,
+      "sha256": "921a859787dcf578b3432903a59f0ddcb5a9767fd918e9bc2ea24cfdc13e99ee",
+      "observed_at": "2026-10-20T15:50:40.769892+00:00"
+    }
+  ],
+  "independent_references": [
+    {"on": "2016-09-01", "close": "1029.2", "quantity": 9742454, "turnover_INR": "10234626988.9", "comparison": "retained independently inspected legacy CM report"},
+    {"on": "2026-10-16", "close": "1211.2", "quantity": 17225283, "turnover_INR": "20794678894.3", "comparison": "retained independently inspected UDiFF CM report"}
+  ],
+  "limitations": [
+    "Two bounded windows only; not continuous or whole-universe coverage",
+    "Observed data-only JSON envelope has no verified cursor/count contract; page metadata in software tests is explicit caller evidence, not invented NSE response fields",
+    "Collection-time observation does not establish historical publication availability",
+    "Prior no-type candidate returned HTTP 500, old historical route HTTP 503",
+    "Separately linked priceAndVolumeDataPerSecurity returns SLBMH lending rows and is not cash-equity support",
+    "No challenge bypass, proxy, alternate provider or source scope expansion"
+  ],
+  "udiff_format_reference": {
+    "url": "https://nsearchives.nseindia.com/web/mediaattachment/2026-06/UDiFF_trade_and_Bhavcopy_file_formats_20260630115803.xlsx",
+    "sha256": "b9f2fa369af20381374cdb40c3ebc96c43029401e057225599cfe63b288ba3e8",
+    "sheet": "Bhavcopy File Format",
+    "fields": ["ClsPric", "SttlmPric", "TtlTradgVol", "TtlTrfVal"],
+    "limitation": "format evidence and representative source comparison, not full historical generation coverage"
+  }
+}

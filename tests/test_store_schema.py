@@ -128,7 +128,7 @@ def test_catalog_typed_schema_and_old_metadata_migration(tmp_path: Path) -> None
     with Store(root) as store:
         assert store.connection.execute(
             "SELECT max(version) FROM schema_migrations"
-        ).fetchone() == (3,)
+        ).fetchone() == (4,)
         for name, schema in SCHEMAS.items():
             table = store.read_table(name)
             assert table.schema.remove(0).equals(schema, check_metadata=False)

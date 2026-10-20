@@ -37,7 +37,11 @@ Content objects, capture envelopes, assertion occurrences and source checks
 have separate identities. Withdrawal is evidenced state with a reason, not
 inferred absence. Schema migrations run only on explicit store open, under
 the writer lock, with a checkpointed pre-migration database backup and a
-transaction per additive version. Version 2 adds nullable SDK metadata; old
+transaction per additive version. Version 3 adds optional market-state observations;
+version 4 adds supplemental security EOD/delivery details while retaining the
+existing price-table layout. Both preserve retained old backups and rollback
+failed migrations. [Equity output semantics](equities.md#shared-output-boundary)
+describe the added fields and shared validation. Version 2 adds nullable SDK metadata; old
 unknowns remain null. Downgrades/newer unsupported versions fail. Fixture-v1
 artifacts/API remain readable through their original reader.
 

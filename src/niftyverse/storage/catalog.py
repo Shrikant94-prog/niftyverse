@@ -17,7 +17,7 @@ from niftyverse.storage.durable import sync_directory, sync_file
 from niftyverse.storage.paths import diagnose_store
 from niftyverse.storage.schemas import SCHEMAS
 
-CATALOG_VERSION = 3
+CATALOG_VERSION = 4
 
 
 class WriterBusy(RuntimeError):
@@ -84,8 +84,8 @@ def migrate(
                     "status VARCHAR NOT NULL, raw_sha256 VARCHAR NOT NULL, reason VARCHAR)"
                 )
                 for name, definition in SCHEMAS.items():
-                    if name == "market_state_observations":
-                        continue  # Introduced by migration 3, including on fresh databases.
+                    if name in {"market_state_observations", "security_daily_details"}:
+                        continue  # Added by their own migration, including on fresh databases.
                     empty = pa.Table.from_batches([], schema=definition)
                     connection.register("schema_input", empty)
                     connection.execute(
@@ -103,6 +103,19 @@ def migrate(
                 try:
                     connection.execute(
                         "CREATE TABLE market_state_observations AS "
+                        "SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
+                        "* FROM schema_input WHERE false"
+                    )
+                finally:
+                    connection.unregister("schema_input")
+            elif version == 4:
+                connection.register(
+                    "schema_input",
+                    pa.Table.from_batches([], schema=SCHEMAS["security_daily_details"]),
+                )
+                try:
+                    connection.execute(
+                        "CREATE TABLE security_daily_details AS "
                         "SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
                         "* FROM schema_input WHERE false"
                     )
