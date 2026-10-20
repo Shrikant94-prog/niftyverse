@@ -501,6 +501,12 @@ def compile_plan(
     }:
         raise ValidationError("repair partition outside requested graph")
     jobs = [replace(j, reuse=j.reuse and not should_recheck(plan, tuple(jobs), j)) for j in jobs]
+    reusable_ids: set[str] = set()
+    for index, job in enumerate(jobs):
+        if job.reuse and all(d in reusable_ids for d in job.dependencies):
+            reusable_ids.add(job.id)
+        else:
+            jobs[index] = replace(job, reuse=False)
     estimate = sum(
         j.capability.requests_per_job
         for j in jobs

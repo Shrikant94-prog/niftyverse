@@ -79,6 +79,11 @@ as NSE sessions. `operation="repair"` requires exact `repair_partitions` identit
 from the graph. `operation="reconcile"` rechecks the full requested interval.
 No operation expands dates silently. Corrected versions retain old assertions;
 unchanged checks advance source-check time without inventing fact versions.
+The run records its starting assertion identities. A changed dependency
+invalidates only affected jobs in the current DAG, including after resume;
+already reconciled units in that run remain reusable. `changed_partitions`
+reports these persistent run changes. Request estimates reserve for dependent
+rechecks even when an unchanged source check may ultimately avoid them.
 Future research materializations consume the existing immutable history and
 correction lineage; this phase does not implement their feature recomputation.
 
@@ -126,6 +131,12 @@ Explain does not open the live catalog or inspect input bundles. For explicit
 local-cache explain in Python, read `committed_cache(store)` in an owning Store
 context and pass those entries to the compiler. The executor independently
 rechecks actual committed state and never trusts caller cache hints as facts.
+The result's bounded `quality` report separates requested dates, observed
+sessions, null counts, parser/schema and source identities, validated coverage
+and actual published coverage. Cached detail remains in the immutable catalog;
+unknown timing, staleness, provisional status or unresolved actions are reported
+as unknown/not assessed rather than guessed. Progress-consumer exceptions do
+not turn acknowledged facts into quarantined data.
 
 Source windows and historical membership retain the prerequisite phases'
 declared limits. Process-crash publication guarantees and power-loss limits

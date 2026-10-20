@@ -10,7 +10,7 @@ import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from niftyverse.batches import ValidatedBatch, identity
 from niftyverse.core import ValidationError
@@ -48,6 +48,21 @@ class PageEvidence:
     snapshot_id: str | None
     rows: int
 
+    def __post_init__(self) -> None:
+        if (
+            not isinstance(self.cursor, str)
+            or not self.cursor
+            or self.next_cursor is not None
+            and (not isinstance(self.next_cursor, str) or not self.next_cursor)
+            or self.snapshot_id is not None
+            and (not isinstance(self.snapshot_id, str) or not self.snapshot_id)
+            or not isinstance(self.content_sha256, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", self.content_sha256)
+            or type(self.rows) is not int
+            or self.rows < 0
+        ):
+            raise ValidationError("invalid page evidence")
+
 
 @dataclass(frozen=True)
 class Acquired:
@@ -55,6 +70,19 @@ class Acquired:
     pages: tuple[PageEvidence, ...] = ()
     expected_source_rows: int | None = None
     reconciliation_evidence: str | None = None
+
+    def __post_init__(self) -> None:
+        if (
+            not isinstance(self.batch, ValidatedBatch)
+            or not isinstance(self.pages, tuple)
+            or any(not isinstance(p, PageEvidence) for p in self.pages)
+        ):
+            raise ValidationError("invalid acquired batch/pages")
+
+
+class _ObserverFailure(Exception):
+    def __init__(self, error: BaseException) -> None:
+        self.error = error
 
 
 class Provider(Protocol):
@@ -90,6 +118,8 @@ class ExecutionResult:
     peak_pending: int = 0
     reused_partitions: int = 0
     history_snapshot_id: str | None = None
+    quality: dict[str, Any] = field(default_factory=dict)
+    changed_partitions: tuple[str, ...] = ()
 
 
 def _validate(
@@ -142,14 +172,19 @@ class _Sink:
     memory: list[ValidatedBatch] = field(default_factory=list)
     files: list[tuple[Job, int, bool]] = field(default_factory=list)
     retained_bytes: int = 0
+    changed_jobs: set[str] = field(default_factory=set)
 
     def publish(self, job: Job, batch: ValidatedBatch) -> bool:
         """True when publicly acknowledged; file units wait for run manifest."""
         p = self.graph.plan
         if self.store is not None:
+            from niftyverse.storage.builds import latest_occurrence
             from niftyverse.storage.publication import publish
 
-            publish(self.store, batch)
+            previous = latest_occurrence(self.store, job.partition.identity)
+            receipt = publish(self.store, batch)
+            if receipt.occurrence_id != previous:
+                self.changed_jobs.add(job.id)
             return True
         if p.mode == "memory":
             size = len(batch.capture.body) + sum(t.nbytes for _, t in batch.tables)
@@ -195,6 +230,15 @@ class _Sink:
             "retry_limit": p.max_attempts,
             "resume_limit": result.resume_limit,
             "raw_replay_available": p.retain_raw,
+            "quality": {
+                **result.quality,
+                "partitions": {
+                    key: {**detail, "coverage": detail["validated_coverage"]}
+                    if result.states.get(key) in {"spooled", "spooled_partial"}
+                    else detail
+                    for key, detail in result.quality["partitions"].items()
+                },
+            },
         }
         publish_bundle(
             p.destination,
@@ -240,22 +284,29 @@ async def execute(
         raise ValidationError("direct extraction has no durable resume ID; bounded re-extract")
     run = None
     reusable: set[str] = set()
+    finished_in_run: set[str] = set()
     if store is not None:
         from niftyverse.storage.builds import committed_cache, start_run
 
         cache = committed_cache(store)
         for job in graph.jobs:
-            if not should_recheck(p, graph.jobs, job) and any(c.satisfies(job) for c in cache):
-                reusable.add(job.id)
-            elif resume and store.connection.execute(
+            if resume and store.connection.execute(
                 "SELECT count(*) FROM source_checks WHERE check_id=?",
                 [identity((resume, job.id))],
             ).fetchone() == (1,):
+                finished_in_run.add(job.id)
+            if not should_recheck(p, graph.jobs, job) and any(c.satisfies(job) for c in cache):
                 reusable.add(job.id)
+            elif job.id in finished_in_run:
+                reusable.add(job.id)
+        may_fetch: set[str] = set()
+        for job in graph.jobs:
+            if job.id not in reusable or any(d in may_fetch for d in job.dependencies):
+                may_fetch.add(job.id)
         estimate = sum(
             j.capability.requests_per_job * p.max_attempts
             for j in graph.jobs
-            if j.capability and not j.blocked and j.id not in reusable
+            if j.capability and not j.blocked and j.id in may_fetch
         )
         if estimate > p.max_requests:
             raise ValidationError("actual store request budget exceeded; recompile")
@@ -270,6 +321,35 @@ async def execute(
     ):
         raise ValidationError("direct re-extraction request budget exceeded")
     result = ExecutionResult("running", {}, {}, {}, run, retry_limit=p.max_attempts)
+    result.quality = {
+        "requested_interval": [str(p.start), str(p.end)],
+        "universe": list(p.universe),
+        "calendar_hash": graph.calendar_hash,
+        "partitions": {
+            j.id: {
+                "dataset": j.partition.dataset,
+                "requested_date": str(j.partition.start),
+                "expected_sessions": None if "calendar_unknown" in j.blocked else 1,
+                "observed_sessions": None,
+                "null_counts": None,
+                "fields": list(j.partition.fields),
+                "basis": j.partition.basis,
+                "identity_policy": j.partition.identity_policy,
+                "quality_policy": j.partition.quality_policy,
+                "source_id": j.capability.source_id if j.capability else None,
+                "parser_version": j.capability.parser_version if j.capability else None,
+                "schema_version": j.capability.schema_version if j.capability else None,
+                "coverage": "unavailable",
+                "validated_coverage": "unavailable",
+                "identity_coverage": "unverified",
+                "publication_time": "not_inferred",
+                "staleness": "not_assessed",
+                "provisional": "not_assessed",
+                "unresolved_actions": "not_assessed",
+            }
+            for j in graph.jobs
+        },
+    }
     if store is not None:
         result.resume_limit = "persistent run ID; compatible config/source/code/inputs required"
     jobs = {j.id: j for j in graph.jobs}
@@ -288,6 +368,11 @@ async def execute(
         rows: int = 0,
     ) -> None:
         result.states[job.id] = state
+        if state in {"committed", "partial"}:
+            detail = result.quality["partitions"][job.id]
+            detail["coverage"] = detail["validated_coverage"]
+        elif state == "skipped_cached":
+            result.quality["partitions"][job.id]["coverage"] = "committed_cache"
         if reason:
             result.reasons[job.id] = reason
         if state == "committed":
@@ -312,16 +397,19 @@ async def execute(
                 attempts=result.attempts.get(job.id, 0),
             )
         if on_event:
-            on_event(
-                Event(
-                    job.id,
-                    state,
-                    result.committed_partitions,
-                    result.committed_rows,
-                    reason,
-                    result.attempts.get(job.id, 0),
+            try:
+                on_event(
+                    Event(
+                        job.id,
+                        state,
+                        result.committed_partitions,
+                        result.committed_rows,
+                        reason,
+                        result.attempts.get(job.id, 0),
+                    )
                 )
-            )
+            except BaseException as error:
+                raise _ObserverFailure(error) from error
 
     async def acquire(job: Job) -> Acquired:
         assert job.capability is not None
@@ -355,6 +443,10 @@ async def execute(
 
     with tempfile.TemporaryDirectory(prefix="niftyverse-extract-") as folder:
         sink = _Sink(graph, store, Path(folder) if p.mode == "files" else None)
+        if store is not None and run:
+            from niftyverse.storage.builds import changed_in_run
+
+            sink.changed_jobs.update(changed_in_run(store, graph, run))
         try:
             while (
                 len(result.states) < len(jobs)
@@ -378,10 +470,6 @@ async def execute(
                     if job.blocked:
                         emit(job, "blocked", ";".join(job.blocked))
                         continue
-                    if job.id in reusable:
-                        result.reused_partitions += 1
-                        emit(job, "skipped_cached")
-                        continue
                     if job.capability and job.capability.source_id in stopped:
                         emit(job, "blocked", "source_capability_stopped")
                         continue
@@ -403,6 +491,13 @@ async def execute(
                         continue
                     if any(d not in {"committed", "skipped_cached", "spooled"} for d in deps):
                         continue
+                    changed_dependency = any(d in sink.changed_jobs for d in job.dependencies)
+                    if job.id in reusable and (
+                        not changed_dependency or job.id in finished_in_run
+                    ):
+                        result.reused_partitions += 1
+                        emit(job, "skipped_cached")
+                        continue
                     emit(job, "ready")
                     task = asyncio.create_task(acquire(job))
                     active[task] = job
@@ -421,6 +516,11 @@ async def execute(
                     batch = None
                     try:
                         acquired = task.result()
+                        if job.capability and job.capability.source_id in stopped:
+                            emit(job, "blocked", "source_capability_stopped")
+                            continue
+                        if not isinstance(acquired, Acquired):
+                            raise ValidationError("invalid provider result")
                         batch = acquired.batch
                         if run:
                             batch = replace(batch, check_id=identity((run, job.id)))
@@ -431,6 +531,32 @@ async def execute(
                         emit(job, "validating", batch=batch)
                         partial = p.allow_partial and store is None and batch.coverage == "partial"
                         _validate(acquired, job, p.batch_bytes, allow_partial=partial)
+                        dates = {
+                            str(d)
+                            for _, table in batch.tables
+                            if "session_date" in table.column_names
+                            for d in table["session_date"].to_pylist()
+                        }
+                        detail = result.quality["partitions"][job.id]
+                        detail.update(
+                            {
+                                "validated_coverage": batch.coverage,
+                                "observed_sessions": len(dates),
+                                "observed_dates": sorted(dates),
+                                "null_counts": {
+                                    name: sum(
+                                        t[name].null_count
+                                        for _, t in batch.tables
+                                        if name in t.column_names
+                                    )
+                                    for name in job.partition.fields
+                                },
+                                "identity_coverage": "validated_partition_scope",
+                                "known_at": batch.known_at.isoformat(),
+                                "checked_at": batch.checked_at.isoformat(),
+                                "completeness_evidence": batch.partition.completeness_evidence,
+                            }
+                        )
                         if stop.is_set():
                             raise asyncio.CancelledError
                         if sink.publish(job, batch):
@@ -453,10 +579,21 @@ async def execute(
                         if not partial:
                             result.reasons.pop(job.id, None)
                     except asyncio.CancelledError:
-                        emit(job, "cancelled", "cancel_requested", batch)
+                        source_stopped = job.capability and job.capability.source_id in stopped
+                        emit(
+                            job,
+                            "blocked" if source_stopped else "cancelled",
+                            "source_capability_stopped" if source_stopped else "cancel_requested",
+                            batch,
+                        )
                     except AcquisitionFailure as error:
                         if error.source_wide and job.capability:
                             stopped.add(job.capability.source_id)
+                            for pending, admitted in active.items():
+                                if admitted.capability and (
+                                    admitted.capability.source_id == job.capability.source_id
+                                ):
+                                    pending.cancel()
                         emit(job, "deferred" if error.deferred else "failed", error.code, batch)
                     except ValidationError:
                         if batch is not None and store is not None:
@@ -493,6 +630,9 @@ async def execute(
                 for j in graph.jobs
                 if not j.required and j.id in result.reasons
             )
+            result.changed_partitions = tuple(
+                j.partition.identity for j in graph.jobs if j.id in sink.changed_jobs
+            )
             if sink.finish(result):
                 for job, rows, partial in sink.files:
                     emit(
@@ -505,6 +645,8 @@ async def execute(
                 for job, _, _ in sink.files:
                     emit(job, "cancelled", "run_not_published")
             return result
+        except _ObserverFailure as failure:
+            raise failure.error from None
         finally:
             for task in active:
                 task.cancel()

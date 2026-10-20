@@ -90,6 +90,9 @@ def start_run(store: Store, graph: WorkGraph, resume: str | None) -> str:
             }
             for j in graph.jobs
         ],
+        "input_occurrences": {
+            j.id: latest_occurrence(store, j.partition.identity) for j in graph.jobs
+        },
     }
     store.connection.execute(
         "INSERT INTO build_runs VALUES (?, ?, ?, ?, 'running')",
@@ -101,6 +104,33 @@ def start_run(store: Store, graph: WorkGraph, resume: str | None) -> str:
         ],
     )
     return run
+
+
+def latest_occurrence(store: Store, partition: str) -> str | None:
+    row = store.connection.execute(
+        "SELECT occurrence_id FROM occurrences WHERE partition_id=? "
+        "ORDER BY known_at DESC LIMIT 1",
+        [partition],
+    ).fetchone()
+    return row[0] if row else None
+
+
+def changed_in_run(store: Store, graph: WorkGraph, run: str) -> set[str]:
+    row = store.connection.execute(
+        "SELECT manifest_json FROM build_runs WHERE run_id=?",
+        [run],
+    ).fetchone()
+    assert row
+    baseline = json.loads(row[0])["input_occurrences"]
+    changed = set()
+    for job in graph.jobs:
+        check = store.connection.execute(
+            "SELECT occurrence_id FROM source_checks WHERE check_id=?",
+            [identity((run, job.id))],
+        ).fetchone()
+        if check and check[0] != baseline[job.id]:
+            changed.add(job.id)
+    return changed
 
 
 def record_work(
