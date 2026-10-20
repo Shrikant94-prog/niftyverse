@@ -113,6 +113,9 @@ class DataPlan:
     max_attempts: int = 2
     offline: bool = False
     local_files: tuple[Path, ...] = ()
+    operation: str = "build"
+    overlap_sessions: int = 7
+    repair_partitions: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if type(self.version) is not int or self.version != 1:
@@ -147,6 +150,23 @@ class DataPlan:
                 raise ValidationError(f"invalid {name} budget")
         if self.batch_bytes > self.memory_bytes:
             raise ValidationError("batch_bytes exceeds memory budget")
+        if self.operation not in {"build", "refresh", "repair", "reconcile"}:
+            raise ValidationError("unknown incremental operation")
+        if self.mode != "build" and self.operation != "build":
+            raise ValidationError("incremental operations require persistent build")
+        if type(self.overlap_sessions) is not int or not 1 <= self.overlap_sessions <= 10_000:
+            raise ValidationError("invalid overlap_sessions")
+        object.__setattr__(
+            self,
+            "repair_partitions",
+            _strings(
+                self.repair_partitions,
+                "repair_partitions",
+                empty=self.operation != "repair",
+            ),
+        )
+        if self.operation != "repair" and self.repair_partitions:
+            raise ValidationError("repair_partitions require repair operation")
         if any(
             type(v) is not bool
             for v in (
@@ -311,7 +331,10 @@ class WorkGraph:
         return {
             "plan_hash": self.plan_hash,
             "mode": self.plan.mode,
-            "requests_upper_bound": self.request_estimate,
+            "requests_estimate": self.request_estimate,
+            "requests_upper_bound": self.request_estimate * self.plan.max_attempts,
+            "unresolved_estimates": [j.id for j in self.jobs if j.capability is None],
+            "requested_interval": (str(self.plan.start), str(self.plan.end)),
             "jobs": [
                 dict(
                     id=j.id,
@@ -473,6 +496,11 @@ def compile_plan(
                 tuple(blockers),
             )
             jobs.append(replace(job, reuse=not blockers and any(c.satisfies(job) for c in cache)))
+    if plan.operation == "repair" and not set(plan.repair_partitions) <= {
+        j.partition.identity for j in jobs
+    }:
+        raise ValidationError("repair partition outside requested graph")
+    jobs = [replace(j, reuse=j.reuse and not should_recheck(plan, tuple(jobs), j)) for j in jobs]
     estimate = sum(
         j.capability.requests_per_job
         for j in jobs
@@ -481,6 +509,24 @@ def compile_plan(
     if estimate * plan.max_attempts > plan.max_requests:
         raise ValidationError("request budget exceeded including bounded retry")
     return WorkGraph(plan, plan_hash, tuple(jobs), estimate, hashes, calendar_hash)
+
+
+def should_recheck(plan: DataPlan, jobs: tuple[Job, ...], job: Job) -> bool:
+    if plan.operation == "reconcile":
+        return True
+    if plan.operation == "repair":
+        return job.partition.identity in plan.repair_partitions
+    if plan.operation == "refresh":
+        sessions = sorted(
+            {
+                j.partition.start
+                for j in jobs
+                if j.partition.dataset == job.partition.dataset
+                and "calendar_unknown" not in j.blocked
+            }
+        )
+        return job.partition.start in sessions[-plan.overlap_sessions :]
+    return False
 
 
 @dataclass(frozen=True)
@@ -562,7 +608,7 @@ def research_preflight(
     if missing:
         requests: dict[str, DatasetRequest] = {}
         for dep in missing:
-            r = dep.request
+            r = replace(dep.request, required=dep.required)
             if r.dataset in requests:
                 old = requests[r.dataset]
                 if replace(old, fields=r.fields, required=r.required) != r:

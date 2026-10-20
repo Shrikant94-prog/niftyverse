@@ -14,8 +14,9 @@ from typing import TYPE_CHECKING, Protocol
 
 from niftyverse.batches import ValidatedBatch, identity
 from niftyverse.core import ValidationError
-from niftyverse.planning import Job, WorkGraph
+from niftyverse.planning import Job, WorkGraph, should_recheck
 from niftyverse.storage.bundles import publish_bundle, write_direct
+from niftyverse.storage.durable import digest_file
 
 if TYPE_CHECKING:
     from niftyverse.storage.catalog import Store
@@ -87,9 +88,13 @@ class ExecutionResult:
     resume_limit: str = "bounded re-extract only; no durable cross-run resume"
     peak_active: int = 0
     peak_pending: int = 0
+    reused_partitions: int = 0
+    history_snapshot_id: str | None = None
 
 
-def _validate(acquired: Acquired, job: Job, byte_budget: int) -> None:
+def _validate(
+    acquired: Acquired, job: Job, byte_budget: int, *, allow_partial: bool = False
+) -> None:
     batch, cap = acquired.batch, job.capability
     size = len(batch.capture.body) + sum(t.nbytes for _, t in batch.tables)
     if size > byte_budget:
@@ -103,7 +108,8 @@ def _validate(acquired: Acquired, job: Job, byte_budget: int) -> None:
         cap.schema_version,
     ):
         raise ValidationError("source_parser_schema_mismatch")
-    if cap.paginated:
+    partial = allow_partial and batch.coverage == "partial"
+    if cap.paginated and not partial:
         pages = acquired.pages
         if not pages or len(pages) > cap.requests_per_job:
             raise ValidationError("pagination_budget_or_missing_pages")
@@ -116,7 +122,7 @@ def _validate(acquired: Acquired, job: Job, byte_budget: int) -> None:
             or pages[-1].next_cursor is not None
         ):
             raise ValidationError("pagination_nonadvancing_or_incomplete")
-        stable = pages[0].snapshot_id is not None and all(
+        stable = bool(pages[0].snapshot_id) and all(
             p.snapshot_id == pages[0].snapshot_id for p in pages
         )
         if (not stable and not acquired.reconciliation_evidence) or (
@@ -124,7 +130,7 @@ def _validate(acquired: Acquired, job: Job, byte_budget: int) -> None:
             or acquired.expected_source_rows != sum(p.rows for p in pages)
         ):
             raise ValidationError("completeness_unverified")
-    if batch.coverage not in {"complete", "no_observations"}:
+    if batch.coverage not in {"complete", "no_observations"} and not partial:
         raise ValidationError("completeness_unverified")
 
 
@@ -134,7 +140,7 @@ class _Sink:
     store: Store | None
     spool: Path | None
     memory: list[ValidatedBatch] = field(default_factory=list)
-    files: list[tuple[Job, int]] = field(default_factory=list)
+    files: list[tuple[Job, int, bool]] = field(default_factory=list)
     retained_bytes: int = 0
 
     def publish(self, job: Job, batch: ValidatedBatch) -> bool:
@@ -153,8 +159,16 @@ class _Sink:
             self.retained_bytes += size
             return True
         assert self.spool is not None
-        write_direct(batch, self.spool / job.id, encoding=p.encoding, retain_raw=p.retain_raw)
-        self.files.append((job, sum(t.num_rows for _, t in batch.tables)))
+        write_direct(
+            batch,
+            self.spool / job.id,
+            encoding=p.encoding,
+            retain_raw=p.retain_raw,
+            allow_partial=p.allow_partial,
+        )
+        self.files.append(
+            (job, sum(t.num_rows for _, t in batch.tables), batch.coverage == "partial")
+        )
         return False
 
     def finish(self, result: ExecutionResult) -> bool:
@@ -170,7 +184,11 @@ class _Sink:
             "status": result.status,
             "plan_hash": self.graph.plan_hash,
             "jobs": {
-                key: "committed" if value == "spooled" else value
+                key: "committed"
+                if value == "spooled"
+                else "partial"
+                if value == "spooled_partial"
+                else value
                 for key, value in result.states.items()
             },
             "failures": result.reasons,
@@ -208,6 +226,12 @@ async def execute(
     locally retained inputs. Non-local providers are never called offline.
     """
     p = graph.plan
+    p.__post_init__()
+    if any(
+        not Path(path).is_file() or digest_file(Path(path)) != sha
+        for path, sha in graph.local_hashes
+    ):
+        raise ValidationError("local input changed since compilation; recompile explicitly")
     if (p.mode == "build") != (store is not None):
         raise ValidationError("persistent execution requires its open store; direct requires none")
     if store is not None and store.root != p.store:
@@ -215,10 +239,36 @@ async def execute(
     if resume and store is None:
         raise ValidationError("direct extraction has no durable resume ID; bounded re-extract")
     run = None
+    reusable: set[str] = set()
     if store is not None:
-        from niftyverse.storage.builds import start_run
+        from niftyverse.storage.builds import committed_cache, start_run
 
+        cache = committed_cache(store)
+        for job in graph.jobs:
+            if not should_recheck(p, graph.jobs, job) and any(c.satisfies(job) for c in cache):
+                reusable.add(job.id)
+            elif resume and store.connection.execute(
+                "SELECT count(*) FROM source_checks WHERE check_id=?",
+                [identity((resume, job.id))],
+            ).fetchone() == (1,):
+                reusable.add(job.id)
+        estimate = sum(
+            j.capability.requests_per_job * p.max_attempts
+            for j in graph.jobs
+            if j.capability and not j.blocked and j.id not in reusable
+        )
+        if estimate > p.max_requests:
+            raise ValidationError("actual store request budget exceeded; recompile")
         run = start_run(store, graph, resume)
+    elif (
+        sum(
+            j.capability.requests_per_job * p.max_attempts
+            for j in graph.jobs
+            if j.capability and not j.blocked
+        )
+        > p.max_requests
+    ):
+        raise ValidationError("direct re-extraction request budget exceeded")
     result = ExecutionResult("running", {}, {}, {}, run, retry_limit=p.max_attempts)
     if store is not None:
         result.resume_limit = "persistent run ID; compatible config/source/code/inputs required"
@@ -253,7 +303,12 @@ async def execute(
                 state,
                 reason=reason,
                 check=batch.check_id if batch else None,
-                raw=batch.capture.sha256 if batch else None,
+                raw=batch.capture.sha256
+                if batch
+                and (
+                    store.location.paths["raw"] / batch.capture.sha256[:2] / batch.capture.sha256
+                ).is_file()
+                else None,
                 attempts=result.attempts.get(job.id, 0),
             )
         if on_event:
@@ -323,12 +378,25 @@ async def execute(
                     if job.blocked:
                         emit(job, "blocked", ";".join(job.blocked))
                         continue
+                    if job.id in reusable:
+                        result.reused_partitions += 1
+                        emit(job, "skipped_cached")
+                        continue
                     if job.capability and job.capability.source_id in stopped:
                         emit(job, "blocked", "source_capability_stopped")
                         continue
                     deps = [result.states.get(d) for d in job.dependencies]
                     if any(
-                        d in {"failed", "blocked", "quarantined", "deferred", "cancelled"}
+                        d
+                        in {
+                            "failed",
+                            "blocked",
+                            "quarantined",
+                            "deferred",
+                            "cancelled",
+                            "partial",
+                            "spooled_partial",
+                        }
                         for d in deps
                     ):
                         emit(job, "blocked", "dependency_failed")
@@ -361,19 +429,29 @@ async def execute(
                         if stop.is_set():
                             raise asyncio.CancelledError
                         emit(job, "validating", batch=batch)
-                        _validate(acquired, job, p.batch_bytes)
+                        partial = p.allow_partial and store is None and batch.coverage == "partial"
+                        _validate(acquired, job, p.batch_bytes, allow_partial=partial)
                         if stop.is_set():
                             raise asyncio.CancelledError
                         if sink.publish(job, batch):
+                            if partial:
+                                emit(job, "partial", "completeness_unverified", batch)
+                            else:
+                                emit(
+                                    job,
+                                    "committed",
+                                    batch=batch,
+                                    rows=sum(t.num_rows for _, t in batch.tables),
+                                )
+                        else:
                             emit(
                                 job,
-                                "committed",
+                                "spooled_partial" if partial else "spooled",
+                                "completeness_unverified" if partial else None,
                                 batch=batch,
-                                rows=sum(t.num_rows for _, t in batch.tables),
                             )
-                        else:
-                            emit(job, "spooled", batch=batch)
-                        result.reasons.pop(job.id, None)
+                        if not partial:
+                            result.reasons.pop(job.id, None)
                     except asyncio.CancelledError:
                         emit(job, "cancelled", "cancel_requested", batch)
                     except AcquisitionFailure as error:
@@ -416,10 +494,15 @@ async def execute(
                 if not j.required and j.id in result.reasons
             )
             if sink.finish(result):
-                for job, rows in sink.files:
-                    emit(job, "committed", rows=rows)
+                for job, rows, partial in sink.files:
+                    emit(
+                        job,
+                        "partial" if partial else "committed",
+                        "completeness_unverified" if partial else None,
+                        rows=0 if partial else rows,
+                    )
             elif p.mode == "files":
-                for job, _ in sink.files:
+                for job, _, _ in sink.files:
                     emit(job, "cancelled", "run_not_published")
             return result
         finally:
