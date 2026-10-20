@@ -7,8 +7,8 @@
 - **Phase:** 08 - Index prices, valuation and TRI; authorized through verified local merge and GitHub push. Do not start Phase 09.
 - **Start:** `phase-08` created from inspected local/origin main `f9aac6bbe4a042ba97406ef8b21374a18890cf93`. Tracked tree clean; no pre-existing phase branch. Owner untracked `Sample_Files/` preserved. No reset or alternate revision.
 - **Prerequisites:** Phase 02/03/04/05 and 07 completion evidence inspected against source interfaces and Git ancestry. Phase 02 index redirects and blocked VIX remain limitations pending bounded new evidence. Full-extra pre-edit regression **364 passed**, 37.26 s.
-- **Checkpoint:** NV-08-02 verified; next NV-08-03. Explicit price/gross/net variant identities and source aliases; exact historical daily values/lineage, true half-open coverage and explicit gaps. No ETF/current substitute or Phase 09 DataPlan.
-- **Next:** bounded NV-08-03 capability verification/tests, then integrated gate, reconciliation, verified local merge and authorized push. Retain phase-08.
+- **Checkpoint:** NV-08-03 verified; next PH-08-GATE and closure checks. Explicit price/gross/net variant identities and source aliases; exact historical daily values/lineage, true half-open coverage and explicit gaps. No ETF/current substitute or Phase 09 DataPlan.
+- **Next:** integrated gate and scoped review/ordinary repairs, then full/core/wheel/platform checks, reconciliation, verified local merge and authorized push. Retain phase-08.
 
 ## Read first
 
@@ -22,7 +22,7 @@
 |---|---|
 | NV-08-01 AC1/2/3 | Typed variants/aliases; collisions unresolved; exact source dates/values/lineage; empty and missing coverage explicit; ETF/current rejection. **18 focused identity/decoder cases pass**; with shared transport **44 pass**, strict mypy/lint/format pass. Five actual old/recent price rows match manually retained exact closes. [Evidence](docs/evidence/08-20261021-price.md). |
 | NV-08-02 AC1/2/3 | **142 focused/affected tests passed**, strict mypy 88 files and lint/format pass. Separate schemas/coverage, null versus zero, exact disjoint-date joins, shared rejection, DB/direct parity, v5 migration/backup/restore verified. All five actual source six-measure tuples match. [Evidence](docs/evidence/08-20261021-datasets.md). |
-| NV-08-03 AC1/2/3 | Historical VIX only for verified source/interval; current-only capability limitation; mistaken variant/invalid valuation rejected. Pending predecessor. |
+| NV-08-03 AC1/2/3 | **86 combined focused tests pass**, strict mypy 89 files/lint/format pass. All five actual NSE VIX OHLC rows verified in old/recent windows; separate Nifty VIX redirects remain blocked. Current-only/empty/partial/unknown grid capability rejection, true dates and annualised-percent units verified. [Evidence](docs/evidence/08-20261021-vix.md). |
 | PH-08-GATE | Integrated price/PE/PB/yield/TRI never conflated, true dates/gaps, no ETF/current-VIX substitution. Pending checkpoints. |
 
 ## Verification and limitations

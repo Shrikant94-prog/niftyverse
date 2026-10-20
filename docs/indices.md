@@ -20,7 +20,8 @@ SHA-256 and row locators survive. Only the observed list schema generation is
 supported; errors, current snapshots, incompatible variants and poisoned rows
 raise `ValidationError` before returning a partition.
 
-`IndexPrice` holds OHLC in index points. `IndexTRI` holds one gross or net level
+`IndexPrice` holds price OHLC in index points, or volatility OHLC in
+`volatility_percent_annualised` for a volatility variant. `IndexTRI` holds one gross or net level
 in index points. `IndexValuation` holds PE/PB ratios and dividend yield in percent
 (1.52 means 1.52%, not .0152). A genuine zero stays zero; null values retain a
 `source_null` reason on publication. Signed source PE/PB remain signed;
@@ -62,5 +63,19 @@ only NIFTY 50 on 1–2 September 2016 and 14–16 October 2026. The official
 [methodology](https://www.niftyindices.com/Methodology/Method_NIFTY_Equity_Indices.pdf)
 separate price and gross/net total return. The adapter preserves reported levels
 without reconstructing dividends, tax or historical vintages. No continuous
-ten-year coverage, launch-time availability or historical VIX support follows
-from these sampled responses.
+ten-year coverage or launch-time availability follows from these sampled responses.
+
+`fetch_vix_history` explicitly downloads the verified NSE historical GET route.
+`decode_vix_history` requires the historical EOD schema and a volatility variant;
+it uses `EOD_TIMESTAMP` for the session date. The source ordering timestamp is
+retained raw and never promoted to publication time. `assess_vix_capability`
+returns `experimental` only for the exact source/window with nonempty validated
+rows and a fully reconciled evidenced calendar; current-only, empty, unknown-grid
+and malformed responses return a reason-coded `blocked` capability. A failed
+route remains blocked even when another source route works.
+
+NSE VIX GET observations verify the same two sampled windows, with all five OHLC
+rows checked independently. The
+[NSE definition](https://nsearchives.nseindia.com/s3fs-public/inline-files/white_paper_IndiaVIX.pdf)
+specifies annualised percentage, retained without dividing values by 100.
+The distinct Nifty historical VIX POST returned redirects and remains blocked.

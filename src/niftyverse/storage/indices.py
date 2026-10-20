@@ -54,7 +54,7 @@ def make_index_batch[T: IndexObservation](
                 high=observation.high,
                 low=observation.low,
                 close=observation.close,
-                unit="index_points",
+                unit=observation.unit,
                 missing_reason="source_null" if observation.close is None else None,
             )
         elif isinstance(observation, IndexTRI):

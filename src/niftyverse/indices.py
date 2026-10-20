@@ -109,6 +109,14 @@ class IndexPrice:
     close: Decimal | None
     lineage: SourceLineage
 
+    @property
+    def unit(self) -> str:
+        return (
+            "volatility_percent_annualised"
+            if self.variant.kind == "volatility"
+            else "index_points"
+        )
+
     def __post_init__(self) -> None:
         self.variant.__post_init__()
         self.lineage.__post_init__()
@@ -186,6 +194,19 @@ class IndexValuation:
 
 
 type IndexObservation = IndexPrice | IndexTRI | IndexValuation
+
+
+@dataclass(frozen=True)
+class HistoricalIndexCapability:
+    source_id: str
+    variant: IndexVariant
+    start: date
+    end: date
+    observed_at: datetime
+    raw_sha256: str
+    status: Literal["experimental", "blocked"]
+    verified_sessions: tuple[date, ...]
+    reason: str | None
 
 
 @dataclass(frozen=True)
@@ -380,7 +401,10 @@ def validate_index_record(
         available = nullable = ("pe", "pb", "dividend_yield")
     else:
         raise ValidationError("incompatible index dataset")
-    if dataset != "index_valuations" and row["unit"] != "index_points":
+    expected_unit = (
+        "volatility_percent_annualised" if variant.kind == "volatility" else "index_points"
+    )
+    if dataset != "index_valuations" and row["unit"] != expected_unit:
         raise ValidationError("incompatible index unit")
     if set(fields) - set(available):
         raise ValidationError("unsupported index requested field")

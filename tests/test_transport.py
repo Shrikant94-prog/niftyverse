@@ -100,6 +100,31 @@ def test_index_fetch_has_exact_inclusive_wire_dates_and_no_implicit_decode() -> 
     _loop.run_until_complete(check())
 
 
+def test_vix_fetch_has_actual_historical_get_route_and_inclusive_end() -> None:
+    from datetime import date
+
+    from niftyverse.adapters.index_history import fetch_vix_history
+
+    async def check() -> None:
+        urls: list[str] = []
+
+        def handle(request: httpx.Request) -> httpx.Response:
+            urls.append(str(request.url))
+            assert request.method == "GET"
+            return httpx.Response(200, content=b'{"data":[]}')
+
+        async with DirectTransport(policy(), transport=httpx.MockTransport(handle)) as client:
+            with pytest.raises(ValueError, match="window"):
+                await fetch_vix_history(client, start=date(2026, 10, 15), end=date(2026, 10, 14))
+            assert not urls
+            await fetch_vix_history(client, start=date(2016, 9, 1), end=date(2016, 9, 3))
+            assert urls == [
+                "https://www.nseindia.com/api/historicalOR/vixhistory?from=01-09-2016&to=02-09-2016"
+            ]
+
+    _loop.run_until_complete(check())
+
+
 def policy(**changes: object) -> FamilyPolicy:
     return FamilyPolicy(spacing=0, **changes)  # type: ignore[arg-type]
 

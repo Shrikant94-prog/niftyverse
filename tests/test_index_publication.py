@@ -217,3 +217,52 @@ def test_index_backup_has_actual_schema_and_restores_exact_rows(tmp_path: Path) 
     restore(saved.path, tmp_path / "restored")
     with Store(tmp_path / "restored") as store:
         assert store.read_table("index_valuations").equals(expected)
+
+
+def test_vix_publication_preserves_volatility_identity_and_percentage_units(
+    tmp_path: Path,
+) -> None:
+    from test_index_vix import VIX, decode, wire
+
+    body = wire()
+    history = index_history(
+        decode(body),
+        variant=VIX,
+        start=D1,
+        end=D2,
+        calendar=calendar(),
+        known_at=KNOWN,
+        source_complete=True,
+    )
+    part = Partition(
+        "index_daily",
+        D1,
+        D2,
+        (VIX.variant_id,),
+        ("close",),
+        "volatility",
+        "nse-vix-v1",
+        "explicit-index",
+        "no-fill",
+        "owned VIX grid",
+    )
+    source = make_index_batch(
+        history,
+        partition=part,
+        capture=Capture(body, "direct_raw", "owned", "owned:vix"),
+        check_id="vix",
+        checked_at=KNOWN,
+        known_at=KNOWN,
+    )
+    with Store(tmp_path / "store") as store:
+        publish(store, source)
+        expected = store.read_table("index_daily").drop(["occurrence_id"])
+    write_direct(source, tmp_path / "direct")
+    assert read_bundle(tmp_path / "direct").table("index_daily").equals(expected)
+    row = expected.to_pylist()[0]
+    assert row["variant_kind"] == "volatility" and row["unit"] == "volatility_percent_annualised"
+    row["unit"] = "index_points"
+    with pytest.raises(ValidationError, match="unit"):
+        replace(
+            source, tables=(("index_daily", pa.Table.from_pylist([row], schema=expected.schema)),)
+        )

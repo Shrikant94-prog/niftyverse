@@ -5,21 +5,41 @@ import json
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Any, Literal
+from urllib.parse import urlencode
 
+from niftyverse.calendars import Calendar
 from niftyverse.core import ValidationError
 from niftyverse.indices import (
+    HistoricalIndexCapability,
     IndexCatalogue,
     IndexPrice,
     IndexTRI,
     IndexValuation,
     IndexVariant,
     SourceLineage,
+    index_history,
 )
 from niftyverse.market_prices import number
 from niftyverse.temporal import day, text, utc
 from niftyverse.transport import DirectTransport, Download
 
 MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+async def fetch_vix_history(transport: DirectTransport, *, start: date, end: date) -> Download:
+    """Explicit historical NSE VIX GET; never falls back to current values."""
+    day(start)
+    day(end)
+    if start >= end or (end - start).days > 366:
+        raise ValidationError("invalid historical VIX window")
+    inclusive = end - timedelta(days=1)
+    query = urlencode(
+        {
+            "from": f"{start.day:02}-{start.month:02}-{start.year:04}",
+            "to": f"{inclusive.day:02}-{inclusive.month:02}-{inclusive.year:04}",
+        }
+    )
+    return await transport.get(f"https://www.nseindia.com/api/historicalOR/vixhistory?{query}")
 
 
 async def fetch_nifty_history(
@@ -73,7 +93,9 @@ def _constant(value: str) -> None:
     raise ValidationError("invalid JSON number")
 
 
-def _rows(body: bytes, max_bytes: int, max_rows: int) -> list[dict[str, Any]]:
+def _rows(
+    body: bytes, max_bytes: int, max_rows: int, *, envelope: bool = False
+) -> list[dict[str, Any]]:
     if not isinstance(body, bytes) or max_bytes <= 0 or len(body) > max_bytes:
         raise ValidationError("byte_limit")
     if max_rows <= 0:
@@ -88,6 +110,10 @@ def _rows(body: bytes, max_bytes: int, max_rows: int) -> list[dict[str, Any]]:
         raise ValidationError("invalid JSON schema or number") from None
     # Only the actually observed list generation is supported. Current snapshots,
     # legacy envelopes and source errors cannot be mistaken for empty history.
+    if envelope:
+        if not isinstance(data, dict) or set(data) != {"data"}:
+            raise ValidationError("historical VIX schema mismatch")
+        data = data["data"]
     if not isinstance(data, list) or any(not isinstance(row, dict) for row in data):
         raise ValidationError("historical index schema mismatch")
     if len(data) > max_rows:
@@ -297,3 +323,124 @@ def decode_index_tri(
         max_rows=max_rows,
     )
     return tuple(IndexTRI(variant, on, number(raw[field]), lineage) for raw, on, lineage in rows)
+
+
+def decode_vix_history(
+    body: bytes,
+    *,
+    catalogue: IndexCatalogue,
+    variant: IndexVariant,
+    source_id: str,
+    locator: str,
+    start: date,
+    end: date,
+    known_at: datetime,
+    max_bytes: int = 8 * 1024 * 1024,
+    max_rows: int = 100_000,
+) -> tuple[IndexPrice, ...]:
+    _window(start, end, known_at)
+    text(source_id, locator)
+    if variant.kind != "volatility":
+        raise ValidationError("historical VIX requires volatility variant")
+    fields = (
+        "EOD_OPEN_INDEX_VAL",
+        "EOD_HIGH_INDEX_VAL",
+        "EOD_LOW_INDEX_VAL",
+        "EOD_CLOSE_INDEX_VAL",
+    )
+    rows = []
+    seen = set()
+    for i, raw in enumerate(_rows(body, max_bytes, max_rows, envelope=True)):
+        if not {"EOD_TIMESTAMP", "EOD_INDEX_NAME", *fields} <= raw.keys():
+            if "last" in raw or "lastPrice" in raw:
+                raise ValidationError("current_only_capability")
+            raise ValidationError("historical VIX schema mismatch")
+        value = raw["EOD_TIMESTAMP"]
+        if not isinstance(value, str):
+            raise ValidationError("invalid VIX source date")
+        on = _date(value.replace("-", " ").title())
+        if not start <= on < end:
+            raise ValidationError("VIX source date outside requested window")
+        if on in seen:
+            raise ValidationError("duplicate VIX session")
+        seen.add(on)
+        resolved = catalogue.resolve(source_id, raw["EOD_INDEX_NAME"], "volatility", on, known_at)
+        if resolved != variant:
+            raise ValidationError("VIX source/request variant mismatch")
+        rows.append(
+            IndexPrice(
+                variant,
+                on,
+                number(raw[fields[0]]),
+                number(raw[fields[1]]),
+                number(raw[fields[2]]),
+                number(raw[fields[3]]),
+                _lineage(body, raw, source_id, locator, i, "nse_vix_history_v1"),
+            )
+        )
+    return tuple(rows)
+
+
+def assess_vix_capability(
+    body: bytes,
+    *,
+    catalogue: IndexCatalogue,
+    variant: IndexVariant,
+    source_id: str,
+    locator: str,
+    start: date,
+    end: date,
+    observed_at: datetime,
+    calendar: Calendar,
+) -> HistoricalIndexCapability:
+    """A current/empty/partial response cannot certify a historical interval.
+
+    This is a bounded observation report, not permission to extrapolate support
+    beyond this exact source, variant and independently evidenced session grid.
+    """
+    _window(start, end, observed_at)
+    try:
+        rows = decode_vix_history(
+            body,
+            catalogue=catalogue,
+            variant=variant,
+            source_id=source_id,
+            locator=locator,
+            start=start,
+            end=end,
+            known_at=observed_at,
+        )
+        result = index_history(
+            rows,
+            variant=variant,
+            start=start,
+            end=end,
+            calendar=calendar,
+            known_at=observed_at,
+            source_complete=True,
+        )
+        if not rows or result.coverage != "complete":
+            raise ValidationError("incomplete_historical_window")
+    except ValidationError as error:
+        return HistoricalIndexCapability(
+            source_id,
+            variant,
+            start,
+            end,
+            observed_at,
+            hashlib.sha256(body).hexdigest(),
+            "blocked",
+            (),
+            str(error),
+        )
+    return HistoricalIndexCapability(
+        source_id,
+        variant,
+        start,
+        end,
+        observed_at,
+        hashlib.sha256(body).hexdigest(),
+        "experimental",
+        tuple(r.session_date for r in result.rows),
+        None,
+    )
