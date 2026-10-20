@@ -261,7 +261,7 @@ def backup(
             "kind": "backup",
             "status": "complete",
             "raw_replay_available": True,
-            "catalog_version": 2,
+            "catalog_version": 3,
             "unfinished_jobs": report.unfinished_jobs,
             "staging_replay": "caller must resupply/revalidate unfinished batch; "
             "committed state retained",
@@ -294,7 +294,11 @@ def restore(source: Path, destination: Path) -> None:
         with duckdb.connect(
             str(stage / "catalog.duckdb"), read_only=True, config={"enable_external_access": False}
         ) as conn:
-            if conn.execute("SELECT max(version) FROM schema_migrations").fetchone() != (2,):
+            # Retained v2 backups remain readable; Store explicitly migrates on open.
+            if conn.execute("SELECT max(version) FROM schema_migrations").fetchone() not in {
+                (2,),
+                (3,),
+            }:
                 raise ValidationError("unsupported restored catalog schema")
             conn.execute("SELECT count(*) FROM occurrences").fetchone()
             conn.execute("SELECT count(*) FROM coverage").fetchone()

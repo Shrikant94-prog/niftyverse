@@ -13,6 +13,7 @@ from typing import Any, Literal
 import pyarrow as pa
 
 from niftyverse.core import ValidationError
+from niftyverse.market_state import MarketStateObservation
 from niftyverse.storage.schemas import ANALYTICAL_KEY, KEYS, SCHEMAS
 
 MAX_ROWS = 100_000
@@ -187,6 +188,15 @@ class ValidatedBatch:
             if len(set(keys)) != len(keys):
                 raise ValidationError("duplicate business key in atomic partition")
             for row in rows:
+                if name == "market_state_observations":
+                    MarketStateObservation(**row)
+                    if not self.partition.start <= row["observed_on"] < self.partition.end:
+                        raise ValidationError("market state outside partition date scope")
+                    if (
+                        row["known_at"] > self.known_at
+                        or row["source_id"] != self.capture.source_id
+                    ):
+                        raise ValidationError("market state availability/source mismatch")
                 if (
                     "listing_id" in row
                     and self.partition.scope == "selected"

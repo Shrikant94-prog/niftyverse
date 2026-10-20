@@ -17,6 +17,8 @@ from niftyverse.storage.durable import sync_directory, sync_file
 from niftyverse.storage.paths import diagnose_store
 from niftyverse.storage.schemas import SCHEMAS
 
+CATALOG_VERSION = 3
+
 
 class WriterBusy(RuntimeError):
     """Another owner holds the live catalog; read an immutable snapshot instead."""
@@ -25,7 +27,7 @@ class WriterBusy(RuntimeError):
 def migrate(
     connection: duckdb.DuckDBPyConnection,
     *,
-    target: int = 2,
+    target: int = CATALOG_VERSION,
     fault: Callable[[], None] | None = None,
 ) -> None:
     connection.execute(
@@ -34,7 +36,7 @@ def migrate(
     row = connection.execute("SELECT coalesce(max(version), 0) FROM schema_migrations").fetchone()
     assert row is not None
     current = row[0]
-    if not 0 <= current <= target <= 2:
+    if not 0 <= current <= target <= CATALOG_VERSION:
         raise ValueError("unsupported migration version; downgrade is forbidden")
     for version in range(current + 1, target + 1):
         connection.execute("BEGIN TRANSACTION")
@@ -82,6 +84,8 @@ def migrate(
                     "status VARCHAR NOT NULL, raw_sha256 VARCHAR NOT NULL, reason VARCHAR)"
                 )
                 for name, definition in SCHEMAS.items():
+                    if name == "market_state_observations":
+                        continue  # Introduced by migration 3, including on fresh databases.
                     empty = pa.Table.from_batches([], schema=definition)
                     connection.register("schema_input", empty)
                     connection.execute(
@@ -89,8 +93,21 @@ def migrate(
                         "* FROM schema_input WHERE false"
                     )
                     connection.unregister("schema_input")
-            else:
+            elif version == 2:
                 connection.execute("ALTER TABLE captures ADD COLUMN sdk_version VARCHAR")
+            elif version == 3:
+                connection.register(
+                    "schema_input",
+                    pa.Table.from_batches([], schema=SCHEMAS["market_state_observations"]),
+                )
+                try:
+                    connection.execute(
+                        "CREATE TABLE market_state_observations AS "
+                        "SELECT CAST(NULL AS VARCHAR) AS occurrence_id, "
+                        "* FROM schema_input WHERE false"
+                    )
+                finally:
+                    connection.unregister("schema_input")
             if fault:
                 fault()
             connection.execute("INSERT INTO schema_migrations VALUES (?)", [version])
@@ -158,7 +175,7 @@ class Store:
                 row = self.connection.execute(
                     "SELECT max(version) FROM schema_migrations"
                 ).fetchone()
-                if row and row[0] is not None and row[0] < 2:
+                if row and row[0] is not None and row[0] < CATALOG_VERSION:
                     self.connection.execute("CHECKPOINT")
                     # Windows DuckDB holds an exclusive file handle. Keep our
                     # OS writer lock, close the DB, then copy its checkpoint.

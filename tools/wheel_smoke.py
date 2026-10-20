@@ -10,7 +10,7 @@ import subprocess
 import sys
 import tempfile
 import zipfile
-from datetime import date
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -36,13 +36,38 @@ else:
     raise AssertionError("child process guard failed")
 
 import niftyverse  # noqa: E402
+import niftyverse.calendars  # noqa: E402
+import niftyverse.delisted  # noqa: E402
 import niftyverse.filing_inline  # noqa: E402
 import niftyverse.filing_xml  # noqa: E402
 import niftyverse.filings  # noqa: E402
+import niftyverse.identity  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
+import niftyverse.market_state  # noqa: E402
 import niftyverse.recon  # noqa: E402
-import niftyverse.transport  # noqa: E402
 import niftyverse.taxonomy_zip  # noqa: E402
+import niftyverse.transport  # noqa: E402
+
+# Exercise new pure models under the same import/network/process audit guard.
+from niftyverse.calendars import Calendar, CalendarSnapshot, Session, SourceTime  # noqa: E402
+
+source_time = SourceTime(datetime(2020, 1, 2, 0, 15), "Asia/Kolkata", "instant")
+assert source_time.instant == datetime(2020, 1, 1, 18, 45, tzinfo=UTC)
+assert SourceTime(date(2020, 1, 2), "Asia/Kolkata", "date").instant is None
+calendar = Calendar(
+    "installed-calendar",
+    "NSE",
+    "CM",
+    datetime(2020, 1, 1, tzinfo=UTC),
+    (Session(date(2020, 1, 2), "closed", None, None, "Asia/Kolkata", "owned", "notice:1"),),
+)
+assert (
+    CalendarSnapshot("installed-snapshot", calendar, datetime(2020, 1, 2, tzinfo=UTC))
+    .calendar.session(date(2020, 1, 2))
+    .eligible
+    is False
+)
+assert calendar.session(date(2020, 1, 3)).eligible is None
 
 assert "site-packages" in niftyverse.__file__, niftyverse.__file__
 assert Path(niftyverse.__file__).with_name("py.typed").exists()
