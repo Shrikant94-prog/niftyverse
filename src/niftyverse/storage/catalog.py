@@ -17,7 +17,7 @@ from niftyverse.storage.durable import sync_directory, sync_file
 from niftyverse.storage.paths import diagnose_store
 from niftyverse.storage.schemas import SCHEMAS
 
-CATALOG_VERSION = 5
+CATALOG_VERSION = 6
 
 
 class WriterBusy(RuntimeError):
@@ -141,6 +141,18 @@ def migrate(
                         )
                     finally:
                         connection.unregister("schema_input")
+            elif version == 6:
+                connection.execute(
+                    "CREATE TABLE build_runs (run_id VARCHAR PRIMARY KEY, "
+                    "plan_hash VARCHAR NOT NULL, checkpoint_identity VARCHAR NOT NULL, "
+                    "manifest_json VARCHAR NOT NULL, status VARCHAR NOT NULL)"
+                )
+                connection.execute(
+                    "CREATE TABLE build_work (run_id VARCHAR NOT NULL, job_id VARCHAR NOT NULL, "
+                    "status VARCHAR NOT NULL, reason VARCHAR, check_id VARCHAR, "
+                    "raw_sha256 VARCHAR, attempts INTEGER NOT NULL, "
+                    "PRIMARY KEY (run_id, job_id))"
+                )
             if fault:
                 fault()
             connection.execute("INSERT INTO schema_migrations VALUES (?)", [version])

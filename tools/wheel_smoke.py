@@ -21,6 +21,7 @@ def deny_io(event: str, args: tuple[object, ...]) -> None:
 
 
 loop = asyncio.new_event_loop() if sys.argv[1] == "filings" else None
+builder_loop = asyncio.new_event_loop()
 sys.addaudithook(deny_io)
 try:
     socket.create_connection(("127.0.0.1", 9), timeout=0.1)
@@ -382,10 +383,61 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
     assert vix_capability.status=="blocked" and vix_capability.reason=="current_only_capability"
     assert metadata_snapshot.rows[0].value("classification",on=date(2016,9,1),known_at=known).value is None
 
+    # Installed Phase 09: actual bundle replay -> cancel/resume -> history, then
+    # direct extraction after denying DuckDB. The loop predates socket denial.
+    from dataclasses import replace
+    from niftyverse import DataPlan, Capability, compile_plan, build, extract
+    from niftyverse.acquisition_inputs import BundleProvider
+
+    build_day = date(2026,9,1)
+    build_end = date(2026,9,2)
+    build_cal = Calendar("installed-builder", "NSE", "CM", now, (
+        Session(build_day,"trading",datetime(2026,9,1,4,tzinfo=UTC),
+                datetime(2026,9,1,10,tzinfo=UTC),"Asia/Kolkata","owned","owned:session"),))
+    build_plan = DataPlan.from_mapping(dict(version=1,start=build_day,end=build_end,
+        universe=["001"],store=str(Path(folder)/"builder"),max_attempts=1,queue_limit=1,
+        datasets=[dict(dataset=d,fields=["close"]) for d in ("equity_daily","etf_daily")]))
+    build_caps = tuple(Capability(d,"owned","synthetic-v1","v1","v1",("json",),
+                                 ("close",),("raw",),build_day,build_end)
+                       for d in ("equity_daily","etf_daily"))
+    build_graph = compile_plan(build_plan,build_caps,calendar=build_cal)
+    inputs = []
+    for job in build_graph.jobs:
+        item = publication
+        if job.partition.dataset=="etf_daily":
+            erow = {**row,"quantity_unit":"fund_units"}
+            item = replace(publication,partition=replace(publication.partition,dataset="etf_daily"),
+                tables=(("etf_daily",pa.Table.from_pylist([erow],schema=SCHEMAS["etf_daily"])),))
+        destination = Path(folder)/("builder-input-"+job.partition.dataset)
+        write_direct(item,destination)
+        inputs.append(destination)
+    replay_provider = BundleProvider(tuple(inputs))
+    cancellation = asyncio.Event()
+    def cancel_build(event):
+        if event.state=="committed": cancellation.set()
+    first_build = builder_loop.run_until_complete(build(build_graph,{"owned":replay_provider},
+        cancel=cancellation,on_event=cancel_build))
+    assert first_build.status=="cancelled" and first_build.committed_partitions==1
+    second_build = builder_loop.run_until_complete(build(build_graph,{"owned":replay_provider},
+        resume=first_build.run_id))
+    assert second_build.status=="complete" and second_build.reused_partitions==1
+    assert second_build.history_snapshot_id
+    third_build = builder_loop.run_until_complete(build(build_graph,{"owned":replay_provider}))
+    assert third_build.status=="complete" and third_build.reused_partitions==2
+    with Store(build_plan.store) as catalog:
+        assert catalog.connection.execute("SELECT count(*) FROM coverage").fetchone()==(2,)
+        assert catalog.connection.execute("SELECT count(*) FROM source_checks").fetchone()==(2,)
+    direct_graph = compile_plan(replace(build_plan,mode="memory",store=None),build_caps,
+                                calendar=build_cal)
+
     def denied(*args, **kwargs):
         raise AssertionError("direct/render path opened a DB or materialized data")
 
     duckdb.connect = denied
+    installed_extract = builder_loop.run_until_complete(extract(direct_graph,{"owned":replay_provider}))
+    assert installed_extract.status=="complete" and installed_extract.run_id is None
+    assert installed_extract.committed_partitions==2 and len(installed_extract.batches)==2
+    assert installed_extract.batches[0].tables[0][1].equals(typed)
     for encoding in ("csv", "parquet"):
         target = Path(folder) / f"durable-direct-{encoding}"
         write_direct(publication, target, encoding=encoding)
@@ -432,7 +484,8 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
     assert cli_result.stderr == ""
     (entry,) = metadata.entry_points(group="console_scripts", name="niftyverse")
     assert entry.load() is main
-print("Installed wheel: msgspec -> Arrow -> DuckDB/CSV -> Polars, MIME and CLI passed offline.")
+builder_loop.close()
+print("Installed wheel: validated DataPlan cancel/resume/rerun/direct, storage, MIME and CLI passed offline.")
 print(sys.version)
 print(
     "Installed distributions:",
