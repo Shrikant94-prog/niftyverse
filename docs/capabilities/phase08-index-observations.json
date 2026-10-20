@@ -38,7 +38,8 @@
       ],
       "row_count": 2,
       "identity": "Nifty 50 price",
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     },
     {
       "name": "price-recent",
@@ -79,7 +80,8 @@
       ],
       "row_count": 3,
       "identity": "Nifty 50 price",
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     }
   ],
   "limitations": [
@@ -119,7 +121,8 @@
         "2016-09-01"
       ],
       "row_count": 2,
-      "units": "ratio / percent"
+      "units": "ratio / percent",
+      "http_status": 200
     },
     {
       "name": "tri-old",
@@ -151,7 +154,8 @@
         "2016-09-01"
       ],
       "row_count": 2,
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     },
     {
       "name": "tri-old",
@@ -183,7 +187,8 @@
         "2016-09-01"
       ],
       "row_count": 2,
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     },
     {
       "name": "valuations-recent",
@@ -217,7 +222,8 @@
         "2026-10-14"
       ],
       "row_count": 3,
-      "units": "ratio / percent"
+      "units": "ratio / percent",
+      "http_status": 200
     },
     {
       "name": "tri-recent",
@@ -250,7 +256,8 @@
         "2026-10-14"
       ],
       "row_count": 3,
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     },
     {
       "name": "tri-recent",
@@ -283,7 +290,8 @@
         "2026-10-14"
       ],
       "row_count": 3,
-      "units": "index_points"
+      "units": "index_points",
+      "http_status": 200
     }
   ],
   "independent_expected_source_tuples": {
@@ -402,7 +410,8 @@
       ],
       "units": "volatility_percent_annualised",
       "definition": "https://nsearchives.nseindia.com/s3fs-public/inline-files/white_paper_IndiaVIX.pdf",
-      "limitations": "Exact sampled window only; EOD_TIMESTAMP is source date, ordering timestamp is not publication time; no vintage guarantee."
+      "limitations": "Exact sampled window only; EOD_TIMESTAMP is source date, ordering timestamp is not publication time; no vintage guarantee.",
+      "http_status": 200
     },
     {
       "name": "vix-recent",
@@ -464,7 +473,8 @@
       ],
       "units": "volatility_percent_annualised",
       "definition": "https://nsearchives.nseindia.com/s3fs-public/inline-files/white_paper_IndiaVIX.pdf",
-      "limitations": "Exact sampled window only; EOD_TIMESTAMP is source date, ordering timestamp is not publication time; no vintage guarantee."
+      "limitations": "Exact sampled window only; EOD_TIMESTAMP is source date, ordering timestamp is not publication time; no vintage guarantee.",
+      "http_status": 200
     }
   ],
   "failed_vix_route": {
