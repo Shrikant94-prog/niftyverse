@@ -14,7 +14,7 @@ import pyarrow as pa
 
 from niftyverse.core import ValidationError
 from niftyverse.delivery import SourceDelivery, delivery_fraction
-from niftyverse.indices import validate_index_record
+from niftyverse.indices import validate_index_record, validate_index_scope
 from niftyverse.market_prices import MarketDataFailure, number, validate_price_fields
 from niftyverse.market_state import MarketStateObservation
 from niftyverse.storage.schemas import ANALYTICAL_KEY, KEYS, SCHEMAS
@@ -91,6 +91,10 @@ class Partition:
             )
         ):
             raise ValidationError("invalid partition scope/fields/basis/identity")
+        if self.dataset in {"index_daily", "index_tri", "index_valuations"}:
+            validate_index_scope(
+                self.dataset, fields=self.fields, basis=self.basis, scope=self.scope
+            )
 
     @property
     def identity(self) -> str:

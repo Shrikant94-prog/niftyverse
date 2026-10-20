@@ -7,13 +7,13 @@
 - **Phase:** 08 - Index prices, valuation and TRI; authorized through verified local merge and GitHub push. Do not start Phase 09.
 - **Start:** `phase-08` created from inspected local/origin main `f9aac6bbe4a042ba97406ef8b21374a18890cf93`. Tracked tree clean; no pre-existing phase branch. Owner untracked `Sample_Files/` preserved. No reset or alternate revision.
 - **Prerequisites:** Phase 02/03/04/05 and 07 completion evidence inspected against source interfaces and Git ancestry. Phase 02 index redirects and blocked VIX remain limitations pending bounded new evidence. Full-extra pre-edit regression **364 passed**, 37.26 s.
-- **Checkpoint:** NV-08-03 verified; next PH-08-GATE and closure checks. Explicit price/gross/net variant identities and source aliases; exact historical daily values/lineage, true half-open coverage and explicit gaps. No ETF/current substitute or Phase 09 DataPlan.
-- **Next:** integrated gate and scoped review/ordinary repairs, then full/core/wheel/platform checks, reconciliation, verified local merge and authorized push. Retain phase-08.
+- **Checkpoint:** all three checkpoints and PH-08-GATE locally verified; phase incomplete pending hosted platform checks and final integration. Explicit price/gross/net variant identities and source aliases; exact historical daily values/lineage, true half-open coverage and explicit gaps. No ETF/current substitute or Phase 09 DataPlan.
+- **Next:** push verified phase source for hosted checks, reconciliation, verified local merge and authorized push. Retain phase-08.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 08 contract](docs/phases/08.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. Current checkpoint: [identity and representation](docs/specs/data-model.md#s7), [index semantics](docs/specs/analytics.md#s12-1), [AM-03](docs/specs/requirements.md#s18-2). Inspect affected index adapters/models, publication schemas/validation and tests only.
+2. Current checkpoint: [gate/review evidence](docs/evidence/08-20261021-gate.md), [index usage](docs/indices.md). Reopen only affected [identity and representation](docs/specs/data-model.md#s7), [index semantics](docs/specs/analytics.md#s12-1), [AM-03](docs/specs/requirements.md#s18-2). Inspect affected index adapters/models, publication schemas/validation and tests only.
 3. [Capability report](docs/capabilities/README.md), [partition contracts](docs/capabilities/partitions.md); relevant retained Phase 02 index/VIX samples. Prerequisites: [02](docs/evidence/02-20261018-completion.md), [03](docs/evidence/03-20261019-completion.md), [04](docs/evidence/04-20261020-completion.md), [05](docs/evidence/05-20261020-completion.md), [07](docs/evidence/07-20261021-completion.md).
 
 ## Acceptance mapping
@@ -23,11 +23,12 @@
 | NV-08-01 AC1/2/3 | Typed variants/aliases; collisions unresolved; exact source dates/values/lineage; empty and missing coverage explicit; ETF/current rejection. **18 focused identity/decoder cases pass**; with shared transport **44 pass**, strict mypy/lint/format pass. Five actual old/recent price rows match manually retained exact closes. [Evidence](docs/evidence/08-20261021-price.md). |
 | NV-08-02 AC1/2/3 | **142 focused/affected tests passed**, strict mypy 88 files and lint/format pass. Separate schemas/coverage, null versus zero, exact disjoint-date joins, shared rejection, DB/direct parity, v5 migration/backup/restore verified. All five actual source six-measure tuples match. [Evidence](docs/evidence/08-20261021-datasets.md). |
 | NV-08-03 AC1/2/3 | **86 combined focused tests pass**, strict mypy 89 files/lint/format pass. All five actual NSE VIX OHLC rows verified in old/recent windows; separate Nifty VIX redirects remain blocked. Current-only/empty/partial/unknown grid capability rejection, true dates and annualised-percent units verified. [Evidence](docs/evidence/08-20261021-vix.md). |
-| PH-08-GATE | Integrated price/PE/PB/yield/TRI never conflated, true dates/gaps, no ETF/current-VIX substitution. Pending checkpoints. |
+| PH-08-GATE | **2 integrated cases pass**: decoders through dated coverage/typed joins/shared DB/direct publication and immutable history; ETF/current-VIX substitution rejects. Empty-partition scope/basis/field bypass reproduced and repaired. **431 full-extra tests**, **387 core/3 optional skips**, strict mypy 90 files, format/lint and fresh isolated core wheel pass. [Gate/review evidence](docs/evidence/08-20261021-gate.md). |
 
 ## Verification and limitations
 
 - Phase 07 verified at `b8ccde7`, merged/pushed as `f9aac6b`; 364 full-extra, 320 core/3 optional skips, installed wheel and eight hosted jobs pass. [Completion](docs/evidence/07-20261021-completion.md).
+- Phase 08 local final: **431 full-extra / 387 core with 3 optional skips**, strict mypy **90 files**, lint/format, installed core wheel passed. Hosted verification/integration pending.
 - Source evidence certifies exact sampled windows only, never ten-year history or historical publication vintages. No new provider or legacy import. Owner files preserved.
 
 ## Phase ledger

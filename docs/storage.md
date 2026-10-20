@@ -45,6 +45,11 @@ describe the added fields and shared validation. Version 2 adds nullable SDK met
 unknowns remain null. Downgrades/newer unsupported versions fail. Fixture-v1
 artifacts/API remain readable through their original reader.
 
+Version 5 adds separate index price/volatility, TRI and valuation tables through
+the same publication boundary. [Index semantics](indices.md) describe variant
+scope, units and null reasons. Migration rollback and retained pre-v5 backups
+remain supported; new physical backups report the actual catalog schema version.
+
 Only the owning process/thread uses a writable connection. All mutation APIs
 are synchronous and serialized by that owner; independent readers use immutable
 snapshots or wait until it closes. Lock contention fails within a bounded wait

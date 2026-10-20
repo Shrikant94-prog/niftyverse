@@ -348,6 +348,26 @@ def join_index_datasets(
     )
 
 
+def validate_index_scope(dataset: str, *, fields: tuple[str, ...], basis: str, scope: str) -> None:
+    """Validate dataset-level contracts even when the response has no rows."""
+    available = {
+        "index_daily": {"open", "high", "low", "close"},
+        "index_tri": {"value"},
+        "index_valuations": {"pe", "pb", "dividend_yield"},
+    }
+    bases = {
+        "index_daily": {"price", "volatility"},
+        "index_tri": {"gross_tri", "net_tri"},
+        "index_valuations": {"valuation_ratios_percent"},
+    }
+    if dataset not in available or set(fields) - available[dataset]:
+        raise ValidationError("unsupported index requested field/dataset")
+    if basis not in bases[dataset]:
+        raise ValidationError("index partition variant/basis mismatch")
+    if scope != "selected":
+        raise ValidationError("index partition requires explicit variant scope")
+
+
 def validate_index_record(
     dataset: str,
     row: dict[str, Any],

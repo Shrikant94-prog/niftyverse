@@ -138,6 +138,28 @@ def test_partition_basis_and_source_mismatch_reject() -> None:
         replace(source, capture=Capture(b"wrong", "direct_raw", "owned", "owned:p"))
 
 
+@pytest.mark.parametrize(
+    "changes,reason",
+    [
+        ({"fields": ("pe",)}, "field"),
+        ({"basis": "gross_tri"}, "basis"),
+        ({"scope": "whole_market"}, "scope"),
+    ],
+)
+def test_empty_index_partitions_cannot_bypass_dataset_contract(
+    changes: dict[str, Any], reason: str
+) -> None:
+    source = batch()
+    name, table = source.tables[0]
+    with pytest.raises(ValidationError, match=reason):
+        replace(
+            source,
+            partition=replace(source.partition, **changes),
+            tables=((name, table.slice(0, 0)),),
+            coverage="no_observations",
+        )
+
+
 def test_nullable_valuations_publish_explicit_partial_with_zero_retained(tmp_path: Path) -> None:
     body = valuation_wire(pe=None, pb="0", divYield="0")
     history = index_history(
