@@ -4,12 +4,13 @@
 
 ## Active work
 
-- **Phase:** 08 - Index prices, valuation and TRI. All three checkpoints and PH-08-GATE verified at source `25837b96655633942a3fdcdb4bf005f181752724`; all eight hosted jobs passed. Ready for authorized local integration and push. Do not start Phase 09.
+- **Phase:** 08 - Index prices, valuation and TRI. All three checkpoints and PH-08-GATE verified at source `25837b96655633942a3fdcdb4bf005f181752724`; all eight hosted jobs passed. Integrated into local main as merge `51ae1953256de07314ffed56328ff679d5d52d88`. Do not start Phase 09.
 - **Start:** `phase-08` created from inspected local/origin main `f9aac6bbe4a042ba97406ef8b21374a18890cf93`. Tracked tree clean; no pre-existing phase branch. Owner untracked `Sample_Files/` preserved. No reset or alternate revision.
 - **Prerequisites:** Phase 02/03/04/05 and 07 completion evidence inspected against source interfaces and Git ancestry. Phase 02 failed candidates retained; new exact-window Nifty index and distinct NSE VIX observations separately verified. Full-extra pre-edit regression **364 passed**, 37.26 s.
 - **Checkpoint:** Explicit price/gross/net/volatility identities and aliases; separate exact daily OHLC, TRI and PE/PB/yield schemas/units/null reasons; true dates/gaps, no ETF/current substitute. Shared persistent/direct validation, v5 migration/rollback/backup and immutable history verified.
 - **Reconciliation:** main remains `f9aac6b`; no incoming changes/conflicts. **158 affected tests passed**, 11.39 s; source/test/tool/config content unchanged from verified source.
-- **Next:** commit completion evidence, guard main, merge verified phase-08 with a merge commit, record actual integration and push both heads. Retain phase-08. Phase 09 remains unstarted.
+- **Integration:** merge `51ae195` has parents `f9aac6b` and retained phase-08 head `bd59763a6bcf7fda827af7fcf6c80b53aba3672b`. Final pre-merge guard found main unchanged; **28 gate/publication cases passed**, 2.52 s. Main source/tests/tools/config match verified `25837b9` exactly. This status-only follow-up records actual integration; remote main/phase-08 heads provide publication evidence.
+- **Next:** Phase 09 is eligible, **not started**. No further phase work is authorized. Retain phase-08.
 
 ## Read first
 
@@ -44,5 +45,5 @@
 | 05 | verified, integrated and pushed | [Completion](docs/evidence/05-20261020-completion.md) |
 | 06 | verified, integrated and pushed | [Completion](docs/evidence/06-20261020-completion.md) |
 | 07 | verified, integrated and pushed; phase-07 retained | [JSON](docs/evidence/07-20261020-json.md), [reports](docs/evidence/07-20261020-reports.md), [quality/shared output](docs/evidence/07-20261020-quality.md); [ETF](docs/evidence/07-20261020-etfs.md); [gate](docs/evidence/07-20261020-gate.md); [completion](docs/evidence/07-20261021-completion.md) |
-| 08 | verified; ready for final local integration and push | [Completion](docs/evidence/08-20261021-completion.md) |
+| 08 | verified and integrated as merge `51ae195`; phase-08 retained | [Completion](docs/evidence/08-20261021-completion.md) |
 | 09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
