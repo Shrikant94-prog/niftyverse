@@ -4,33 +4,32 @@
 
 ## Active work
 
-- **Phase:** 05 - Identities, contracts foundation and calendars. Authorized through sequential checkpoints, verification, local merge commit and GitHub push; retain phase-05. Do not start Phase 06.
-- **Status:** All checkpoints and PH-05-GATE pass locally; final core/hosted verification and integration pending. Phase incomplete until final gates and delivery.
-- **Start:** phase-05 created from inspected local main/origin main `16b6cc52e904a372d330be2d24ba3ffec0460c6b`. No existing phase-05. Tracked tree clean; owner untracked `Sample_Files/` preserved. No reset or alternative start.
-- **Prerequisites:** Phase 02/04 evidence and source ancestry inspected; current main full-extra offline baseline **224 passed** (`uv run --frozen --all-extras pytest -q`). Source/data limitations remain separate from software readiness.
-- **Next action:** Finish minimal-core checks, push phase-05 for actual hosted verification, record evidence, recheck main, merge and push both retained branches.
+- **Phase:** 05 - Identities, contracts foundation and calendars. All checkpoints and PH-05-GATE verified. Local merge commit and GitHub push authorized; retain phase-05. Do not start Phase 06.
+- **Status:** Verified locally and in all eight hosted jobs; final local integration and push pending.
+- **Start:** phase-05 created from inspected clean local main/origin main `16b6cc52e904a372d330be2d24ba3ffec0460c6b`. Owner untracked `Sample_Files/` preserved. No reset, alternative start or discarded work.
+- **Integration identity:** verified source `4b44075ddbb3c7d5666ff072bf90be608ce7b859`. Fetch and main reconciliation returned up to date; source/test/tool/config trees exactly match that verified source. Completion metadata may differ. Git records final phase/merge/publication identities.
+- **Next action:** Commit completion evidence, recheck main, merge with a merge commit and push main/phase-05. Phase 06 is next eligible, not started.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 05 acceptance/gate](docs/phases/05.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. Current checkpoint: calendar rules in [temporal selection](docs/specs/data-model.md#s7-3), `temporal.py`, identity/delisted models and their tests. Read relevant code/tests only.
-3. Later: [delisted manifest](docs/specs/data-model.md#s7-4); calendar rules in [temporal selection](docs/specs/data-model.md#s7-3). Prerequisites: [02 completion](docs/evidence/02-20261018-completion.md), [04 completion](docs/evidence/04-20261020-completion.md). Do not reopen settled source research.
+2. [Final acceptance/platform evidence](docs/evidence/05-20261020-completion.md), [identity, manifest, market-state and calendar usage/limits](docs/identities.md).
+3. Only for a concrete dependency: [identity/time/listing policies](docs/specs/data-model.md#s7-1), [temporal selection](docs/specs/data-model.md#s7-3), [delisted inputs](docs/specs/data-model.md#s7-4); `identity.py`, `temporal.py`, `delisted.py`, `market_state.py`, `calendars.py` and their tests. Do not reopen settled source research or unchanged expensive checks.
 
 ## Acceptance mapping
 
-| Checkpoint | Independent expected outcome / verification / current result |
+| Checkpoint | Independent observed verification |
 |---|---|
-| NV-05-01 AC1-2,5 | `tests/test_identity.py`: renamed/reused/overlapping and unknown aliases; EQ-BE-EQ/BL policy, ETF/stale no-network search, derivative dated terms pass. Scoped review reproduced and fixed unknown competing alias selecting a known hit. |
-| NV-05-01 AC3-4 | `tests/test_market_state.py`: ASM/GSM/band overlap, nullable bounds, explicit removal/unknown/not-applicable and snapshot-only dates; DB/CSV/Parquet parity, additive v2-v3 rollback pass. Focused identity/state/storage regressions **73 passed**; Ruff format/lint and strict mypy pass. Checkpoint commit identifies tested code. |
-| NV-05-02 AC1-3 | `tests/test_delisted.py`: 10 CSV/Parquet, malformed and ambiguous manifest cases pass; network-blocked renamed dead identity, unknown dates, stable-ID membership eligibility/source-unavailable prices remain distinct. Combined checkpoint suite **28 passed**, Ruff format/lint and strict mypy pass. |
-| NV-05-03 AC1-3 | `tests/test_calendars.py`: explicit closed/trading/special/unknown, half-open boundaries, UTC/source-date rollover, DST gap/fold rejection and old/corrected immutable snapshots pass. Combined Phase 05 suite **34 passed**; Ruff format/lint and strict mypy pass. |
-| PH-05-GATE | `tests/test_phase05_gate.py` and focused cases pass: reused/renamed/dead/unknown/special/ETF/stale matches under socket denial. Full Windows offline suite **264 passed**, strict mypy (55 files), Ruff format/lint pass. Fresh installed core wheel passes Python socket/process audit guards; docs baseline/self-tests pass (87 Markdown files). Reconciliation reports up to date. Hosted/final merge pending. |
+| NV-05-01 AC1-5 | [Completion](docs/evidence/05-20261020-completion.md): renamed/reused/overlapping/unknown aliases; EQ-BE-EQ/BL and explicit listing policies; exact dated derivative terms; ETF/stale/current-only local search under socket denial. Overlapping market states, snapshot-only evidence, nullable bounds, removal/unknown/not-applicable, DB/CSV/Parquet parity and v2-v3 migration/rollback/retained-backup checks pass. |
+| NV-05-02 AC1-3 | [Completion](docs/evidence/05-20261020-completion.md): validated CSV/Parquet manifests resolve renamed dead identities without live lookup; malformed/ambiguous inputs reject atomically. Unknown dates/prices and established membership eligibility remain explicit. |
+| NV-05-03 AC1-3 | [Completion](docs/evidence/05-20261020-completion.md): trading/closed/special/unknown states, exact boundaries/UTC rollover/date precision/DST ambiguity and immutable original/corrected calendar snapshots pass. |
+| PH-05-GATE | Integrated offline scenario and **40 phase tests** pass; final full-extra suite **264 passed**, minimal-core **220 passed/3 optional skips**. Ruff format/lint, strict mypy (55 files), fresh installed core wheel and documentation baseline/self-tests pass. |
 
 ## Verification and limitations
 
-- Phase 03 source quarantines and Phase 04 durability/replay limits remain; synthetic identity/calendar fixtures do not establish provider coverage. No new acquisition or later-phase analytics.
-- Frozen lock/dependencies/workflow unchanged. Wheel SHA-256 `f25caebf7d432cc2c4917196c83072ce298d1be245fb46854d7c656a228cd1c9`; lock SHA-256 `71224e6730b34a20a25b34de7d32148d2710eab1d43c7495193d1f14950287b0`. No blockers.
-- Scoped implementation-agent review reproduced/fixed unknown competing aliases, conflicting listing states and unknown-start/known-end handling; Parquet decoded-size rejection added. No independent review claimed. See [usage and limits](docs/identities.md).
+- Hosted [39433418010](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39433418010): overall and all eight jobs succeeded on verified source. Linux 3.14.7/Windows 3.14.8 each passed 220 core tests plus 51 filing cases. macOS 3.14.8 core installation and all five extras passed. Exact wheel/lock/log identities and commands are in completion evidence.
+- Dependencies, lock, workflow and provider capability scope unchanged. Scoped implementation-agent review reproduced/fixed alias/listing/time-boundary defects and added decoded-size rejection; no independent review claimed. No blockers remain.
+- Software verification is separate from source/dataset readiness. Supplied local evidence and synthetic timelines do not certify a historical security/calendar corpus. Membership is caller-established; durable downstream recipes retain calendar version/hash/data. Phase 03 source quarantines and Phase 04 durability/replay limits remain. No new provider acquisition, research engine or next-phase features.
 
 ## Phase ledger
 
@@ -41,5 +40,5 @@
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
-| 05 | in progress | Current mapping above |
+| 05 | PH-05-GATE verified; integration pending | [Completion](docs/evidence/05-20261020-completion.md) |
 | 06-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |
