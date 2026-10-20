@@ -161,6 +161,13 @@ def test_original_input_cannot_be_its_own_independent_evidence() -> None:
     assert all(r.status != "independently_verified" for r in run(checks=checks).intervals)
 
 
+def test_raw_event_is_not_verified_by_matching_endpoints_alone() -> None:
+    result = run(events=(replace(EVENT, evidence=replace(REF, sha256=RAW_HASH)),))
+    assert "event_evidence_unverified" in result.intervals[-1].reasons
+    with pytest.raises(ValidationError, match="unverified"):
+        result.strict_members(D2)
+
+
 def test_evidence_unavailable_at_cutoff_and_invalid_windows() -> None:
     result = run(known_at=datetime(2025, 1, 1, tzinfo=UTC))
     assert all(r.status != "independently_verified" for r in result.intervals)
@@ -168,3 +175,12 @@ def test_evidence_unavailable_at_cutoff_and_invalid_windows() -> None:
         replace(COVERAGE, end=D1)
     with pytest.raises(ValidationError, match="sha256"):
         replace(REF, sha256="wrong")
+
+
+def test_acceptance_cannot_precede_replacement_evidence() -> None:
+    future = datetime(2025, 3, 1, tzinfo=UTC)
+    with pytest.raises(ValidationError, match="review precedes"):
+        replace(
+            correction("accepted"),
+            replacement=replace(EVENT, evidence=replace(REF, known_at=future)),
+        )

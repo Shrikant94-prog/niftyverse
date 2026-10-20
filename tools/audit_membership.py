@@ -11,6 +11,8 @@ from niftyverse.membership_audit import audit_membership, notice_conflicts
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path)
+    parser.add_argument("--require-original", action="store_true",
+                        help="Fail unless every inherited exact-input audit expectation reconciles")
     args = parser.parse_args()
     before = args.input.read_bytes()
     report = audit_membership(
@@ -40,6 +42,18 @@ def main() -> None:
         "imported_at": report.imported_at.isoformat(),
     }
     print(json.dumps(result, indent=2))
+    if args.require_original:
+        expected = {
+            "bytes": 302057, "original_hash_matches": True, "rows": 72,
+            "index_types": ["Nifty500"], "first_date": "2010-06-04", "last_date": "2026-03-31",
+            "ascending_unique_dates": True, "snapshot_sizes": [500], "distinct_strings": 756,
+            "failing_transitions": 50, "duplicate_event_rows": 11, "weekend_rows": 5, "unchanged": True,
+        }
+        mismatches = [key for key, value in expected.items() if result[key] != value]
+        if len(notice_conflicts(report)) != 7:
+            mismatches.append("notice_conflicts")
+        if mismatches:
+            parser.exit(1, "Original-input audit gate failed: " + ", ".join(mismatches) + "\n")
 
 
 if __name__ == "__main__":

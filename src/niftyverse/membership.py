@@ -166,7 +166,11 @@ class Correction:
             if self.reviewed_at is None:
                 raise ValidationError("review time required")
             utc(self.reviewed_at)
-            if self.reviewed_at < max(self.proposed_at, *(r.known_at for r in self.evidence)):
+            if self.reviewed_at < max(
+                self.proposed_at,
+                *(r.known_at for r in self.evidence),
+                *(r.evidence.known_at for r in records),
+            ):
                 raise ValidationError("review precedes proposal/evidence")
         else:
             raise ValidationError("invalid correction review state")
@@ -332,6 +336,8 @@ def replay(
                 event_errors = set()
                 if event.evidence.known_at > known_at:
                     event_errors.add("event_not_known")
+                if event.evidence.sha256 == original_sha256:
+                    event_errors.add("event_evidence_unverified")
                 inc, exc = set(event.includes), set(event.excludes)
                 if inc & exc:
                     event_errors.add("event_overlap")

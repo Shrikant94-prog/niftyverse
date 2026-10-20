@@ -1,0 +1,19 @@
+{
+  "source_url": "https://www.niftyindices.com/Press_Release/ind_prs20022026_1.pdf",
+  "locator": "page 1, paragraphs 1-3 and affected-index table row 2",
+  "source_date": "2026-02-20",
+  "review_method": "manual reading of official notice, separately from owner CSV",
+  "reviewer": "implementation agent; no independent agent review claimed",
+  "facts": {
+    "component": "Kwality Wall's (India) Ltd.",
+    "dummy_symbol": "DUMMYHDLVR",
+    "later_symbol": "KWIL",
+    "initial_index_inclusion": "2025-12-05",
+    "listing_date": "2026-02-16",
+    "exclusion_effective_date": "2026-02-24",
+    "last_included_close_date": "2026-02-23",
+    "affected_index": "Nifty 500"
+  },
+  "claim_scope": "this component only; not a complete NIFTY 500 snapshot or event inventory",
+  "source_retention": "reviewed note retained; raw PDF not bundled; direct raw-retention request timed out"
+}

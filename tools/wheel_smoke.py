@@ -44,6 +44,9 @@ import niftyverse.filings  # noqa: E402
 import niftyverse.identity  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
 import niftyverse.market_state  # noqa: E402
+import niftyverse.membership  # noqa: E402
+import niftyverse.membership_audit  # noqa: E402
+import niftyverse.membership_identity  # noqa: E402
 import niftyverse.recon  # noqa: E402
 import niftyverse.taxonomy_zip  # noqa: E402
 import niftyverse.transport  # noqa: E402
@@ -200,6 +203,39 @@ expected = [
     },
 ]
 with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder:
+    # Fresh installed membership import, correction and retained-recipe replay.
+    from dataclasses import replace
+
+    from niftyverse.membership import Correction, Coverage, Member, Reference, Snapshot, replay
+    from niftyverse.membership_audit import audit_membership
+    from niftyverse.storage.membership import load_membership, publish_membership
+
+    source = Path(folder) / "membership.csv"
+    source.write_bytes(b"effective_date,index_type,inclusions,exclusions,symbols\n"
+                       b"2020-01-01,Nifty500,A,,A\n")
+    known = datetime(2020, 1, 5, tzinfo=UTC)
+    audit = audit_membership(source, source_statement="owned installed fixture", imported_at=known)
+    assert audit.row_count == 1 and not audit.original_hash_matches
+    ref = Reference("owned", "fixture:1", "b" * 64, known, "reviewer")
+    a, b = Member("a", "security", "a"), Member("b", "security", "b")
+    left, right = date(2020, 1, 1), date(2020, 1, 2)
+    initial = Snapshot("seed", left, (a,), ref)
+    correction = Correction("fix", initial, replace(initial, members=(b,)), left, right, (ref,),
+                            "independent check", "author", "accepted", known, "reviewer", known)
+
+    def membership_result(corrections):
+        return replay(original_sha256=audit.sha256, scope="installed owned fixture", start=left,
+                      end=right, baseline=initial, events=(), corrections=corrections,
+                      checks=(Snapshot("left", left, (b,), ref), Snapshot("right", right, (b,), ref)),
+                      coverage=(Coverage(left, right, ref),), known_at=known)
+
+    old = publish_membership(membership_result(()), Path(folder) / "membership-old")
+    new = publish_membership(membership_result((correction,)), Path(folder) / "membership-new", previous=old)
+    assert old.manifest["status"] == "partial" and new.manifest["status"] == "complete"
+    assert load_membership(new.path).strict_members(left) == (b,)
+    assert load_membership(old.path) == membership_result(())
+    assert new.manifest["invalidation"][0]["correction_ids"] == ["fix"]
+
     stored = niftyverse.build_fixture(payload, Path(folder) / "slice.duckdb")
     assert stored.to_polars().to_dicts() == expected
     import duckdb

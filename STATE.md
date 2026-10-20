@@ -4,40 +4,36 @@
 
 ## Active work
 
-- **Phase 06 active:** `phase-06` created from clean tracked local main/origin main `f4c9712`; owner untracked `Sample_Files/` preserved. Local commits, merge and GitHub push authorized; retain branch, do not start Phase 07.
-- **Checkpoint:** NV-06-01 and NV-06-02 software verified; NV-06-03 next. Owner supplied exact original under `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; hash matches. [Audit observations](docs/evidence/06-20261020-audit.md) record all inherited counts and seven notice conflicts, unchanged original. PH-06-GATE still awaits integrated replay/publication.
-- **Prerequisites observed:** Phase 04/05 completion evidence inspected against containing Git history; current pre-edit full-extra suite `uv run --frozen --all-extras pytest -q`: **264 passed** on main's code, 23.43 s.
-- **Acceptance binding:** NV-06-01 exact original → inherited figures all observed. NV-06-02 `tests/test_membership.py`/`test_membership_identity.py` → A on Jan 1, B from Jan 2; accepted date correction moves switch to Jan 3 only at review cutoff; pending/rejected unchanged. Missing/order/overlap/external contradictions quarantine; temporary identities never become instruments; dated aliases remain literal/local. Focused **21 tests pass**, formatter/lint/strict mypy on affected modules/tests pass. Source pinned by containing checkpoint commit; pre-module collection failures establish test-first ordering only.
-- **Next:** NV-06-03 immutable publication, correction lineage/invalidation and retained recipe replay. Scope clarification pending: official notices establish KWIL component history; current official CSV has 501 rows and no effective date, so cannot certify a full historical snapshot. Full-index history stays blocked; no synthetic fixture substitutes for real evidence.
-
-## Previous completion (retained prerequisite)
-
-- **Phase:** 05 - Identities, contracts foundation and calendars. All checkpoints and PH-05-GATE verified. Local merge commit and GitHub push authorized; retain phase-05. Do not start Phase 06.
-- **Status:** Phase 05 verified locally and in all eight hosted jobs; integrated into local main by the containing merge commit. Git remote refs establish publication.
-- **Start:** phase-05 created from inspected clean local main/origin main `16b6cc52e904a372d330be2d24ba3ffec0460c6b`. Owner untracked `Sample_Files/` preserved. No reset, alternative start or discarded work.
-- **Integration identity:** verified source `4b44075ddbb3c7d5666ff072bf90be608ce7b859`; final phase head `3917e406be54fe704c209549c28350a199fbb979`; starting main `16b6cc5`. Fetch and main reconciliation returned up to date; merge had no conflict. Main source/test/tool/config trees exactly match verified source; only completion metadata differs. Git records the merge/publication identities.
-- **Next eligible phase:** 06, not started. Retain phase-05 and preserve Sample_Files. No further phase work is authorized by this completion.
+- **Phase:** 06 - NIFTY 500 verification and corrections. NV-06-01/02 verified; NV-06-03 software checks pass, real-evidence window scope pending. Do not start Phase 07.
+- **Branch/start:** `phase-06` from inspected local main/origin main `f4c9712`. No reset, discarded work or alternative start. Owner untracked `Sample_Files/` preserved. Local commits, final merge and GitHub push authorized; retain phase branch.
+- **Prerequisites:** Phase 04/05 evidence inspected against Git ancestry and current code. Before edits, full-extra suite passed **264 tests**. Existing provider/source/durability limits remain.
+- **Original:** owner explicitly supplied `C:\Users\Shrikant Maurya\OneDrive\Documents\Python-Workspace\nse-flow`; only exact named membership CSV read there. Required SHA-256 `f3b4ce4dc430b6e88a302096551e576621fb6bdd45c3a1344a5204bd1957a091` matches. Original remains untouched outside project; no old code/environment imported.
+- **Current result:** parser checkpoint `6822801`; correction replay checkpoint `d627e4c`. [Publication observations](docs/evidence/06-20261020-publication.md) record verified immutable outputs/lineage and review repairs, pinned by the containing checkpoint commit. Dependencies/lock/provider capabilities unchanged.
+- **Open scope question:** official notices directly establish KWIL component membership on 23 February 2026 and exclusion on 24 February. Owner was asked whether this explicit component-scoped real-evidence window is acceptable, while full-index history stays blocked. A fetched current official CSV has 501 rows and no effective date; it cannot supply a dated historical baseline. No scope answer inferred or historical date invented.
+- **Next:** preserve/push verified software checkpoint and inspect hosted checks while scope answer is pending. Component-scoped real-evidence example is concrete and reviewable in publication evidence; if accepted, record its scope decision and close the remaining gate after main reconciliation and verification. No final integration while a required criterion remains pending.
 
 ## Read first
 
 1. [PLAN purpose](PLAN.md#purpose), [phase boundary](PLAN.md#phase-goals), [Phase 06 acceptance/gate](docs/phases/06.md), [workflow](docs/WORKFLOW.md#phase-loop).
-2. [Membership contract](docs/specs/membership.md#s8), [original input identity](docs/INPUTS.md), [Phase 05 prerequisite](docs/evidence/05-20261020-completion.md), [Phase 04 prerequisite](docs/evidence/04-20261020-completion.md).
-3. Current checkpoint only: membership parser/replay/publication code and tests as introduced; dated identity `Catalogue.resolve`, `Evidence`, `SourceTime` and immutable bundle interfaces when required. Do not reopen unrelated source research.
+2. [Membership contract](docs/specs/membership.md#s8), [original input identity](docs/INPUTS.md), [original audit observations](docs/evidence/06-20261020-audit.md), [membership interfaces](docs/membership.md).
+3. Current checkpoint: `membership.py`, `membership_audit.py`, `membership_identity.py`, `storage/membership.py`, corresponding tests and `test_phase06_gate.py`. Follow Phase 05 identity/SourceTime or Phase 04 bundle code only for concrete dependencies. Prerequisite completion: [04](docs/evidence/04-20261020-completion.md), [05](docs/evidence/05-20261020-completion.md).
 
 ## Acceptance mapping
 
-| Checkpoint | Independent observed verification |
+| Checkpoint | Independent expected outcome and observed verification |
 |---|---|
-| NV-05-01 AC1-5 | [Completion](docs/evidence/05-20261020-completion.md): renamed/reused/overlapping/unknown aliases; EQ-BE-EQ/BL and explicit listing policies; exact dated derivative terms; ETF/stale/current-only local search under socket denial. Overlapping market states, snapshot-only evidence, nullable bounds, removal/unknown/not-applicable, DB/CSV/Parquet parity and v2-v3 migration/rollback/retained-backup checks pass. |
-| NV-05-02 AC1-3 | [Completion](docs/evidence/05-20261020-completion.md): validated CSV/Parquet manifests resolve renamed dead identities without live lookup; malformed/ambiguous inputs reject atomically. Unknown dates/prices and established membership eligibility remain explicit. |
-| NV-05-03 AC1-3 | [Completion](docs/evidence/05-20261020-completion.md): trading/closed/special/unknown states, exact boundaries/UTC rollover/date precision/DST ambiguity and immutable original/corrected calendar snapshots pass. |
-| PH-05-GATE | Integrated offline scenario and **40 phase tests** pass; final full-extra suite **264 passed**, minimal-core **220 passed/3 optional skips**. Ruff format/lint, strict mypy (55 files), fresh installed core wheel and documentation baseline/self-tests pass. |
+| NV-06-01 AC1/2/3 | Exact original: 72 rows/756 literal strings/50 failed transitions/11 duplicate-event rows/5 weekend flags; 500 unique-string snapshots, unique ascending 2010-06-04 through 2026-03-31 dates. Seven targeted official-notice conflicts; original unchanged. [Audit observations](docs/evidence/06-20261020-audit.md), nine current owned parser tests. |
+| NV-06-02 AC1/2/3 | Owned A to B timeline with Jan 1/2 boundaries; accepted correction moves switch to Jan 3 only at review cutoff. Pending/rejected records unchanged. Explicit ordering, missing/overlapping events, external contradictions, temporary/unresolved identities, dated literal aliases and raw-event evidence checks pass. Source pinned by `d627e4c` plus current focused repair diff. |
+| NV-06-03 AC1/2/3 | CSV/Parquet retain blocked reasons, old recipes and new corrected lineage/invalidation. Forged results/parents and injected faults reject. [Actual KWIL example](docs/evidence/06-20261020-publication.md#actual-evidence-example-and-its-exact-scope) produces explicit component-only output; whether that meets the intended small-window scope is awaiting owner decision. |
+| PH-06-GATE | Exact-original audit observed; owned integrated offline scenario passes. Real-data interval publication pending; no full-history certification or synthetic substitution. |
 
 ## Verification and limitations
 
-- Hosted [39433418010](https://github.com/Shrikant94-prog/niftyverse/actions/runs/39433418010): overall and all eight jobs succeeded on verified source. Linux 3.14.7/Windows 3.14.8 each passed 220 core tests plus 51 filing cases. macOS 3.14.8 core installation and all five extras passed. Exact wheel/lock/log identities and commands are in completion evidence.
-- Dependencies, lock, workflow and provider capability scope unchanged. Scoped implementation-agent review reproduced/fixed alias/listing/time-boundary defects and added decoded-size rejection; no independent review claimed. No blockers remain.
-- Software verification is separate from source/dataset readiness. Supplied local evidence and synthetic timelines do not certify a historical security/calendar corpus. Membership is caller-established; durable downstream recipes retain calendar version/hash/data. Phase 03 source quarantines and Phase 04 durability/replay limits remain. No new provider acquisition, research engine or next-phase features.
+- Current focused suite: **34 passed**, `uv run --frozen pytest tests/test_membership.py tests/test_membership_audit.py tests/test_membership_identity.py tests/test_membership_publication.py tests/test_phase06_gate.py -q`; Ruff format/lint and strict mypy **64 files** pass.
+- Final current full-extra regression: **298 passed**, 38.03 s. Minimal core: **254 passed, 3 optional skips**, 10.44 s. An environment-overlapped run was invalidated and cleanly rerun; details in publication evidence.
+- Fresh isolated core wheel passed with installed new modules/parser/correction/publication/replay under Python socket/process audit guard. Wheel SHA-256 `09c60fbe83ec08d076f1ed3ea7794e98b7c2465e8f50b89b4f3c09fdfd10bac8`; unchanged frozen lock SHA-256 `71224e6730b34a20a25b34de7d32148d2710eab1d43c7495193d1f14950287b0`. No native firewall or cross-platform byte-rebuild guarantee claimed. Final-source/platform evidence pending.
+- Scoped implementation-agent review (no independent delegation) reproduced raw events certified from matching endpoints, review preceding replacement evidence, and mutable parent metadata entering lineage. Behavioral regressions failed before focused fixes and now pass. No acceptance weakened.
+- Software consistency is separate from dataset readiness. Broad original history is unverified. Source statement remains attributed; official notice facts manually reviewed. Current-list observations and synthetic fixtures cannot establish complete historical coverage. No research/universe engine or next-phase features.
 
 ## Phase ledger
 
@@ -48,6 +44,6 @@
 | 02 | verified, integrated and pushed | [Completion](docs/evidence/02-20261018-completion.md) |
 | 03 | verified, integrated and pushed | [Completion](docs/evidence/03-20261019-completion.md) |
 | 04 | verified, integrated and pushed | [Completion](docs/evidence/04-20261020-completion.md) |
-| 05 | PH-05-GATE verified; integrated into local main | [Completion](docs/evidence/05-20261020-completion.md) |
-| 06 | active; NV-06-01/02 software verified | [Original audit](docs/evidence/06-20261020-audit.md); independent publication/gate pending |
+| 05 | verified, integrated and pushed | [Completion](docs/evidence/05-20261020-completion.md) |
+| 06 | active; actual window scope pending | [Original audit](docs/evidence/06-20261020-audit.md); software gate checks above |
 | 07-09, 12-18, 10-11, 19-22 | not started | No next-phase authorization |

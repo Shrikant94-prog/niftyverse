@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from niftyverse.core import ValidationError
 from niftyverse.membership_audit import audit_membership, notice_conflicts
 
 IMPORTED = datetime(2026, 10, 20, tzinfo=UTC)
@@ -119,3 +120,20 @@ def test_source_comma_encoding_and_notice_conflicts(tmp_path: Path) -> None:
     assert any(i.code == "temporary_component_missing" for i in conflicts)
     assert report.rows[0].symbols == ("A", "M& M")
     assert path.read_bytes() == raw
+
+
+def test_byte_limit_and_invalid_utf8_never_modify_input(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import niftyverse.membership_audit as audit_module
+
+    path = tmp_path / "oversize.csv"
+    path.write_bytes(b"12345")
+    monkeypatch.setattr(audit_module, "MAX_BYTES", 4)
+    with pytest.raises(ValidationError, match="byte limit"):
+        audit_membership(path, source_statement="owned", imported_at=IMPORTED)
+    assert path.read_bytes() == b"12345"
+    path.write_bytes(b"\xff")
+    report = audit_membership(path, source_statement="owned", imported_at=IMPORTED)
+    assert any(i.code == "csv_error" for i in report.issues)
+    assert not report.structurally_valid and path.read_bytes() == b"\xff"
