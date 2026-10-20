@@ -48,6 +48,8 @@ import niftyverse.filing_inline  # noqa: E402
 import niftyverse.filing_xml  # noqa: E402
 import niftyverse.filings  # noqa: E402
 import niftyverse.identity  # noqa: E402
+import niftyverse.indices  # noqa: E402
+import niftyverse.adapters.index_history  # noqa: E402
 import niftyverse.ingestion  # noqa: E402
 import niftyverse.market_state  # noqa: E402
 import niftyverse.market_prices  # noqa: E402
@@ -328,6 +330,56 @@ with tempfile.TemporaryDirectory(prefix="niftyverse-installed-slice-") as folder
         assert expected_etf["close"].to_pylist()==[Decimal("101.25000000")]
     write_direct(etf_batch,Path(folder)/"etf-direct",encoding="csv")
     assert read_bundle(Path(folder)/"etf-direct").table("etf_daily").equals(expected_etf)
+
+    # Installed Phase 08 price, valuation and gross/net TRI remain separate.
+    from niftyverse.adapters.index_history import (
+        assess_vix_capability, decode_index_prices, decode_index_tri, decode_index_valuations,
+    )
+    from niftyverse.indices import IndexVariant, IndexAlias, IndexCatalogue, index_history
+    from niftyverse.storage.indices import make_index_batch
+    from niftyverse.temporal import Evidence
+
+    variants = tuple(IndexVariant("installed-"+kind,"installed-index",kind)
+                     for kind in ("price","gross_tri","net_tri"))
+    index_cat = IndexCatalogue("installed-index-v1",variants,tuple(
+        IndexAlias("owned","OWNED INDEX",v.variant_id,Evidence(day,None,known,"owned","alias"))
+        for v in variants))
+    price_body = b'[{"INDEX_NAME":"OWNED INDEX","HistoricalDate":"20 Oct 2026","OPEN":"100","HIGH":"102","LOW":"99","CLOSE":"100.1250"}]'
+    val_body = b'[{"Index Name":"OWNED INDEX","DATE":"20 Oct 2026","pe":"0","pb":"2.00","divYield":"0"}]'
+    tri_body = b'[{"Index Name":"OWNED INDEX","Date":"20 Oct 2026","TotalReturnsIndex":"1200.25","NTR_Value":"1100.125"}]'
+    decode_args = dict(catalogue=index_cat,source_id="owned",locator="owned:index",start=day,
+                       end=date(2026,10,21),known_at=known)
+    for dataset,variant,body,decoder,fields in (
+        ("index_daily",variants[0],price_body,decode_index_prices,("close",)),
+        ("index_valuations",variants[0],val_body,decode_index_valuations,("pe","pb","dividend_yield")),
+        ("index_tri",variants[1],tri_body,decode_index_tri,("value",)),
+        ("index_tri",variants[2],tri_body,decode_index_tri,("value",)),
+    ):
+        observations = decoder(body,variant=variant,**decode_args)
+        indexed = index_history(observations,variant=variant,start=day,end=date(2026,10,21),
+                                calendar=etf_cal,known_at=known,source_complete=True)
+        assert indexed.coverage=="complete"
+        part = Partition(dataset,day,date(2026,10,21),(variant.variant_id,),fields,
+                         "valuation_ratios_percent" if dataset=="index_valuations" else variant.kind,
+                         "owned-index-v1","explicit-index","no-fill","owned session grid")
+        ibatch = make_index_batch(indexed,partition=part,capture=Capture(body,"direct_raw","owned","owned:index"),
+                                  check_id=dataset+variant.kind,checked_at=known,known_at=known)
+        label = dataset+variant.kind
+        with Store(Path(folder)/(label+"-store")) as catalog:
+            publish(catalog,ibatch)
+            expected_index = catalog.read_table(dataset).drop(["occurrence_id"])
+        write_direct(ibatch,Path(folder)/label)
+        assert read_bundle(Path(folder)/label).table(dataset).equals(expected_index)
+        index_row = expected_index.to_pylist()[0]
+        if dataset=="index_daily": assert index_row["close"]==Decimal("100.1250")
+        elif dataset=="index_valuations": assert index_row["pe"]==0 and index_row["dividend_yield"]==0
+        elif variant.kind=="gross_tri": assert index_row["value"]==Decimal("1200.25")
+        else: assert index_row["value"]==Decimal("1100.125")
+    vix_variant = IndexVariant("installed-vix","india-vix","volatility")
+    vix_capability = assess_vix_capability(b'{"data":[{"index":"INDIA VIX","last":14}]}',
+        catalogue=index_cat,variant=vix_variant,source_id="owned",locator="current",
+        start=day,end=date(2026,10,21),observed_at=known,calendar=etf_cal)
+    assert vix_capability.status=="blocked" and vix_capability.reason=="current_only_capability"
     assert metadata_snapshot.rows[0].value("classification",on=date(2016,9,1),known_at=known).value is None
 
     def denied(*args, **kwargs):

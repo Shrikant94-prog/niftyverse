@@ -36,6 +36,47 @@ PRICE = schema(
     ("missing_reason", TEXT, True),
 )
 SCHEMAS = {
+    "index_daily": schema(
+        ("variant_id", TEXT, False),
+        ("index_id", TEXT, False),
+        ("variant_kind", TEXT, False),
+        ("session_date", DAY, False),
+        ("open", MONEY, True),
+        ("high", MONEY, True),
+        ("low", MONEY, True),
+        ("close", MONEY, True),
+        ("unit", TEXT, False),
+        ("missing_reason", TEXT, True),
+        ("raw_sha256", TEXT, False),
+        ("locator", TEXT, False),
+    ),
+    "index_tri": schema(
+        ("variant_id", TEXT, False),
+        ("index_id", TEXT, False),
+        ("variant_kind", TEXT, False),
+        ("session_date", DAY, False),
+        ("value", MONEY, True),
+        ("unit", TEXT, False),
+        ("missing_reason", TEXT, True),
+        ("raw_sha256", TEXT, False),
+        ("locator", TEXT, False),
+    ),
+    "index_valuations": schema(
+        ("variant_id", TEXT, False),
+        ("index_id", TEXT, False),
+        ("variant_kind", TEXT, False),
+        ("session_date", DAY, False),
+        ("pe", MONEY, True),
+        ("pb", MONEY, True),
+        ("dividend_yield", MONEY, True),
+        ("ratio_unit", TEXT, False),
+        ("yield_unit", TEXT, False),
+        ("pe_reason", TEXT, True),
+        ("pb_reason", TEXT, True),
+        ("dividend_yield_reason", TEXT, True),
+        ("raw_sha256", TEXT, False),
+        ("locator", TEXT, False),
+    ),
     "market_state_observations": schema(
         ("observation_id", TEXT, False),
         ("listing_id", TEXT, False),
@@ -140,6 +181,9 @@ SCHEMAS = {
 }
 
 KEYS = {
+    "index_daily": ("variant_id", "session_date"),
+    "index_tri": ("variant_id", "session_date"),
+    "index_valuations": ("variant_id", "session_date"),
     "market_state_observations": ("listing_id", "segment", "state_kind", "observation_id"),
     "equity_daily": ("listing_id", "series", "session_date"),
     "etf_daily": ("listing_id", "series", "session_date"),

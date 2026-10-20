@@ -14,6 +14,7 @@ import pyarrow as pa
 
 from niftyverse.core import ValidationError
 from niftyverse.delivery import SourceDelivery, delivery_fraction
+from niftyverse.indices import validate_index_record, validate_index_scope
 from niftyverse.market_prices import MarketDataFailure, number, validate_price_fields
 from niftyverse.market_state import MarketStateObservation
 from niftyverse.storage.schemas import ANALYTICAL_KEY, KEYS, SCHEMAS
@@ -90,6 +91,10 @@ class Partition:
             )
         ):
             raise ValidationError("invalid partition scope/fields/basis/identity")
+        if self.dataset in {"index_daily", "index_tri", "index_valuations"}:
+            validate_index_scope(
+                self.dataset, fields=self.fields, basis=self.basis, scope=self.scope
+            )
 
     @property
     def identity(self) -> str:
@@ -192,6 +197,18 @@ class ValidatedBatch:
             if len(set(keys)) != len(keys):
                 raise ValidationError("duplicate business key in atomic partition")
             for row in rows:
+                if name in {"index_daily", "index_tri", "index_valuations"}:
+                    validate_index_record(
+                        name,
+                        row,
+                        source_id=self.capture.source_id,
+                        raw_sha256=self.capture.sha256,
+                        universe=self.partition.universe,
+                        scope=self.partition.scope,
+                        basis=self.partition.basis,
+                        fields=self.partition.fields,
+                        complete=self.coverage == "complete",
+                    )
                 if name == "security_daily_details":
                     if row["raw_sha256"] != self.capture.sha256:
                         raise MarketDataFailure("details_capture_mismatch")
@@ -251,11 +268,15 @@ class ValidatedBatch:
                     and not self.partition.start <= row["session_date"] < self.partition.end
                 ):
                     raise ValidationError("row outside partition date scope")
-                if name.endswith("daily") and row["quantity_unit"] != (
+                if name in {"equity_daily", "etf_daily"} and row["quantity_unit"] != (
                     "fund_units" if name == "etf_daily" else "shares"
                 ):
                     raise ValidationError("incompatible quantity unit")
-                if name.endswith("daily") and row["close"] is None and not row["missing_reason"]:
+                if (
+                    name in {"equity_daily", "etf_daily"}
+                    and row["close"] is None
+                    and not row["missing_reason"]
+                ):
                     raise ValidationError("missing price needs a reason")
         price_rows = rows_by_name.get("equity_daily", []) + rows_by_name.get("etf_daily", [])
         prices = {(r["listing_id"], r["series"], r["session_date"]): r for r in price_rows}

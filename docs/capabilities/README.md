@@ -1,5 +1,9 @@
 # Phase 02 initial source capability report — v1
 
+Later bounded index observations are recorded separately in
+[Phase 08 index evidence](phase08-index-observations.json) and
+[usage/limitations](../indices.md). They do not rewrite the initial observations below.
+
 Observed 18 October 2026. [Minimum targets](manifest-v1.json),
 [partition/completeness contracts](partitions.md),
 [metadata and hashes](observations.json), and [exact finite plans](probes/01.json)
